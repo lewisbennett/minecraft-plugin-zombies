@@ -10,7 +10,7 @@ import com.mango.zombies.Main;
 import com.mango.zombies.assets.MapInterface;
 import com.mango.zombies.entities.MapEntity;
 
-public class EditMapDescriptionCommand implements CommandExecutor
+public class EditMapDescriptionClearCommand implements CommandExecutor
 {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
@@ -24,8 +24,8 @@ public class EditMapDescriptionCommand implements CommandExecutor
 		// the command was run by a player
 		else
 		{
-			// check if 2 arguments were supplied
-			if (args.length >= 2)
+			// check that one 1 argument was supplied
+			if (args.length >= 1)
 			{
 				// define boolean for this check
 				boolean doesExist = false;
@@ -46,19 +46,8 @@ public class EditMapDescriptionCommand implements CommandExecutor
 					// check if the map exists
 					if (doesExist)
 					{
-						// define String to assign description to
-						String description = "";
-						
-						// run this for each arugment in the array
-						for (int i = 1; i < args.length; i++)
-						{
-							// build the description
-							description = description + " " + args[i];
-							description = description.trim();
-						}
-						
 						// set the description
-						map.setDescription(description);
+						map.setDescription("");
 						
 						// re-write the map file
 						boolean editSuccess = MapInterface.WriteMapFile(map);
@@ -67,15 +56,7 @@ public class EditMapDescriptionCommand implements CommandExecutor
 						if (editSuccess)
 						{
 							// notify the sender
-							sender.sendMessage(ChatColor.GREEN
-								+ "Set description of: "
-								+ ChatColor.BOLD
-								+ args[0]
-								+ ChatColor.RESET
-								+ ChatColor.GREEN
-								+ " to: "
-								+ ChatColor.ITALIC
-								+ description);
+							sender.sendMessage(ChatColor.GREEN + "Cleared description for map: " + ChatColor.BOLD + args[0]);
 						}
 						// the edit failed
 						else
@@ -99,7 +80,7 @@ public class EditMapDescriptionCommand implements CommandExecutor
 			else
 			{
 				// notify the sender
-				sender.sendMessage(ChatColor.RED + "Correct usage: /z_editmap_description <map name> <description>");
+				sender.sendMessage(ChatColor.RED + "Correct usage: /z_editmap_description_clear <map name>");
 			}
 		}
 		

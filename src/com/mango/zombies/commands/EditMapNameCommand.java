@@ -10,7 +10,7 @@ import com.mango.zombies.Main;
 import com.mango.zombies.assets.MapInterface;
 import com.mango.zombies.entities.MapEntity;
 
-public class EditMapDescriptionCommand implements CommandExecutor
+public class EditMapNameCommand implements CommandExecutor
 {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
@@ -25,7 +25,7 @@ public class EditMapDescriptionCommand implements CommandExecutor
 		else
 		{
 			// check if 2 arguments were supplied
-			if (args.length >= 2)
+			if (args.length == 2)
 			{
 				// define boolean for this check
 				boolean doesExist = false;
@@ -45,37 +45,44 @@ public class EditMapDescriptionCommand implements CommandExecutor
 					
 					// check if the map exists
 					if (doesExist)
-					{
-						// define String to assign description to
-						String description = "";
-						
-						// run this for each arugment in the array
-						for (int i = 1; i < args.length; i++)
-						{
-							// build the description
-							description = description + " " + args[i];
-							description = description.trim();
-						}
-						
-						// set the description
-						map.setDescription(description);
+					{	
+						// create new map
+						MapEntity newMap = new MapEntity(args[1].trim());
+						newMap.setDescription(map.getDescription());
+						newMap.setEnabled(map.isEnabled());
+						newMap.setDeleteKey(map.getDeleteKey());
+						newMap.setUuid(map.getUuid());
 						
 						// re-write the map file
-						boolean editSuccess = MapInterface.WriteMapFile(map);
+						boolean editSuccess = MapInterface.WriteMapFile(newMap);
+						
+						// define boolean for deleting the old map file
+						boolean deleteSuccess = false;
 						
 						// check if the edit was successful
 						if (editSuccess)
 						{
+							// delete the old file
+							deleteSuccess = MapInterface.DeleteMapFile(map);
+							Main.mapList.remove(map);
+						}
+						
+						// check if the edit was successful
+						if (editSuccess && deleteSuccess)
+						{
+							// add the new map to the list
+							Main.mapList.add(newMap);
+							
 							// notify the sender
 							sender.sendMessage(ChatColor.GREEN
-								+ "Set description of: "
+								+ "Set title of: "
 								+ ChatColor.BOLD
 								+ args[0]
 								+ ChatColor.RESET
 								+ ChatColor.GREEN
 								+ " to: "
 								+ ChatColor.ITALIC
-								+ description);
+								+ args[1].trim());
 						}
 						// the edit failed
 						else
@@ -99,9 +106,9 @@ public class EditMapDescriptionCommand implements CommandExecutor
 			else
 			{
 				// notify the sender
-				sender.sendMessage(ChatColor.RED + "Correct usage: /z_editmap_description <map name> <description>");
+				sender.sendMessage(ChatColor.RED + "Correct usage: /z_editmap_name <map name> <new map name>");
 			}
-		}
+		}	
 		
 		return true;
 	}

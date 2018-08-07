@@ -9,6 +9,22 @@ commands:
         description: Creates a new map
         usage: /<command> <map name>
         
+    z_loadmap:
+        description: Loads a map into the world relative to the Player
+        usage: /<command> <map name>
+        
+    z_setoriginpoint:
+        description: Creates the origin point for the map
+        usage: /<command> <map name>
+        
+    z_addspawnpoint_player:
+        description: Adds a Player spawn point to a map using the Player's current location
+        usage: /<command> <map name>
+    
+    z_addspawnpoint_zombie:
+        description: Adds a Zombie spawn point to a map using the Player's current location
+        usage: /<command> <map name>
+        
     z_listmaps:
         description: Lists all available maps
         usage: /<command>
@@ -25,14 +41,18 @@ commands:
         description: Shows the information of map
         usage: /<command> <map name>
         
-    z_editmap_title:
-        description: Sets the title for a map
-        usage: /<command> <map name> <new map name>    
+    z_editmap_name:
+        description: Sets the name for a map
+        usage: /<command> <map name> <new map name>
         
     z_editmap_description:
         description: Sets the description for a map
         usage: /<command> <map name> <description>
         
+    z_editmap_description_clear:
+        description: Clears the description of a map
+        usage: /<command> <map name>
+        
     z_deletemap:
         description: Deletes a map
-        usage: /<command> <map name>
+        usage: /<command> <map name> <delete key>

@@ -12,8 +12,8 @@ public class MapInterface
 {
 	public static boolean WriteMapFile(MapEntity map)
 	{
-		// define success boolean - this will be invalidated if there is an error
-		boolean isSuccess = true;
+		// define success boolean
+		boolean isSuccess = false;
 		
 		// create a new YamlConfiguration
 		YamlConfiguration yaml = new YamlConfiguration();
@@ -21,13 +21,19 @@ public class MapInterface
 		// create the sections
 		yaml.createSection("name");
 		yaml.createSection("description");
+		yaml.createSection("origin_point");
+		yaml.createSection("player_spawn_points");
+		yaml.createSection("zombie_spawn_points");
 		yaml.createSection("delete_key");
 		yaml.createSection("enabled");
 		yaml.createSection("uuid");
-		
+
 		// set the information
 		yaml.set("name", map.getName());
 		yaml.set("description", map.getDescription());
+		yaml.set("origin_point", map.getOriginPointStr());
+		yaml.set("player_spawn_points", map.getPlayerSpawnPoints());
+		yaml.set("zombie_spawn_points", map.getZombieSpawnPoints());
 		yaml.set("delete_key", map.getDeleteKey());
 		yaml.set("enabled", map.isEnabled());
 		yaml.set("uuid", map.getUuid());
@@ -35,13 +41,13 @@ public class MapInterface
 		try
 		{
 			// save the file
-			yaml.save(Main.dataFolder + "/Maps/" + map.getName() + ".yml");
+			yaml.save(Main.mapsFolder + "/" + map.getName() + ".yml");
+			
+			// validate the success bool
+			isSuccess = true;
 		}
 		catch (IOException e)
-		{
-			// invalidate the success boolean
-			isSuccess = false;
-			
+		{	
 			// notify the console and print the error
 			System.out.println("[Zombies] Error writing map file: " + map.getName() + ".yml");
 			e.printStackTrace();
@@ -56,7 +62,7 @@ public class MapInterface
 		boolean isSuccess = true;
 		
 		// get list of map files
-		File[] fileList = new File(Main.dataFolder + "/Maps/").listFiles();
+		File[] fileList = Main.mapsFolder.listFiles();
 		
 		// run this for each file in the list
 		for (File file : fileList)

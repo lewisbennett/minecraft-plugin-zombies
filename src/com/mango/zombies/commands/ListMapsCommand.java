@@ -22,24 +22,34 @@ public class ListMapsCommand implements CommandExecutor
 		// the command was run by a player
 		else
 		{
-			// check if the maps list contains any items
-			if (Main.mapList.size() == 0)
+			// check that there aren't any arguments
+			if (args.length == 0)
 			{
-				// notify the sender
-				sender.sendMessage(ChatColor.RED + "No maps found");
+				// check if the maps list contains any items
+				if (Main.mapList.size() == 0)
+				{
+					// notify the sender
+					sender.sendMessage(ChatColor.RED + "No maps found");
+				}
+				// there is at least one map in the list
+				else
+				{
+					// send the first line
+					sender.sendMessage(ChatColor.BOLD + "" + ChatColor.GREEN + "Maps:");
+					
+					// run this for every item in the maps list
+					for (int i = 0; i < Main.mapList.size(); i++)
+					{
+						// list the maps
+						sender.sendMessage(Main.mapList.get(i).getName());
+					}
+				}
 			}
-			// there is at least one map in the list
+			// the command was run incorrectly
 			else
 			{
-				// send the first line
-				sender.sendMessage(ChatColor.BOLD + "" + ChatColor.GREEN + "Maps:");
-				
-				// run this for every item in the maps list
-				for (int i = 0; i < Main.mapList.size(); i++)
-				{
-					// list the maps
-					sender.sendMessage(Main.mapList.get(i).getName());
-				}
+				// notify the sender
+				sender.sendMessage(ChatColor.RED + "Correct usage: /z_listmaps");
 			}
 		}
 		
