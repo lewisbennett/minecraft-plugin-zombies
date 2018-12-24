@@ -1,58 +1,14 @@
 name: Zombies
-version: 1.0.0
+version: 0.1.0
 main: com.mango.zombies.Main
 description: Zombies plugin to replicate the Call of Duty Zombies experience
 author: Useless_Mango
 
 commands:
-    z_createmap:
-        description: Creates a new map
-        usage: /<command> <map name>
-        
-    z_loadmap:
-        description: Loads a map into the world relative to the Player
-        usage: /<command> <map name>
-        
-    z_setoriginpoint:
-        description: Creates the origin point for the map
-        usage: /<command> <map name>
-        
-    z_addspawnpoint_player:
-        description: Adds a Player spawn point to a map using the Player's current location
-        usage: /<command> <map name>
-    
-    z_addspawnpoint_zombie:
-        description: Adds a Zombie spawn point to a map using the Player's current location
-        usage: /<command> <map name>
-        
-    z_listmaps:
-        description: Lists all available maps
+    info:
+        description: Get plugin information
         usage: /<command>
         
-    z_enablemap:
-        description: Enables a map if it is disabled
-        usage: /<command> <map name>
-        
-    z_disablemap:
-        description: Disables a map if it is enabled
-        usage: /<command> <map name>
-        
-    z_mapinfo:
-        description: Shows the information of map
-        usage: /<command> <map name>
-        
-    z_editmap_name:
-        description: Sets the name for a map
-        usage: /<command> <map name> <new map name>
-        
-    z_editmap_description:
-        description: Sets the description for a map
-        usage: /<command> <map name> <description>
-        
-    z_editmap_description_clear:
-        description: Clears the description of a map
-        usage: /<command> <map name>
-        
-    z_deletemap:
-        description: Deletes a map
-        usage: /<command> <map name> <delete key>
+    createmap:
+        description: Creates a new Zombies map
+        usage: /<command> [map name]
