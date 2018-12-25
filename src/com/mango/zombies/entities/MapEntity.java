@@ -8,7 +8,7 @@ import org.bukkit.Location;
 
 public class MapEntity
 {
-	public String mapName;
+	public String name;
 	public String description;
 	public LocationEntity originPoint;
 	public List<LocationEntity> playerSpawns = new ArrayList<LocationEntity>();
@@ -16,9 +16,9 @@ public class MapEntity
 	public boolean isEnabled = false;
 	public String deleteKey;
 	
-	public MapEntity(String name, Location origin)
+	public MapEntity(String mapName, Location origin)
 	{
-		mapName = name;
+		name = mapName;
 		description = "";
 		originPoint = new LocationEntity(origin);
 		deleteKey = Integer.toString(100000 + new Random().nextInt(999999));	// generates a random 6 digit number

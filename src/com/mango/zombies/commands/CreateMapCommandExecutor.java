@@ -15,15 +15,15 @@ public class CreateMapCommandExecutor implements CommandExecutor
 {
 	// errors specific to this command
 	public static final String CorrectUsageError = "Correct usage: /createmap [map name]";
-	public static final String MapAlreadyExistsError = "This map already exists";
+	public static final String AlreadyExistsError = "This map already exists";
 	
-	private Player player;
+	private Player _player;
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
 	{
 		if (sender instanceof Player)
-			player = (Player)sender;
+			_player = (Player)sender;
 		else
 		{
 			CustomMessaging.showError(sender, GlobalErrors.PlayerOnlyCommand);
@@ -36,16 +36,16 @@ public class CreateMapCommandExecutor implements CommandExecutor
 			return true;
 		}
 		
-		for (MapEntity map : PluginCore.mapList)
+		for (MapEntity map : PluginCore.gameplay.maps)
 		{
-			if (map.mapName.equals(args[0]))
+			if (map.name.equals(args[0]))
 			{
-				CustomMessaging.showError(sender, MapAlreadyExistsError);
+				CustomMessaging.showError(sender, AlreadyExistsError);
 				return true;
 			}
 		}
 		
-		PluginCore.mapList.add(new MapEntity(args[0], player.getLocation().subtract(0, 1, 0)));
+		PluginCore.gameplay.maps.add(new MapEntity(args[0], _player.getLocation().subtract(0, 1, 0)));
 		CustomMessaging.showSuccess(sender, "Successfully created map: " + ChatColor.BOLD + args[0]);
 		
 		return true;

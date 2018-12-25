@@ -1,11 +1,12 @@
 package com.mango.zombies.helper;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+
+import com.google.gson.GsonBuilder;
 
 public class FileManager
 {
@@ -28,13 +29,12 @@ public class FileManager
 	    return contentBuilder.toString();
 	}
 	
-	public static void WriteFile(File directory, String name, String contents)
+	public static void WriteFile(File directory, String name, Object contents)
 	{
-	    try
+	    try (FileWriter writer = new FileWriter(directory + "/" + name))
 	    {
-	    	BufferedWriter writer = new BufferedWriter(new FileWriter(directory + "/" + name));
-			writer.write(contents);
-			writer.close();
+	    	new GsonBuilder().setPrettyPrinting().create().toJson(contents, writer);
+	    	writer.close();
 		}
 	    catch (IOException e)
 	    {

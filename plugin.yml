@@ -12,3 +12,11 @@ commands:
     createmap:
         description: Creates a new Zombies map
         usage: /<command> [map name]
+        
+    createweapon:
+        description: Creates a new weapon for use in gameplay
+        usage: /<command> [weapon name]
+        
+    getweapon:
+        description: Puts the specified weapon in your inventory
+        usage: /<command> [weapon name]
