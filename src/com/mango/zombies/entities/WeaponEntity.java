@@ -1,6 +1,6 @@
 package com.mango.zombies.entities;
 
-import com.mango.zombies.schema.WeaponClasses;
+import com.mango.zombies.PluginCore;
 import com.mango.zombies.schema.WeaponServices;
 
 public class WeaponEntity
@@ -11,13 +11,24 @@ public class WeaponEntity
 	public boolean isWonderWeapon;
 	public WeaponServiceEntity[] services;
 	
-	public WeaponEntity(String weaponName, String weaponClass)
+	public WeaponEntity(String weaponName, String weaponClassName)
 	{
+		WeaponClassEntity weaponClass = null;
+		
+		for (WeaponClassEntity queryClass : PluginCore.gameplay.weaponClasses)
+		{
+			if (queryClass.name.equals(weaponClassName))
+			{
+				weaponClass = queryClass;
+				break;
+			}
+		}
+		
 		name = weaponName;
-		this.weaponClass = weaponClass;
-		item = WeaponClasses.getDefaultItemForWeaponClass(weaponClass);
-		isWonderWeapon = weaponClass.equals(WeaponClasses.special);
-		services = WeaponClasses.getDefaultServicesForWeaponClass(weaponClass);
+		this.weaponClass = weaponClass.name;
+		item = weaponClass.defaultItem;
+		isWonderWeapon = false;
+		services = weaponClass.defaultServices;
 	}
 	
 	public boolean canPackAPunch()

@@ -8,4 +8,5 @@ public class WeaponCharacteristics
 	public static final UUID bulletCapacity = UUID.fromString("43b8ecb8-36ef-455f-92f1-41e6a0be6d16");
 	public static final UUID reloadSpeed = UUID.fromString("0bcfed7e-2a44-425d-945c-8ae24d6bd32e");
 	public static final UUID projectilesInCatridge = UUID.fromString("04ecb193-b98f-47c4-aea3-52d9f6dc34e7");
+	public static final UUID packAPunchName = UUID.fromString("c7831000-095b-11e9-b568-0800200c9a66");
 }

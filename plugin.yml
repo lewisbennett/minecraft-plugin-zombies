@@ -20,3 +20,7 @@ commands:
     getweapon:
         description: Puts the specified weapon in your inventory
         usage: /<command> [weapon name]
+        
+    createweaponclass:
+       description: Creates a new weapon class
+       usage: /<command> [class name] [weapon type] [can Pack-A-Punch? true/false]

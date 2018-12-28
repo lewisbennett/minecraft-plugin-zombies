@@ -1,0 +1,76 @@
+package com.mango.zombies.commands;
+
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+
+import com.mango.zombies.PluginCore;
+import com.mango.zombies.entities.WeaponClassEntity;
+import com.mango.zombies.helper.CustomMessaging;
+import com.mango.zombies.schema.WeaponTypes;
+
+public class CreateWeaponClassCommandExecutor implements CommandExecutor
+{
+	// errors specific to this command
+	public static final String CorrectUsageError = "Correct usage: /createweaponclass [class name] [weapon type (" + String.join(", ", WeaponTypes.toArray()) + ")] [can Pack-A-Punch? true/false]";
+	public static final String ClassAlreadyExistsError = "This weapon class already exists";
+	public static final String TypeDoesNotExistError = "This weapon type does not exist";
+	
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
+	{
+		if (args.length != 3 || !isValidBoolean(args[2]))
+		{
+			CustomMessaging.showError(sender, CorrectUsageError);
+			return true;
+		}
+		
+		if (!isValidClassName(args[0]))
+		{
+			CustomMessaging.showError(sender, ClassAlreadyExistsError);
+			return true;
+		}
+		
+		if(!isValidWeaponType(args[1]))
+		{
+			CustomMessaging.showError(sender, TypeDoesNotExistError);
+			return true;
+		}
+		
+		PluginCore.gameplay.weaponClasses.add(new WeaponClassEntity(args[0], args[1], Boolean.parseBoolean(args[2])));
+		CustomMessaging.showSuccess(sender, "Successfully created weapon class: " + ChatColor.BOLD + args[0]);
+		
+		return true;
+	}
+	
+	private boolean isValidClassName(String className)
+	{
+		for (WeaponClassEntity weaponClass : PluginCore.gameplay.weaponClasses)
+		{
+			if (weaponClass.name.equals(className))
+				return false;
+		}
+		
+		return true;
+	}
+	
+	private boolean isValidWeaponType(String weaponType)
+	{
+		for (String type : WeaponTypes.toArray())
+		{
+			if (type.equals(weaponType))
+				return true;
+		}
+		
+		return false;
+	}
+	
+	private boolean isValidBoolean(String bool)
+	{
+		if (bool.toLowerCase().equals("true") || bool.toLowerCase().equals("false"))
+			return true;
+		else
+			return false;
+	}
+}

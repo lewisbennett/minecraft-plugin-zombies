@@ -6,13 +6,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.mango.zombies.commands.CreateMapCommandExecutor;
+import com.mango.zombies.commands.CreateWeaponClassCommandExecutor;
 import com.mango.zombies.commands.CreateWeaponCommandExecutor;
 import com.mango.zombies.commands.GetWeaponCommandExecutor;
 import com.mango.zombies.commands.InfoCommandExecutor;
 import com.mango.zombies.entities.ConfigEntity;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.mango.zombies.entities.MapEntity;
+import com.mango.zombies.entities.WeaponClassEntity;
 import com.mango.zombies.entities.WeaponEntity;
 import com.mango.zombies.helper.FileManager;
 import com.mango.zombies.schema.FileNames;
@@ -24,54 +27,86 @@ public class Main extends JavaPlugin
 		PluginCore.descriptionFile = getDescription();
 		PluginCore.setupFolders(getDataFolder());
 		
+		// get the config file or create if not there
 		for (File file : PluginCore.dataFolder.listFiles())
 		{
-			// get the config file or create if not there
 			if (file.getName().equals(FileNames.configFile))
-				PluginCore.config = new Gson().fromJson(FileManager.ReadContentsAsString(file.toString()), ConfigEntity.class);
-			else
 			{
-				PluginCore.config = new ConfigEntity();
-				PluginCore.config.worldName = Bukkit.getWorlds().get(0).getName();
+				try
+				{
+					PluginCore.config = new Gson().fromJson(FileManager.ReadContentsAsString(file.toString()), ConfigEntity.class);
+				}
+				catch (JsonSyntaxException ex)
+				{
+					PluginCore.config = new ConfigEntity();
+					PluginCore.config.worldName = Bukkit.getWorlds().get(0).getName();
+				}
+				
+				break;
 			}
 		}
 		
+		// import maps, weapons, weapon classes
 		for (File file : PluginCore.mapsFolder.listFiles())
 		{
-			MapEntity map = new Gson().fromJson(FileManager.ReadContentsAsString(file.toString()), MapEntity.class);
-			
-			// if parsing was successful the map won't be null
-			if (map != null)
+			try
+			{
+				MapEntity map = new Gson().fromJson(FileManager.ReadContentsAsString(file.toString()), MapEntity.class);
 				PluginCore.gameplay.maps.add(map);
-			else
+			}
+			catch (JsonSyntaxException ex)
+			{
 				System.out.println("[Zombies] Failed to parse map file: " + file.getName());
+			}
 		}
 		
 		for (File file : PluginCore.weaponsFolder.listFiles())
 		{
-			WeaponEntity weapon = new Gson().fromJson(FileManager.ReadContentsAsString(file.toString()), WeaponEntity.class);
-			
-			if (weapon != null)
+			try
+			{
+				WeaponEntity weapon = new Gson().fromJson(FileManager.ReadContentsAsString(file.toString()), WeaponEntity.class);
 				PluginCore.gameplay.weapons.add(weapon);
-			else
+			}
+			catch (JsonSyntaxException ex)
+			{
 				System.out.println("[Zombies] Failed to parse weapon file: " + file.getName());
+			}
+		}
+		
+		for (File file : PluginCore.weaponClassesFolder.listFiles())
+		{
+			try
+			{
+				WeaponClassEntity weaponClass = new Gson().fromJson(FileManager.ReadContentsAsString(file.toString()), WeaponClassEntity.class);
+				PluginCore.gameplay.weaponClasses.add(weaponClass);
+			}
+			catch (JsonSyntaxException ex)
+			{
+				System.out.println("[Zombies] Failed to parse weapon class file: " + file.getName());
+			}
 		}
 				
-		// executor for base command - we handle subcommands in CommandHandler
+		// set executors for commands
 		this.getCommand("info").setExecutor(new InfoCommandExecutor());
 		this.getCommand("createmap").setExecutor(new CreateMapCommandExecutor());
 		this.getCommand("createweapon").setExecutor(new CreateWeaponCommandExecutor());
 		this.getCommand("getweapon").setExecutor(new GetWeaponCommandExecutor());
+		this.getCommand("createweaponclass").setExecutor(new CreateWeaponClassCommandExecutor());
 	}
 	
 	public void onDisable()
 	{		
+		// write config file
 		FileManager.WriteFile(PluginCore.dataFolder, FileNames.configFile, PluginCore.config);
 		
+		// save maps, weapons, weapon classes
 		for (MapEntity map : PluginCore.gameplay.maps)
 			FileManager.WriteFile(PluginCore.mapsFolder, map.name + ".json", map);
 		
 		for (WeaponEntity weapon : PluginCore.gameplay.weapons)
 			FileManager.WriteFile(PluginCore.weaponsFolder, weapon.name + ".json", weapon);
+		
+		for (WeaponClassEntity weaponClass : PluginCore.gameplay.weaponClasses)
+			FileManager.WriteFile(PluginCore.weaponClassesFolder, weaponClass.name + ".json", weaponClass);
 	}
 }

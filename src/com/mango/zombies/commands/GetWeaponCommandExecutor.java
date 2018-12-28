@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.mango.zombies.PluginCore;
+import com.mango.zombies.entities.WeaponClassEntity;
 import com.mango.zombies.entities.WeaponEntity;
 import com.mango.zombies.helper.CustomMessaging;
 import com.mango.zombies.helper.GlobalErrors;
@@ -53,15 +54,18 @@ public class GetWeaponCommandExecutor implements CommandExecutor
 			return true;
 		}
 		
+		// gets the class that the weapon belongs to
+		WeaponClassEntity weaponClass = null;
+		for (WeaponClassEntity queryClass : PluginCore.gameplay.weaponClasses)
+		{
+			if (queryClass.name.equals(weapon.weaponClass))
+				weaponClass = queryClass;
+		}
+		
 		// gets the item and formats it ready to be added to the user's inventory
 		ItemStack item = new ItemStack(Material.getMaterial(weapon.item), 1);
 		ItemMeta meta = item.getItemMeta();
-		
-		if (weapon.isWonderWeapon)
-			meta.setDisplayName(ChatColor.RESET + "" + ChatColor.AQUA + weapon.name);
-		else
-			meta.setDisplayName(ChatColor.RESET + "" + ChatColor.RED + weapon.name);
-		
+		meta.setDisplayName(ChatColor.RESET + "" + ChatColor.valueOf(weaponClass.color) + weapon.name);
 		item.setItemMeta(meta);
 		
 		_player.getInventory().addItem(item);

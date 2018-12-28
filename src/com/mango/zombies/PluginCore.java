@@ -15,6 +15,7 @@ public class PluginCore
 	public static File mapsFolder;
 	public static File installFolder;
 	public static File weaponsFolder;
+	public static File weaponClassesFolder;
 	
 	public static ConfigEntity config;
 	public static Gameplay gameplay = new Gameplay();
@@ -25,6 +26,7 @@ public class PluginCore
 		mapsFolder = new File(dataFolder + "/Maps/");
 		installFolder = new File(dataFolder + "/Install/");
 		weaponsFolder = new File(dataFolder + "/Weapons/");
+		weaponClassesFolder = new File(dataFolder + "/Weapon Classes/");
 		
 		// check if each of the needed folders exists and create if not
 		if (!dataFolder.exists() && !dataFolder.mkdir())
@@ -38,5 +40,8 @@ public class PluginCore
 		
 		if (!weaponsFolder.exists() && !weaponsFolder.mkdir())
 			System.out.println("[Zombies] Could not create Weapons directory for plugin");
+		
+		if (!weaponClassesFolder.exists() && !weaponClassesFolder.mkdir())
+			System.out.println("[Zombies] Could not create Weapon Classes directory for plugin");
 	}
 }
