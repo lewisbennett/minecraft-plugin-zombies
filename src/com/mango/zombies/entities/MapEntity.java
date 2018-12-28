@@ -9,18 +9,17 @@ import org.bukkit.Location;
 public class MapEntity
 {
 	public String name;
-	public String description;
+	public String id;
 	public LocationEntity originPoint;
 	public List<LocationEntity> playerSpawns = new ArrayList<LocationEntity>();
 	public List<LocationEntity> zombieSpawns = new ArrayList<LocationEntity>();
-	public boolean isEnabled = false;
 	public String deleteKey;
 	
-	public MapEntity(String mapName, Location origin)
+	public MapEntity(String id, String name, Location origin)
 	{
-		name = mapName;
-		description = "";
+		this.name = name;
+		this.id = id;
 		originPoint = new LocationEntity(origin);
-		deleteKey = Integer.toString(100000 + new Random().nextInt(999999));	// generates a random 6 digit number
+		deleteKey = Integer.toString(100000 + new Random().nextInt(999999)).substring(0, 6);	// generates a random 6 digit number
 	}
 }

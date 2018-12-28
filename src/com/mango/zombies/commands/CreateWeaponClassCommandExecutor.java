@@ -13,9 +13,9 @@ import com.mango.zombies.schema.WeaponTypes;
 public class CreateWeaponClassCommandExecutor implements CommandExecutor
 {
 	// errors specific to this command
-	public static final String CorrectUsageError = "Correct usage: /createweaponclass [class name] [weapon type (" + String.join(", ", WeaponTypes.toArray()) + ")] [can Pack-A-Punch? true/false]";
-	public static final String ClassAlreadyExistsError = "This weapon class already exists";
-	public static final String TypeDoesNotExistError = "This weapon type does not exist";
+	public static final String CorrectUsageError = "Correct usage: /createweaponclass [name] [weapon type (" + String.join(", ", WeaponTypes.toArray()) + ")] [can Pack-A-Punch? true/false]";
+	public static final String ClassAlreadyExistsError = "A weapon class with this name already exists";
+	public static final String TypeDoesNotExistError = "The specified weapon type does not exist";
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)

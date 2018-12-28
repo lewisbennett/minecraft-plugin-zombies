@@ -10,17 +10,17 @@ commands:
         usage: /<command>
         
     createmap:
-        description: Creates a new Zombies map
-        usage: /<command> [map name]
-        
-    createweapon:
-        description: Creates a new weapon for use in gameplay
-        usage: /<command> [weapon name]
-        
-    getweapon:
-        description: Puts the specified weapon in your inventory
-        usage: /<command> [weapon name]
+        description: Creates a new map
+        usage: /<command> [ID] [name]
         
     createweaponclass:
        description: Creates a new weapon class
-       usage: /<command> [class name] [weapon type] [can Pack-A-Punch? true/false]
+       usage: /<command> [name] [weapon type] [can Pack-A-Punch? true/false]
+        
+    createweapon:
+        description: Creates a new weapon
+        usage: /<command> [ID] [name] [weapon class]
+        
+    getweapon:
+        description: Puts the specified weapon in your inventory
+        usage: /<command> [weapon ID]

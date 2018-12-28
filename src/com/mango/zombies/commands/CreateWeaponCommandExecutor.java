@@ -13,33 +13,52 @@ import com.mango.zombies.helper.CustomMessaging;
 public class CreateWeaponCommandExecutor implements CommandExecutor
 {
 	// errors specific to this command
-	public static final String CorrectUsageError = "Correct usage: /createweapon [weapon name] [weapon class]";
-	public static final String WeaponAlreadyExistsError = "This weapon already exists";
-	public static final String ClassDoesNotExistError = "This weapon class does not exist";
+	public static final String CorrectUsageError = "Correct usage: /createweapon [ID] [name] [weapon class]";
+	public static final String WeaponIdAlreadyExistsError = "A weapon with this ID already exists";
+	public static final String WeaponNameAlreadyExistsError = "A weapon with this name already exists";
+	public static final String ClassDoesNotExistError = "The specified weapon class does not exist";
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
 	{
-		if (args.length != 2)
+		if (args.length != 3)
 		{
 			CustomMessaging.showError(sender, CorrectUsageError);
 			return true;
 		}
 		
-		if (!isValidWeaponName(args[0]))
+		if (!isValidWeaponId(args[0]))
 		{
-			CustomMessaging.showError(sender, WeaponAlreadyExistsError);
+			CustomMessaging.showError(sender, WeaponIdAlreadyExistsError);
 			return true;
 		}
 		
-		if (!isValidWeaponClass(args[1]))
+		if (!isValidWeaponName(args[1]))
+		{
+			CustomMessaging.showError(sender, WeaponNameAlreadyExistsError);
+			return true;
+		}
+		
+		if (!isValidWeaponClass(args[2]))
 		{
 			CustomMessaging.showError(sender, ClassDoesNotExistError);
 			return true;
 		}
 		
-		PluginCore.gameplay.weapons.add(new WeaponEntity(args[0], args[1]));
-		CustomMessaging.showSuccess(sender, "Successfully created weapon: " + ChatColor.BOLD + args[0]);
+		WeaponEntity weapon = new WeaponEntity(args[0], args[1], args[2]);
+		PluginCore.gameplay.weapons.add(weapon);
+		CustomMessaging.showSuccess(sender, "Successfully created weapon: " + ChatColor.BOLD + weapon.name);
+		
+		return true;
+	}
+	
+	private boolean isValidWeaponId(String weaponId)
+	{
+		for (WeaponEntity weapon : PluginCore.gameplay.weapons)
+		{
+			if (weapon.id.equals(weaponId))
+				return false;
+		}
 		
 		return true;
 	}

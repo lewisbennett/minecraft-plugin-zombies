@@ -18,8 +18,8 @@ import com.mango.zombies.helper.GlobalErrors;
 public class GetWeaponCommandExecutor implements CommandExecutor
 {
 	// errors specific to this command
-	public static final String CorrectUsageError = "Correct usage: /getweapon [weapon name]";
-	public static final String DoesNotExistError = "This weapon does not exist";
+	public static final String CorrectUsageError = "Correct usage: /getweapon [weapon ID]";
+	public static final String DoesNotExistError = "The specified weapon does not exist";
 	
 	private Player _player;
 	
@@ -44,8 +44,11 @@ public class GetWeaponCommandExecutor implements CommandExecutor
 		
 		for (WeaponEntity queryWeapon : PluginCore.gameplay.weapons)
 		{
-			if (queryWeapon.name.equals(args[0]))
+			if (queryWeapon.id.equals(args[0]))
+			{
 				weapon = queryWeapon;
+				break;
+			}
 		}
 		
 		if (weapon == null)

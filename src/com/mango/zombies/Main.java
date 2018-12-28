@@ -101,10 +101,10 @@ public class Main extends JavaPlugin
 		
 		// save maps, weapons, weapon classes
 		for (MapEntity map : PluginCore.gameplay.maps)
-			FileManager.WriteFile(PluginCore.mapsFolder, map.name + ".json", map);
+			FileManager.WriteFile(PluginCore.mapsFolder, map.id+ ".json", map);
 		
 		for (WeaponEntity weapon : PluginCore.gameplay.weapons)
-			FileManager.WriteFile(PluginCore.weaponsFolder, weapon.name + ".json", weapon);
+			FileManager.WriteFile(PluginCore.weaponsFolder, weapon.id + ".json", weapon);
 		
 		for (WeaponClassEntity weaponClass : PluginCore.gameplay.weaponClasses)
 			FileManager.WriteFile(PluginCore.weaponClassesFolder, weaponClass.name + ".json", weaponClass);

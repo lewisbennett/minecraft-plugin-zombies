@@ -14,8 +14,9 @@ import com.mango.zombies.helper.GlobalErrors;
 public class CreateMapCommandExecutor implements CommandExecutor
 {
 	// errors specific to this command
-	public static final String CorrectUsageError = "Correct usage: /createmap [map name]";
-	public static final String AlreadyExistsError = "This map already exists";
+	public static final String CorrectUsageError = "Correct usage: /createmap [ID] [name]";
+	public static final String MapIdAlreadyExistsError = "A map with this ID already exists";
+	public static final String MapNameAlreadyExistsError = "A map with this name already exists";
 	
 	private Player _player;
 	
@@ -30,23 +31,49 @@ public class CreateMapCommandExecutor implements CommandExecutor
 			return true;
 		}
 		
-		if (args.length != 1)
+		if (args.length != 2)
 		{
 			CustomMessaging.showError(sender, CorrectUsageError);
 			return true;
 		}
 		
-		for (MapEntity map : PluginCore.gameplay.maps)
+		if (!isValidMapId(args[0]))
 		{
-			if (map.name.equals(args[0]))
-			{
-				CustomMessaging.showError(sender, AlreadyExistsError);
-				return true;
-			}
+			CustomMessaging.showError(sender, MapIdAlreadyExistsError);
+			return true;
 		}
 		
-		PluginCore.gameplay.maps.add(new MapEntity(args[0], _player.getLocation().subtract(0, 1, 0)));
-		CustomMessaging.showSuccess(sender, "Successfully created map: " + ChatColor.BOLD + args[0]);
+		if (!isValidMapName(args[1]))
+		{
+			CustomMessaging.showError(sender, MapNameAlreadyExistsError);
+			return true;
+		}
+		
+		MapEntity map = new MapEntity(args[0], args[1], _player.getLocation().subtract(0, 1, 0));
+		PluginCore.gameplay.maps.add(map);
+		CustomMessaging.showSuccess(sender, "Successfully created map: " + ChatColor.BOLD + map.name);
+		
+		return true;
+	}
+	
+	private boolean isValidMapId(String mapId)
+	{
+		for (MapEntity map : PluginCore.gameplay.maps)
+		{
+			if (map.id.equals(mapId))
+				return false;
+		}
+		
+		return true;
+	}
+	
+	private boolean isValidMapName(String mapName)
+	{
+		for (MapEntity map: PluginCore.gameplay.maps)
+		{
+			if (map.name.equals(mapName))
+				return false;
+		}
 		
 		return true;
 	}

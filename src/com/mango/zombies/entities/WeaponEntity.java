@@ -5,13 +5,14 @@ import com.mango.zombies.schema.WeaponServices;
 
 public class WeaponEntity
 {
+	public String id;
 	public String name;
 	public String weaponClass;
 	public String item;
 	public boolean isWonderWeapon;
 	public WeaponServiceEntity[] services;
 	
-	public WeaponEntity(String weaponName, String weaponClassName)
+	public WeaponEntity(String id, String weaponName, String weaponClassName)
 	{
 		WeaponClassEntity weaponClass = null;
 		
@@ -24,6 +25,7 @@ public class WeaponEntity
 			}
 		}
 		
+		this.id = id;
 		name = weaponName;
 		this.weaponClass = weaponClass.name;
 		item = weaponClass.defaultItem;
