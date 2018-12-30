@@ -15,8 +15,8 @@ public class InfoCommandExecutor implements CommandExecutor
 		sender.sendMessage(new String[]
 		{
 			ChatColor.GREEN + "" + "<==-- Call of Minecraft: Zombies --==>",
-			ChatColor.YELLOW + "" + ChatColor.BOLD + "Version: " + ChatColor.RESET + PluginCore.descriptionFile.getVersion(),
-			ChatColor.YELLOW + "" + ChatColor.BOLD + "Authors: " + ChatColor.RESET + String.join(", ", PluginCore.descriptionFile.getAuthors())
+			ChatColor.YELLOW + "Version: " + ChatColor.RESET + PluginCore.descriptionFile.getVersion(),
+			ChatColor.YELLOW + "Authors: " + ChatColor.RESET + String.join(", ", PluginCore.descriptionFile.getAuthors())
 		});
 		
 		return true;

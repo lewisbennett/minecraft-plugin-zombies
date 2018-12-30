@@ -10,6 +10,7 @@ import com.mango.zombies.commands.CreateWeaponClassCommandExecutor;
 import com.mango.zombies.commands.CreateWeaponCommandExecutor;
 import com.mango.zombies.commands.GetWeaponCommandExecutor;
 import com.mango.zombies.commands.InfoCommandExecutor;
+import com.mango.zombies.commands.MapInfoCommandExecutor;
 import com.mango.zombies.entities.ConfigEntity;
 
 import com.google.gson.Gson;
@@ -92,6 +93,7 @@ public class Main extends JavaPlugin
 		this.getCommand("createweapon").setExecutor(new CreateWeaponCommandExecutor());
 		this.getCommand("getweapon").setExecutor(new GetWeaponCommandExecutor());
 		this.getCommand("createweaponclass").setExecutor(new CreateWeaponClassCommandExecutor());
+		this.getCommand("mapinfo").setExecutor(new MapInfoCommandExecutor());
 	}
 	
 	public void onDisable()

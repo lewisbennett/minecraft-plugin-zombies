@@ -9,6 +9,10 @@ commands:
         description: Get plugin information
         usage: /<command>
         
+    mapinfo:
+       description: Gets information related to specified map
+       usage: /<command> [map ID]
+        
     createmap:
         description: Creates a new map
         usage: /<command> [ID] [name]

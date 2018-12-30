@@ -16,4 +16,9 @@ public class LocationEntity
 		z = location.getBlockZ();
 		block = location.getBlock().getType().toString();
 	}
+	
+	public String getLocationAsString()
+	{
+		return Integer.toString(x) + ", " + Integer.toString(y) + ", " + Integer.toString(z);
+	}
 }
