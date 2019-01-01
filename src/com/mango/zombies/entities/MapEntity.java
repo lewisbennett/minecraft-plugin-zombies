@@ -8,8 +8,8 @@ import org.bukkit.Location;
 
 public class MapEntity
 {
-	public String name;
 	public String id;
+	public String name;
 	public LocationEntity originPoint;
 	public List<LocationEntity> playerSpawns = new ArrayList<LocationEntity>();
 	public List<LocationEntity> zombieSpawns = new ArrayList<LocationEntity>();

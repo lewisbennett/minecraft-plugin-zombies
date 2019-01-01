@@ -13,14 +13,14 @@ import com.mango.zombies.schema.WeaponTypes;
 public class CreateWeaponClassCommandExecutor implements CommandExecutor
 {
 	// errors specific to this command
-	public static final String CorrectUsageError = "Correct usage: /createweaponclass [name] [weapon type (" + String.join(", ", WeaponTypes.toArray()) + ")] [can Pack-A-Punch? true/false]";
+	public static final String CorrectUsageError = "Correct usage: /createweaponclass [name] [default cost] [weapon type (" + String.join(", ", WeaponTypes.toArray()) + ")] [can Pack-A-Punch? true/false]";
 	public static final String ClassAlreadyExistsError = "A weapon class with this name already exists";
 	public static final String TypeDoesNotExistError = "The specified weapon type does not exist";
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
 	{
-		if (args.length != 3 || !isValidBoolean(args[2]))
+		if (args.length != 4 || !isValidBoolean(args[3]))
 		{
 			CustomMessaging.showError(sender, CorrectUsageError);
 			return true;
@@ -32,13 +32,13 @@ public class CreateWeaponClassCommandExecutor implements CommandExecutor
 			return true;
 		}
 		
-		if(!isValidWeaponType(args[1]))
+		if(!isValidWeaponType(args[2]))
 		{
 			CustomMessaging.showError(sender, TypeDoesNotExistError);
 			return true;
 		}
 		
-		PluginCore.gameplay.weaponClasses.add(new WeaponClassEntity(args[0], args[1], Boolean.parseBoolean(args[2])));
+		PluginCore.gameplay.weaponClasses.add(new WeaponClassEntity(args[0], Integer.parseInt(args[1]), args[2], Boolean.parseBoolean(args[3])));
 		CustomMessaging.showSuccess(sender, "Successfully created weapon class: " + ChatColor.BOLD + args[0]);
 		
 		return true;
