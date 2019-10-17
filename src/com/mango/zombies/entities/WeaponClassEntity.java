@@ -28,8 +28,8 @@ public class WeaponClassEntity
 		List<WeaponServiceEntity> services = new ArrayList<WeaponServiceEntity>();
 		List<WeaponCharacteristicEntity> chars = new ArrayList<WeaponCharacteristicEntity>();
 		
-		if (type.equals(WeaponTypes.melee))
-			services.add(new WeaponServiceEntity(1, WeaponServices.melee));
+		if (type.equals(WeaponTypes.MELEE))
+			services.add(new WeaponServiceEntity(1, WeaponServices.MELEE));
 		else
 		{	
 			UUID typeUUID = null;
@@ -37,32 +37,32 @@ public class WeaponClassEntity
 			// here we get the type UUID of the service we're adding and also setup any service specific characteristics
 			switch (type)
 			{
-				case WeaponTypes.buckShot:
-					chars.add(new WeaponCharacteristicEntity(3, WeaponCharacteristics.projectilesInCatridge));
-					typeUUID = WeaponServices.buckShot;
+				case WeaponTypes.BUCK_SHOT:
+					chars.add(new WeaponCharacteristicEntity(3, WeaponCharacteristics.PROJECTILES_IN_CATRIDGE));
+					typeUUID = WeaponServices.BUCK_SHOT;
 					break;
 					
-				case WeaponTypes.singleShot:
-					typeUUID = WeaponServices.singleShot;
+				case WeaponTypes.SINGLE_SHOT:
+					typeUUID = WeaponServices.SINGLE_SHOT;
 					break;
 			}
 			
 			services.add(new WeaponServiceEntity(2, typeUUID));
 			
 			// these characteristics are the same across every non-melee weapon type so define them here
-			chars.add(new WeaponCharacteristicEntity(40, WeaponCharacteristics.bulletCapacity));
-			chars.add(new WeaponCharacteristicEntity(8, WeaponCharacteristics.magazineSize));
-			chars.add(new WeaponCharacteristicEntity(4, WeaponCharacteristics.reloadSpeed));
-			chars.add(new WeaponCharacteristicEntity(cost / 2, WeaponCharacteristics.ammoCost));
+			chars.add(new WeaponCharacteristicEntity(40, WeaponCharacteristics.BULLET_CAPACITY));
+			chars.add(new WeaponCharacteristicEntity(8, WeaponCharacteristics.MAGAZINE_SIZE));
+			chars.add(new WeaponCharacteristicEntity(4, WeaponCharacteristics.RELOAD_SPEED));
+			chars.add(new WeaponCharacteristicEntity(cost / 2, WeaponCharacteristics.AMMO_COST));
 		}
 		
-		chars.add(new WeaponCharacteristicEntity(cost, WeaponCharacteristics.weaponCost));
+		chars.add(new WeaponCharacteristicEntity(cost, WeaponCharacteristics.WEAPON_COST));
 		services.get(0).characteristics = chars.toArray(new WeaponCharacteristicEntity[chars.size()]);
 		
 		// add the default pack-a-punch service if needed
 		if (canPackAPunch)
 		{
-			WeaponServiceEntity upgraded = new WeaponServiceEntity(services.get(0).damage * 5, WeaponServices.packAPunch);
+			WeaponServiceEntity upgraded = new WeaponServiceEntity(services.get(0).damage * 5, WeaponServices.PACK_A_PUNCH);
 			WeaponCharacteristicEntity[] newChars = new WeaponCharacteristicEntity[services.get(0).characteristics.length + 1];
 			
 			// copy the characteristics from the normal service
@@ -70,7 +70,7 @@ public class WeaponClassEntity
 				newChars[i] = services.get(0).characteristics[i];
 			
 			// the last characteristic is the name of the weapon upon upgrade. -1 to account for 0 index
-			newChars[newChars.length - 1] = new WeaponCharacteristicEntity("Upgraded", WeaponCharacteristics.packAPunchName);
+			newChars[newChars.length - 1] = new WeaponCharacteristicEntity("Upgraded", WeaponCharacteristics.PACK_A_PUNCH_NAME);
 			
 			upgraded.characteristics = newChars;
 			services.add(upgraded);

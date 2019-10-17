@@ -19,101 +19,100 @@ import com.mango.zombies.schema.Signs;
 import com.mango.zombies.schema.WeaponCharacteristics;
 import com.mango.zombies.schema.WeaponServices;
 
-public class BlockEvents implements Listener
-{
-	// errors specific to these handlers
-	public static final String PerkDoesNotExistError = "The specified perk does not exist";
-	public static final String WeaponDoesNotExistError = "The specified weapon does not exist";
-	public static final String MapDoesNotExistError = "The specified map does not exist";
-	public static final String TypeDoesNotExistError = "The specified type does not exist";
-	
+public class BlockEvents implements Listener {
+
+	public static final String PERK_DOES_NOT_EXIST_ERROR = "%s is not a valid perk";
+	public static final String PERK_DOES_NOT_EXIST_ERROR_GENERIC = "Invalid perk";
+	public static final String WEAPON_DOES_NOT_EXIST_ERROR = "%s is not a valid weapon";
+	public static final String WEAPON_DOES_NOT_EXIST_ERROR_GENERIC = "Invalid weapon";
+	public static final String MAP_DOES_NOT_EXIST_ERROR = "%s is not a valid map";
+	public static final String MAP_DOES_NOT_EXIST_ERROR_GENERIC = "Invalid map";
+	public static final String TYPE_DOES_NOT_EXIST_ERROR = "%s is not a valid sign type";
+	public static final String TYPE_DOES_NOT_EXIST_ERROR_GENERIC = "Invalid sign type";
+
 	@EventHandler
-	public void onSignChange(SignChangeEvent event)
-	{
+	public void onSignChange(SignChangeEvent event) {
+
 		String[] lines = event.getLines();
 		
-		if (!lines[0].equalsIgnoreCase(Signs.header))
+		if (!lines[0].equalsIgnoreCase(Signs.HEADER))
 			return;
 		
 		String operation = null;
 		String desc = null;
-		
-		switch (lines[1])
-		{
-			case Signs.mysteryBox:
-				operation = MapItems.mysteryBox;
-				desc = "Cost: " + (lines[3].trim().equals("") ? Integer.toString(Gameplay.defaultMysteryBoxCost) : lines[3]);
+
+		String error = null;
+
+		switch (lines[1]) {
+			case Signs.MYSTERY_BOX:
+				operation = MapItems.MYSTERY_BOX;
+				desc = "Cost: " + (lines[3] == null || lines[3].isEmpty() ? Integer.toString(Gameplay.DEFAULT_MYSTERY_BOX_COST) : lines[3]);
 				break;
 				
-			case Signs.perk:
+			case Signs.PERK:
 				PerkEntity perk = null;
 				
-				for (PerkEntity queryPerk : PluginCore.gameplay.perks)
-				{
-					if (queryPerk.id.equals(lines[3]))
-					{
+				for (PerkEntity queryPerk : PluginCore.gameplay.perks) {
+
+					if (queryPerk.id.equals(lines[3])) {
 						perk = queryPerk;
 						break;
 					}
 				}
 				
-				if (perk == null)
-				{
-					CustomMessaging.showError(event.getPlayer(), PerkDoesNotExistError);
+				if (perk == null) {
+					error = lines[1] == null || lines[1].isEmpty() ? PERK_DOES_NOT_EXIST_ERROR_GENERIC : String.format(PERK_DOES_NOT_EXIST_ERROR, lines[1]);
 					return;
 				}
-				else
-				{
-					operation = perk.name;
-					desc = "Cost: " + Integer.toString(perk.cost);
-				}
+
+				operation = perk.name;
+				desc = "Cost: " + Integer.toString(perk.cost);
+
 				break;
 				
-			case Signs.weapon:
+			case Signs.WEAPON:
 				WeaponEntity weapon = null;
 				
-				for (WeaponEntity queryWeapon : PluginCore.gameplay.weapons)
-				{
-					if (queryWeapon.id.equals(lines[3]))
-					{
+				for (WeaponEntity queryWeapon : PluginCore.gameplay.weapons) {
+
+					if (queryWeapon.id.equals(lines[3])) {
 						weapon = queryWeapon;
 						break;
 					}
 				}
 				
-				if (weapon == null)
-				{
-					CustomMessaging.showError(event.getPlayer(), WeaponDoesNotExistError);
+				if (weapon == null) {
+					CustomMessaging.showError(event.getPlayer(), WEAPON_DOES_NOT_EXIST_ERROR);
 					return;
 				}
-				else
-				{
-					operation = weapon.name;
 
-					// gets the characteristic containing the cost value and appends the desc value
-					for (WeaponServiceEntity service : weapon.services)
-					{
-						if (!service.typeUUID.equals(WeaponServices.packAPunch))
-						{
-							for (WeaponCharacteristicEntity characteristic : service.characteristics)
-							{
-								if (characteristic.typeUUID.equals(WeaponCharacteristics.weaponCost))
-								{
-									desc = "Cost: " + Double.toString((double)characteristic.value);
-									break;
-								}
-							}
-							
-							if (desc != null)
-								break;
+				operation = weapon.name;
+
+				// gets the characteristic containing the cost value and appends the desc value
+				for (WeaponServiceEntity service : weapon.services) {
+
+					if (service.typeUUID.equals(WeaponServices.PACK_A_PUNCH))
+						continue;
+
+					for (WeaponCharacteristicEntity characteristic : service.characteristics) {
+
+						if (characteristic.typeUUID.equals(WeaponCharacteristics.WEAPON_COST)) {
+							desc = "Cost: " + Double.toString((double)characteristic.value);
+							break;
 						}
 					}
 				}
+
 				break;
 				
 			default:
-				CustomMessaging.showError(event.getPlayer(), TypeDoesNotExistError);
+				error = lines[1] == null || lines[1].isEmpty() ? TYPE_DOES_NOT_EXIST_ERROR_GENERIC : String.format(TYPE_DOES_NOT_EXIST_ERROR, lines[1]);
 				return;
+		}
+
+		if (error != null) {
+			CustomMessaging.showError(event.getPlayer(), error);
+			return;
 		}
 		
 		MapEntity map = null;
@@ -129,11 +128,11 @@ public class BlockEvents implements Listener
 		
 		if (map == null)
 		{
-			CustomMessaging.showError(event.getPlayer(), MapDoesNotExistError);
+			CustomMessaging.showError(event.getPlayer(), MAP_DOES_NOT_EXIST_ERROR);
 			return;
 		}
 		
-		event.setLine(0, ChatColor.RED + Signs.header);
+		event.setLine(0, ChatColor.RED + Signs.HEADER);
 		event.setLine(1, "");
 		event.setLine(2, ChatColor.AQUA + operation);
 		event.setLine(3, ChatColor.GREEN + desc);

@@ -10,7 +10,7 @@ import com.mango.zombies.entities.WeaponEntity;
 
 public class Gameplay
 {	
-	public static final int defaultMysteryBoxCost = 950;
+	public static final int DEFAULT_MYSTERY_BOX_COST = 950;
 	
 	public List<MapEntity> maps = new ArrayList<MapEntity>();
 	public List<WeaponClassEntity> weaponClasses = new ArrayList<WeaponClassEntity>();

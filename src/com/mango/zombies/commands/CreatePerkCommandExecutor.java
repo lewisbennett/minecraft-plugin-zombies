@@ -12,28 +12,28 @@ import com.mango.zombies.helper.CustomMessaging;
 public class CreatePerkCommandExecutor implements CommandExecutor
 {
 	// errors specific to this command
-	public static final String CorrectUsageError = "Correct usage: /createperk [ID] [name] [cost]";
-	public static final String PerkIdAlreadyExistsError = "A perk with this ID already exists";
-	public static final String PerkNameAlreadyExistsError = "A perk with this name already exists";
+	public static final String CORRECT_USAGE_ERROR = "Correct usage: /createperk [ID] [name] [cost]";
+	public static final String PERK_ID_ALREADY_EXISTS_ERROR = "A perk with this ID already exists";
+	public static final String PERK_NAME_ALREADY_EXISTS_ERROR = "A perk with this name already exists";
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
 	{
 		if (args.length != 3)
 		{
-			CustomMessaging.showError(sender, CorrectUsageError);
+			CustomMessaging.showError(sender, CORRECT_USAGE_ERROR);
 			return true;
 		}
 		
 		if (!isValidPerkId(args[0]))
 		{
-			CustomMessaging.showError(sender, PerkIdAlreadyExistsError);
+			CustomMessaging.showError(sender, PERK_ID_ALREADY_EXISTS_ERROR);
 			return true;
 		}
 		
 		if (!isValidPerkName(args[1]))
 		{
-			CustomMessaging.showError(sender, PerkNameAlreadyExistsError);
+			CustomMessaging.showError(sender, PERK_NAME_ALREADY_EXISTS_ERROR);
 			return true;
 		}
 		

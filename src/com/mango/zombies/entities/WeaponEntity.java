@@ -37,7 +37,7 @@ public class WeaponEntity
 	{
 		for (WeaponServiceEntity service : services)
 		{
-			if (service.typeUUID == WeaponServices.packAPunch)
+			if (service.typeUUID == WeaponServices.PACK_A_PUNCH)
 				return true;
 		}
 		
