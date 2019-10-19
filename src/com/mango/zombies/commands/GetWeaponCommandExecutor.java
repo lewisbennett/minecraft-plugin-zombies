@@ -1,5 +1,10 @@
 package com.mango.zombies.commands;
 
+import com.mango.zombies.PluginCore;
+import com.mango.zombies.entities.WeaponClassEntity;
+import com.mango.zombies.entities.WeaponEntity;
+import com.mango.zombies.helper.CustomMessaging;
+import com.mango.zombies.helper.GlobalErrors;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -8,12 +13,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import com.mango.zombies.PluginCore;
-import com.mango.zombies.entities.WeaponClassEntity;
-import com.mango.zombies.entities.WeaponEntity;
-import com.mango.zombies.helper.CustomMessaging;
-import com.mango.zombies.helper.GlobalErrors;
 
 public class GetWeaponCommandExecutor implements CommandExecutor
 {

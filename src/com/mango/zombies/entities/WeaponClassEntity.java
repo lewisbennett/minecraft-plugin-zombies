@@ -1,15 +1,14 @@
 package com.mango.zombies.entities;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-
 import com.mango.zombies.schema.WeaponCharacteristics;
 import com.mango.zombies.schema.WeaponServices;
 import com.mango.zombies.schema.WeaponTypes;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class WeaponClassEntity
 {

@@ -1,23 +1,18 @@
 package com.mango.zombies.listeners;
 
 
-import org.bukkit.ChatColor;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.SignChangeEvent;
-
 import com.mango.zombies.PluginCore;
-import com.mango.zombies.entities.MapEntity;
-import com.mango.zombies.entities.PerkEntity;
-import com.mango.zombies.entities.WeaponCharacteristicEntity;
-import com.mango.zombies.entities.WeaponEntity;
-import com.mango.zombies.entities.WeaponServiceEntity;
+import com.mango.zombies.entities.*;
 import com.mango.zombies.gameplay.Gameplay;
 import com.mango.zombies.helper.CustomMessaging;
 import com.mango.zombies.schema.MapItems;
 import com.mango.zombies.schema.Signs;
 import com.mango.zombies.schema.WeaponCharacteristics;
 import com.mango.zombies.schema.WeaponServices;
+import org.bukkit.ChatColor;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.SignChangeEvent;
 
 public class BlockEvents implements Listener {
 

@@ -1,14 +1,13 @@
 package com.mango.zombies.commands;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.entities.WeaponClassEntity;
 import com.mango.zombies.helper.CustomMessaging;
 import com.mango.zombies.schema.WeaponTypes;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 
 public class CreateWeaponClassCommandExecutor implements CommandExecutor
 {

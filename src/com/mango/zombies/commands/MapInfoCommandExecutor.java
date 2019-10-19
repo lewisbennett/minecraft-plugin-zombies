@@ -1,13 +1,12 @@
 package com.mango.zombies.commands;
 
+import com.mango.zombies.PluginCore;
+import com.mango.zombies.entities.MapEntity;
+import com.mango.zombies.helper.CustomMessaging;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import com.mango.zombies.PluginCore;
-import com.mango.zombies.entities.MapEntity;
-import com.mango.zombies.helper.CustomMessaging;
 
 public class MapInfoCommandExecutor implements CommandExecutor
 {

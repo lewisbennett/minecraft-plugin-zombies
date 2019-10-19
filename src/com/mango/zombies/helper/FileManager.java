@@ -1,44 +1,62 @@
 package com.mango.zombies.helper;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonSerializer;
+
+import java.io.*;
 
 public class FileManager
 {
-	public static String ReadContentsAsString(String filePath)
-	{
-		StringBuilder contentBuilder = new StringBuilder();
-		
-	    try (BufferedReader br = new BufferedReader(new FileReader(filePath)))
-	    {
-	        String sCurrentLine;
-	        
-	        while ((sCurrentLine = br.readLine()) != null)
-	        	contentBuilder.append(sCurrentLine).append("\n");
-	    }
-	    catch (IOException e)
-	    {
-	        e.printStackTrace();
-	    }
-	    
-	    return contentBuilder.toString();
+	/**
+	 * Deletes a file from a directory.
+	 * @param directory The directory where the file is located.
+	 * @param name The name of the file to delete, not including extension.
+	 */
+	public static void deleteFile(File directory, String name) {
+		new File(directory + "/" + name + ".json").delete();
 	}
-	
-	public static void WriteFile(File directory, String name, Object contents)
-	{
-	    try (FileWriter writer = new FileWriter(directory + "/" + name))
-	    {
-	    	new GsonBuilder().setPrettyPrinting().create().toJson(contents, writer);
-	    	writer.close();
+
+	/**
+	 * Reads the contents of a file as deserializes it to an object.
+	 * @param filePath The path to the file to read.
+	 * @param deserializer The deserlializer for the object.
+	 * @param entity The class of the object.
+	 */
+	public static <TReq> TReq readContents(String filePath, JsonDeserializer<TReq> deserializer, Class<TReq> entity) {
+
+		try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+
+			StringBuilder contentBuilder = new StringBuilder();
+			String currentLine;
+
+			while ((currentLine = reader.readLine()) != null)
+				contentBuilder.append(currentLine).append("\n");
+
+			return new GsonBuilder().registerTypeAdapter(entity, deserializer).create().fromJson(contentBuilder.toString(), entity);
+
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-	    catch (IOException e)
-	    {
-			System.out.println("[Zombies] Failed to write: " + name);
+
+		return null;
+	}
+
+	/**
+	 * Writes a file to a directory in JSON format.
+	 * @param directory The directory for where the file should be created.
+	 * @param name The name of the file, not including extension.
+	 * @param contents The contents of the file to be written.
+	 * @param serializer The serializer for the contents object.
+	 */
+	public static <TReq> void writeFile(File directory, String name, TReq contents, JsonSerializer<TReq> serializer) {
+
+		try (FileWriter writer = new FileWriter(directory + "/" + name + ".json")) {
+
+			new GsonBuilder().registerTypeAdapter(contents.getClass(), serializer).setPrettyPrinting().create().toJson(contents, writer);
+
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }

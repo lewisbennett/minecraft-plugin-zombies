@@ -1,11 +1,10 @@
 package com.mango.zombies.commands;
 
+import com.mango.zombies.PluginCore;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import com.mango.zombies.PluginCore;
 
 public class InfoCommandExecutor implements CommandExecutor
 {
