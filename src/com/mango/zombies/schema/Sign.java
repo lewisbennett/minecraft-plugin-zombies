@@ -1,6 +1,6 @@
 package com.mango.zombies.schema;
 
-public class Signs
+public class Sign
 {
 	public static final String HEADER = "[Zombies]";
 	public static final String MYSTERY_BOX = "mystery_box";

@@ -5,10 +5,10 @@
       <element id="library" level="project" name="craftbukkit" />
       <element id="library" level="project" name="Maven: com.google.code.gson:gson:2.8.5" />
       <element id="file-copy" path="$PROJECT_DIR$/plugin.yml" />
-      <element id="module-output" name="minecraft-plugin-zombies" />
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
       </element>
+      <element id="module-output" name="com.mango.zombies" />
     </root>
   </artifact>
 </component>

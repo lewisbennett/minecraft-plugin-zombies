@@ -1,80 +1,144 @@
 package com.mango.zombies.entities;
 
-import com.mango.zombies.schema.WeaponCharacteristics;
-import com.mango.zombies.schema.WeaponServices;
-import com.mango.zombies.schema.WeaponTypes;
+import com.mango.zombies.schema.WeaponCharacteristic;
+import com.mango.zombies.schema.WeaponService;
+import com.mango.zombies.schema.WeaponType;
+import com.mango.zombies.serializers.WeaponClassEntityJsonSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-public class WeaponClassEntity
-{
-	public String name;
-	public String defaultItem;
-	public String color;
-	public WeaponServiceEntity[] defaultServices;
-	
-	public WeaponClassEntity(String name, int cost, String type, boolean canPackAPunch)
-	{
+public class WeaponClassEntity {
+
+	public static final String COLOR_JSON_TAG = "color";
+	public static final String DEFAULT_ITEM_JSON_TAG = "default_item";
+	public static final String DEFAULT_SERVICES_JSON_TAG = "default_services";
+	public static final String ID_JSON_TAG = "id";
+	public static final String NAME_JSON_TAG = "name";
+	public static final WeaponClassEntityJsonSerializer SERIALIZER = new WeaponClassEntityJsonSerializer();
+
+	private String color;
+	private String defaultItem;
+	private List<WeaponServiceEntity> defaultServices = new ArrayList<WeaponServiceEntity>();
+	private String id;
+	private String name;
+
+	/**
+	 * Gets the color used for the weapon class.
+	 */
+	public String getColor() {
+		return color;
+	}
+
+	/**
+	 * Sets the color used for the weapon class.
+	 */
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	/**
+	 * Gets the default item for the weapon class.
+	 */
+	public String getDefaultItem() {
+		return defaultItem;
+	}
+
+	/**
+	 * Sets the default item for the weapon class.
+	 */
+	public void setDefaultItem(String defaultItem) {
+		this.defaultItem = defaultItem;
+	}
+
+	/**
+	 * Gets the default services for the weapon class.
+	 */
+	public List<WeaponServiceEntity> getDefaultServices() {
+		return defaultServices;
+	}
+
+	/**
+	 * Gets the ID of the weapon class.
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * Sets the ID of the weapon class.
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	/**
+	 * Gets the name of the weapon class.
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * Sets the name of the weapon class.
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public WeaponClassEntity() {
+	}
+
+	public WeaponClassEntity(String id, String name, int cost, String type, boolean canPackAPunch) {
+
+		this.id = id;
 		this.name = name;
 		defaultItem = Material.STICK.name();
 		color = ChatColor.RED.name();
-		
-		// we use a list here as it's easier to modify than an array - converted at the end
-		List<WeaponServiceEntity> services = new ArrayList<WeaponServiceEntity>();
-		List<WeaponCharacteristicEntity> chars = new ArrayList<WeaponCharacteristicEntity>();
-		
-		if (type.equals(WeaponTypes.MELEE))
-			services.add(new WeaponServiceEntity(1, WeaponServices.MELEE));
-		else
-		{	
-			UUID typeUUID = null;
-			
-			// here we get the type UUID of the service we're adding and also setup any service specific characteristics
-			switch (type)
-			{
-				case WeaponTypes.BUCK_SHOT:
-					chars.add(new WeaponCharacteristicEntity(3, WeaponCharacteristics.PROJECTILES_IN_CATRIDGE));
-					typeUUID = WeaponServices.BUCK_SHOT;
-					break;
-					
-				case WeaponTypes.SINGLE_SHOT:
-					typeUUID = WeaponServices.SINGLE_SHOT;
-					break;
-			}
-			
-			services.add(new WeaponServiceEntity(2, typeUUID));
-			
-			// these characteristics are the same across every non-melee weapon type so define them here
-			chars.add(new WeaponCharacteristicEntity(40, WeaponCharacteristics.BULLET_CAPACITY));
-			chars.add(new WeaponCharacteristicEntity(8, WeaponCharacteristics.MAGAZINE_SIZE));
-			chars.add(new WeaponCharacteristicEntity(4, WeaponCharacteristics.RELOAD_SPEED));
-			chars.add(new WeaponCharacteristicEntity(cost / 2, WeaponCharacteristics.AMMO_COST));
+
+		WeaponServiceEntity damageService = new WeaponServiceEntity();
+
+		switch (type) {
+
+			case WeaponType.BUCK_SHOT:
+				damageService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(3, WeaponCharacteristic.PROJECTILES_IN_CATRIDGE));
+				damageService.setTypeUUID(WeaponService.BUCK_SHOT);
+				break;
+
+			case WeaponType.MELEE:
+				damageService.setDamage(1);
+				damageService.setTypeUUID(WeaponService.MELEE);
+				break;
+
+			case WeaponType.SINGLE_SHOT:
+				damageService.setTypeUUID(WeaponService.SINGLE_SHOT);
+				break;
 		}
-		
-		chars.add(new WeaponCharacteristicEntity(cost, WeaponCharacteristics.WEAPON_COST));
-		services.get(0).characteristics = chars.toArray(new WeaponCharacteristicEntity[chars.size()]);
-		
-		// add the default pack-a-punch service if needed
-		if (canPackAPunch)
-		{
-			WeaponServiceEntity upgraded = new WeaponServiceEntity(services.get(0).damage * 5, WeaponServices.PACK_A_PUNCH);
-			WeaponCharacteristicEntity[] newChars = new WeaponCharacteristicEntity[services.get(0).characteristics.length + 1];
-			
-			// copy the characteristics from the normal service
-			for (int i = 0; i < services.get(0).characteristics.length; i++)
-				newChars[i] = services.get(0).characteristics[i];
-			
-			// the last characteristic is the name of the weapon upon upgrade. -1 to account for 0 index
-			newChars[newChars.length - 1] = new WeaponCharacteristicEntity("Upgraded", WeaponCharacteristics.PACK_A_PUNCH_NAME);
-			
-			upgraded.characteristics = newChars;
-			services.add(upgraded);
+
+		defaultServices.add(damageService);
+
+		if (damageService.getTypeUUID() != WeaponService.MELEE) {
+
+			damageService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(40, WeaponCharacteristic.BULLET_CAPACITY));
+			damageService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(8, WeaponCharacteristic.MAGAZINE_SIZE));
+			damageService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(4, WeaponCharacteristic.RELOAD_SPEED));
+			damageService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(cost / 2, WeaponCharacteristic.AMMO_COST));
 		}
-		
-		defaultServices = services.toArray(new WeaponServiceEntity[services.size()]);
+
+		damageService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(cost, WeaponCharacteristic.WEAPON_COST));
+
+		if (canPackAPunch) {
+
+			WeaponServiceEntity packAPunchService = new WeaponServiceEntity(damageService.getDamage() * 5, WeaponService.PACK_A_PUNCH);
+
+			for (WeaponServiceCharacteristicEntity characteristic : damageService.getCharacteristics())
+				packAPunchService.getCharacteristics().add(characteristic);
+
+			packAPunchService.getCharacteristics().add(new WeaponServiceCharacteristicEntity("Upgraded", WeaponCharacteristic.PACK_A_PUNCH_NAME));
+
+			defaultServices.add(packAPunchService);
+		}
 	}
 }

@@ -1,5 +1,5 @@
 package com.mango.zombies.schema;
 
-public class FileNames {
+public class FileName {
 	public static final String CONFIG_FILE = "config.json";
 }

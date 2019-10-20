@@ -1,64 +1,63 @@
 package com.mango.zombies.commands;
 
 import com.mango.zombies.PluginCore;
+import com.mango.zombies.base.BaseCommandExecutor;
 import com.mango.zombies.entities.PerkEntity;
-import com.mango.zombies.helper.CustomMessaging;
+import com.mango.zombies.helper.Messaging;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-public class CreatePerkCommandExecutor implements CommandExecutor
-{
-	// errors specific to this command
-	public static final String CORRECT_USAGE_ERROR = "Correct usage: /createperk [ID] [name] [cost]";
-	public static final String PERK_ID_ALREADY_EXISTS_ERROR = "A perk with this ID already exists";
-	public static final String PERK_NAME_ALREADY_EXISTS_ERROR = "A perk with this name already exists";
-	
+public class CreatePerkCommandExecutor extends BaseCommandExecutor {
+
+	public static final String CORRECT_USAGE_ERROR = "Correct usage: /createperk [ID] [cost] [name]";
+	public static final String INVALID_COST = "Perk not created. You need to enter a valid cost.";
+	public static final String PERK_ID_ALREADY_EXISTS_ERROR = "Perk not created. %s already exists.";
+
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
-	{
-		if (args.length != 3)
-		{
-			CustomMessaging.showError(sender, CORRECT_USAGE_ERROR);
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+
+		if (args.length < 3) {
+			Messaging.showError(sender, CORRECT_USAGE_ERROR);
 			return true;
 		}
 		
-		if (!isValidPerkId(args[0]))
-		{
-			CustomMessaging.showError(sender, PERK_ID_ALREADY_EXISTS_ERROR);
+		if (!isValidPerkId(args[0])) {
+			Messaging.showError(sender, String.format(PERK_ID_ALREADY_EXISTS_ERROR, args[0]));
 			return true;
 		}
-		
-		if (!isValidPerkName(args[1]))
-		{
-			CustomMessaging.showError(sender, PERK_NAME_ALREADY_EXISTS_ERROR);
+
+		Integer cost;
+
+		try {
+			cost = Integer.parseInt(args[1]);
+		} catch (Exception ex) {
+			Messaging.showError(sender, INVALID_COST);
 			return true;
 		}
-		
-		PerkEntity perk = new PerkEntity(args[0], args[1], Integer.parseInt(args[2]));
-		PluginCore.gameplay.perks.add(perk);
-		CustomMessaging.showSuccess(sender, "Successfully created perk: " + ChatColor.BOLD + perk.name);
+
+		StringBuilder name = new StringBuilder();
+
+		for (int i = 2; i < args.length; i++) {
+
+			if (i > 2)
+				name.append(" ");
+
+			name.append(args[i]);
+		}
+
+		PerkEntity perk = new PerkEntity(args[0], name.toString(), cost);
+		PluginCore.getPerks().add(perk);
+		Messaging.showSuccess(sender, "Successfully created perk: " + ChatColor.BOLD + perk.getName());
 		
 		return true;
 	}
 	
-	private boolean isValidPerkId(String perkId)
-	{
-		for (PerkEntity perk : PluginCore.gameplay.perks)
-		{
-			if (perk.id.equals(perkId))
-				return false;
-		}
-		
-		return true;
-	}
-	
-	private boolean isValidPerkName(String perkName)
-	{
-		for (PerkEntity perk : PluginCore.gameplay.perks)
-		{
-			if (perk.name.equals(perkName))
+	private boolean isValidPerkId(String perkId) {
+
+		for (PerkEntity perk : PluginCore.getPerks()) {
+
+			if (perk.getId().equalsIgnoreCase(perkId))
 				return false;
 		}
 		

@@ -1,6 +1,6 @@
 package com.mango.zombies.schema;
 
-public class WeaponTypes
+public class WeaponType
 {
 	public static final String SINGLE_SHOT = "single_shot";
 	public static final String BUCK_SHOT = "buck_shot";

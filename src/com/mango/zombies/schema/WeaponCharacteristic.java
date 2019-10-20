@@ -2,8 +2,8 @@ package com.mango.zombies.schema;
 
 import java.util.UUID;
 
-public class WeaponCharacteristics
-{
+public class WeaponCharacteristic {
+
 	public static final UUID MAGAZINE_SIZE = UUID.fromString("45f4136f-b16a-4f47-bdce-6dbca9084c37");
 	public static final UUID BULLET_CAPACITY = UUID.fromString("43b8ecb8-36ef-455f-92f1-41e6a0be6d16");
 	public static final UUID RELOAD_SPEED = UUID.fromString("0bcfed7e-2a44-425d-945c-8ae24d6bd32e");

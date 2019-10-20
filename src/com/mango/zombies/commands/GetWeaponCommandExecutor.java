@@ -1,78 +1,61 @@
 package com.mango.zombies.commands;
 
 import com.mango.zombies.PluginCore;
+import com.mango.zombies.base.PlayerOnlyCommandExecutor;
 import com.mango.zombies.entities.WeaponClassEntity;
 import com.mango.zombies.entities.WeaponEntity;
-import com.mango.zombies.helper.CustomMessaging;
-import com.mango.zombies.helper.GlobalErrors;
+import com.mango.zombies.helper.Messaging;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class GetWeaponCommandExecutor implements CommandExecutor
-{
-	// errors specific to this command
-	public static final String CorrectUsageError = "Correct usage: /getweapon [weapon ID]";
-	public static final String DoesNotExistError = "The specified weapon does not exist";
-	
-	private Player _player;
-	
+public class GetWeaponCommandExecutor extends PlayerOnlyCommandExecutor {
+
+	public static final String CORRECT_USAGE_ERROR = "Correct usage: /getweapon [weapon ID]";
+	public static final String WEAPON_CLASS_DOES_NOT_EXIST_ERROR = "Could not find weapon class \"%s\". This weapon cannot be used.";
+	public static final String WEAPON_DOES_NOT_EXIST_ERROR = "%s is not a valid weapon ID.";
+
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
-	{
-		if (sender instanceof Player)
-			_player = (Player)sender;
-		else
-		{
-			CustomMessaging.showError(sender, GlobalErrors.PlayerOnlyCommand);
+	public boolean onSuccessfulCommand(Player player, Command command, String label, String[] args) {
+
+		if (args.length != 1) {
+			Messaging.showError(player, CORRECT_USAGE_ERROR);
 			return true;
 		}
-		
-		if (args.length != 1)
-		{
-			CustomMessaging.showError(sender, CorrectUsageError);
-			return true;
-		}
-		
+
 		WeaponEntity weapon = null;
-		
-		for (WeaponEntity queryWeapon : PluginCore.gameplay.weapons)
-		{
-			if (queryWeapon.id.equals(args[0]))
-			{
+
+		for (WeaponEntity queryWeapon : PluginCore.getWeapons()) {
+
+			if (queryWeapon.getId().equalsIgnoreCase(args[0])) {
 				weapon = queryWeapon;
 				break;
 			}
 		}
-		
-		if (weapon == null)
-		{
-			CustomMessaging.showError(sender, DoesNotExistError);
+
+		if (weapon == null) {
+			Messaging.showError(player, String.format(WEAPON_DOES_NOT_EXIST_ERROR, args[0]));
 			return true;
 		}
-		
-		// gets the class that the weapon belongs to
-		WeaponClassEntity weaponClass = null;
-		for (WeaponClassEntity queryClass : PluginCore.gameplay.weaponClasses)
-		{
-			if (queryClass.name.equals(weapon.weaponClass))
-				weaponClass = queryClass;
+
+		WeaponClassEntity weaponClass = weapon.getWeaponClass();
+
+		if (weaponClass == null) {
+			Messaging.showError(player, String.format(WEAPON_CLASS_DOES_NOT_EXIST_ERROR, weapon.getWeaponClassId()));
+			return true;
 		}
-		
-		// gets the item and formats it ready to be added to the user's inventory
-		ItemStack item = new ItemStack(Material.getMaterial(weapon.item), 1);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(ChatColor.RESET + "" + ChatColor.valueOf(weaponClass.color) + weapon.name);
-		item.setItemMeta(meta);
-		
-		_player.getInventory().addItem(item);
-		CustomMessaging.showSuccess(sender, "Weapon added to inventory");
-		
+
+		ItemStack itemStack = new ItemStack(Material.getMaterial(weapon.getItem()), 1);
+		ItemMeta itemMeta = itemStack.getItemMeta();
+		itemMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.valueOf(weaponClass.getColor()) + weapon.getName());
+		itemStack.setItemMeta(itemMeta);
+
+		player.getInventory().addItem(itemStack);
+		Messaging.showSuccess(player, weapon.getName() + " added to inventory.");
+
 		return true;
 	}
 }

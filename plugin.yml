@@ -19,16 +19,16 @@ commands:
         
     createweaponclass:
        description: Creates a new weapon class.
-       usage: /<command> [name] [default cost] [weapon type] [can Pack-A-Punch? true/false]
+       usage: /<command> [ID] [default cost] [weapon type] [can Pack-A-Punch yes/no] [name]
         
     createweapon:
         description: Creates a new weapon.
-        usage: /<command> [ID] [name] [weapon class]
+        usage: /<command> [ID] [weapon class ID] [name]
         
     createperk:
        description: Creates a new perk.
-       usage: /<command> [ID] [name] [cost]
+       usage: /<command> [ID] [cost] [name]
         
     getweapon:
-        description: Puts the specified weapon in your inventory.
+        description: Gets the specified weapon and adds it to your inventory.
         usage: /<command> [weapon ID]

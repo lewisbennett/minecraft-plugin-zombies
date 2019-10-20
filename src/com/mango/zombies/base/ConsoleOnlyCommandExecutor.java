@@ -1,6 +1,6 @@
 package com.mango.zombies.base;
 
-import com.mango.zombies.helper.CustomMessaging;
+import com.mango.zombies.helper.Messaging;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -15,7 +15,7 @@ public class ConsoleOnlyCommandExecutor extends BaseCommandExecutor {
         if (commandSender instanceof ConsoleCommandSender)
             return onSuccessfulCommand(commandSender, command, label, args);
 
-        CustomMessaging.showError(commandSender, CONSOLE_ONLY_COMMAND_ERROR);
+        Messaging.showError(commandSender, CONSOLE_ONLY_COMMAND_ERROR);
 
         return true;
     }
