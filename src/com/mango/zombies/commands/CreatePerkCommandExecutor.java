@@ -3,7 +3,7 @@ package com.mango.zombies.commands;
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.base.BaseCommandExecutor;
 import com.mango.zombies.entities.PerkEntity;
-import com.mango.zombies.helper.Messaging;
+import com.mango.zombies.services.MessagingService;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -18,12 +18,12 @@ public class CreatePerkCommandExecutor extends BaseCommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
 		if (args.length < 3) {
-			Messaging.showError(sender, CORRECT_USAGE_ERROR);
+			MessagingService.showError(sender, CORRECT_USAGE_ERROR);
 			return true;
 		}
 		
 		if (!isValidPerkId(args[0])) {
-			Messaging.showError(sender, String.format(PERK_ID_ALREADY_EXISTS_ERROR, args[0]));
+			MessagingService.showError(sender, String.format(PERK_ID_ALREADY_EXISTS_ERROR, args[0]));
 			return true;
 		}
 
@@ -32,7 +32,7 @@ public class CreatePerkCommandExecutor extends BaseCommandExecutor {
 		try {
 			cost = Integer.parseInt(args[1]);
 		} catch (Exception ex) {
-			Messaging.showError(sender, INVALID_COST);
+			MessagingService.showError(sender, INVALID_COST);
 			return true;
 		}
 
@@ -48,7 +48,7 @@ public class CreatePerkCommandExecutor extends BaseCommandExecutor {
 
 		PerkEntity perk = new PerkEntity(args[0], name.toString(), cost);
 		PluginCore.getPerks().add(perk);
-		Messaging.showSuccess(sender, "Successfully created perk: " + ChatColor.BOLD + perk.getName());
+		MessagingService.showSuccess(sender, "Successfully created perk: " + ChatColor.BOLD + perk.getName());
 		
 		return true;
 	}

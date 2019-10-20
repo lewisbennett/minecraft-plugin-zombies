@@ -9,12 +9,14 @@ import org.bukkit.Material;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class WeaponClassEntity {
 
 	public static final String COLOR_JSON_TAG = "color";
 	public static final String DEFAULT_ITEM_JSON_TAG = "default_item";
 	public static final String DEFAULT_SERVICES_JSON_TAG = "default_services";
+	public static final String DEFAULT_WEAPON_COST_JSON_TAG = "default_weapon_cost_json_tag";
 	public static final String ID_JSON_TAG = "id";
 	public static final String NAME_JSON_TAG = "name";
 	public static final WeaponClassEntityJsonSerializer SERIALIZER = new WeaponClassEntityJsonSerializer();
@@ -22,6 +24,7 @@ public class WeaponClassEntity {
 	private String color;
 	private String defaultItem;
 	private List<WeaponServiceEntity> defaultServices = new ArrayList<WeaponServiceEntity>();
+	private int defaultWeaponCost;
 	private String id;
 	private String name;
 
@@ -61,6 +64,20 @@ public class WeaponClassEntity {
 	}
 
 	/**
+	 * Gets the default cost for weapons of this class.
+	 */
+	public int getDefaultWeaponCost() {
+		return defaultWeaponCost;
+	}
+
+	/**
+	 * Sets the default cost for weapons of this class.
+	 */
+	public void setDefaultWeaponCost(int defaultWeaponCost) {
+		this.defaultWeaponCost = defaultWeaponCost;
+	}
+
+	/**
 	 * Gets the ID of the weapon class.
 	 */
 	public String getId() {
@@ -91,54 +108,56 @@ public class WeaponClassEntity {
 	public WeaponClassEntity() {
 	}
 
-	public WeaponClassEntity(String id, String name, int cost, String type, boolean canPackAPunch) {
+	public WeaponClassEntity(String id, String name, int defaultWeaponCost, String type, boolean canPackAPunch) {
 
 		this.id = id;
 		this.name = name;
 		defaultItem = Material.STICK.name();
+		this.defaultWeaponCost = defaultWeaponCost;
 		color = ChatColor.RED.name();
 
-		WeaponServiceEntity damageService = new WeaponServiceEntity();
+		int damage;
+		UUID typeUUID = null;
 
 		switch (type) {
 
-			case WeaponType.BUCK_SHOT:
-				damageService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(3, WeaponCharacteristic.PROJECTILES_IN_CATRIDGE));
-				damageService.setTypeUUID(WeaponService.BUCK_SHOT);
+			case WeaponType.GUNSHOT:
+				damage = 1;
+				typeUUID = WeaponService.GUNSHOT;
 				break;
 
 			case WeaponType.MELEE:
-				damageService.setDamage(1);
-				damageService.setTypeUUID(WeaponService.MELEE);
+				damage = 5;
+				typeUUID = WeaponService.MELEE;
 				break;
 
-			case WeaponType.SINGLE_SHOT:
-				damageService.setTypeUUID(WeaponService.SINGLE_SHOT);
-				break;
+			default:
+				return;
 		}
 
-		defaultServices.add(damageService);
+		WeaponServiceEntity standardService = new WeaponServiceEntity(damage, false, typeUUID);
+		defaultServices.add(standardService);
 
-		if (damageService.getTypeUUID() != WeaponService.MELEE) {
+		if (standardService.getTypeUUID() != WeaponService.MELEE) {
 
-			damageService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(40, WeaponCharacteristic.BULLET_CAPACITY));
-			damageService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(8, WeaponCharacteristic.MAGAZINE_SIZE));
-			damageService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(4, WeaponCharacteristic.RELOAD_SPEED));
-			damageService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(cost / 2, WeaponCharacteristic.AMMO_COST));
+			standardService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(defaultWeaponCost / 2, WeaponCharacteristic.AMMO_COST));
+			standardService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(8, WeaponCharacteristic.MAGAZINE_SIZE));
+			standardService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(4, WeaponCharacteristic.RELOAD_SPEED));
+			standardService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(80, WeaponCharacteristic.TOTAL_AMMO_CAPACITY));
 		}
 
-		damageService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(cost, WeaponCharacteristic.WEAPON_COST));
+		if (!canPackAPunch)
+			return;
 
-		if (canPackAPunch) {
+		WeaponServiceEntity packAPunchService = new WeaponServiceEntity(standardService.getDamage(), true, typeUUID);
+		defaultServices.add(packAPunchService);
 
-			WeaponServiceEntity packAPunchService = new WeaponServiceEntity(damageService.getDamage() * 5, WeaponService.PACK_A_PUNCH);
+		if (packAPunchService.getTypeUUID() == WeaponService.MELEE)
+			return;
 
-			for (WeaponServiceCharacteristicEntity characteristic : damageService.getCharacteristics())
-				packAPunchService.getCharacteristics().add(characteristic);
-
-			packAPunchService.getCharacteristics().add(new WeaponServiceCharacteristicEntity("Upgraded", WeaponCharacteristic.PACK_A_PUNCH_NAME));
-
-			defaultServices.add(packAPunchService);
-		}
+		packAPunchService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(defaultWeaponCost, WeaponCharacteristic.AMMO_COST));
+		packAPunchService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(12, WeaponCharacteristic.MAGAZINE_SIZE));
+		packAPunchService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(6, WeaponCharacteristic.RELOAD_SPEED));
+		packAPunchService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(120, WeaponCharacteristic.TOTAL_AMMO_CAPACITY));
 	}
 }

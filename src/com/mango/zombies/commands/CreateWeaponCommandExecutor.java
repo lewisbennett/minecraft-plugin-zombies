@@ -4,7 +4,7 @@ import com.mango.zombies.PluginCore;
 import com.mango.zombies.base.BaseCommandExecutor;
 import com.mango.zombies.entities.WeaponClassEntity;
 import com.mango.zombies.entities.WeaponEntity;
-import com.mango.zombies.helper.Messaging;
+import com.mango.zombies.services.MessagingService;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -19,17 +19,17 @@ public class CreateWeaponCommandExecutor extends BaseCommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
 		if (args.length < 3) {
-			Messaging.showError(sender, CORRECT_USAGE_ERROR);
+			MessagingService.showError(sender, CORRECT_USAGE_ERROR);
 			return true;
 		}
 		
 		if (!isValidWeaponId(args[0])) {
-			Messaging.showError(sender, String.format(WEAPON_ID_ALREADY_EXISTS_ERROR, args[0]));
+			MessagingService.showError(sender, String.format(WEAPON_ID_ALREADY_EXISTS_ERROR, args[0]));
 			return true;
 		}
 		
 		if (!isValidWeaponClassId(args[1])) {
-			Messaging.showError(sender, String.format(WEAPON_CLASS_DOES_NOT_EXIST_ERROR, args[1]));
+			MessagingService.showError(sender, String.format(WEAPON_CLASS_DOES_NOT_EXIST_ERROR, args[1]));
 			return true;
 		}
 
@@ -45,7 +45,7 @@ public class CreateWeaponCommandExecutor extends BaseCommandExecutor {
 
 		WeaponEntity weapon = new WeaponEntity(args[0], name.toString(), args[1]);
 		PluginCore.getWeapons().add(weapon);
-		Messaging.showSuccess(sender, "Successfully created weapon: " + ChatColor.BOLD + weapon.getName());
+		MessagingService.showSuccess(sender, "Successfully created weapon: " + ChatColor.BOLD + weapon.getName());
 		
 		return true;
 	}

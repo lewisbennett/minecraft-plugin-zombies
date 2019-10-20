@@ -1,4 +1,4 @@
-package com.mango.zombies.helper;
+package com.mango.zombies.services;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
@@ -6,7 +6,7 @@ import com.google.gson.JsonSerializer;
 
 import java.io.*;
 
-public class FileManager
+public class FilingService
 {
 	/**
 	 * Deletes a file from a directory.

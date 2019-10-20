@@ -1,7 +1,7 @@
 package com.mango.zombies;
 
 import com.mango.zombies.entities.*;
-import com.mango.zombies.helper.FileManager;
+import com.mango.zombies.services.FilingService;
 import com.mango.zombies.schema.FileName;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -171,7 +171,7 @@ public class PluginCore {
             if (!file.getName().equals(FileName.CONFIG_FILE))
                 continue;
 
-            setConfig(FileManager.readContents(file.toString(), ConfigEntity.SERIALIZER, ConfigEntity.class));
+            setConfig(FilingService.readContents(file.toString(), ConfigEntity.SERIALIZER, ConfigEntity.class));
 
             break;
         }
@@ -193,7 +193,7 @@ public class PluginCore {
         log("Importing maps...");
 
         for (File file : mapsFolder.listFiles())
-            maps.add(FileManager.readContents(file.toString(), MapEntity.SERIALIZER, MapEntity.class));
+            maps.add(FilingService.readContents(file.toString(), MapEntity.SERIALIZER, MapEntity.class));
 
         log(String.format(maps.size() == 1 ? "%d map imported." : "%d maps imported.", maps.size()));
     }
@@ -206,7 +206,7 @@ public class PluginCore {
         log("Importing perks...");
 
         for (File file : perksFolder.listFiles())
-            perks.add(FileManager.readContents(file.toString(), PerkEntity.SERIALIZER, PerkEntity.class));
+            perks.add(FilingService.readContents(file.toString(), PerkEntity.SERIALIZER, PerkEntity.class));
 
         log(String.format(perks.size() == 1 ? "%d perk imported." : "%d perks imported.", perks.size()));
     }
@@ -219,7 +219,7 @@ public class PluginCore {
         log("Importing weapon classes...");
 
         for (File file : weaponClassesFolder.listFiles())
-            weaponsClasses.add(FileManager.readContents(file.toString(), WeaponClassEntity.SERIALIZER, WeaponClassEntity.class));
+            weaponsClasses.add(FilingService.readContents(file.toString(), WeaponClassEntity.SERIALIZER, WeaponClassEntity.class));
 
         log(String.format(weaponsClasses.size() == 1 ? "%d weapon class imported." : "%d weapon classes imported.", weaponsClasses.size()));
     }
@@ -232,7 +232,7 @@ public class PluginCore {
         log("Importing weapons...");
 
         for (File file : weaponsFolder.listFiles())
-            weapons.add(FileManager.readContents(file.toString(), WeaponEntity.SERIALIZER, WeaponEntity.class));
+            weapons.add(FilingService.readContents(file.toString(), WeaponEntity.SERIALIZER, WeaponEntity.class));
 
         log(String.format(weapons.size() == 1 ? "%d weapon imported." : "%d weapons imported.", weapons.size()));
     }
@@ -260,7 +260,7 @@ public class PluginCore {
 
         PluginCore.log("Saving config file...");
 
-        FileManager.writeFile(dataFolder, "config", config, ConfigEntity.SERIALIZER);
+        FilingService.writeFile(dataFolder, "config", config, ConfigEntity.SERIALIZER);
 
         PluginCore.log("Config file saved.");
     }
@@ -273,7 +273,7 @@ public class PluginCore {
         PluginCore.log("Saving maps...");
 
         for (MapEntity map : maps)
-            FileManager.writeFile(mapsFolder, map.getId(), map, MapEntity.SERIALIZER);
+            FilingService.writeFile(mapsFolder, map.getId(), map, MapEntity.SERIALIZER);
 
         PluginCore.log(String.format(maps.size() == 1 ? "%d map saved." : "%d maps saved.", maps.size()));
     }
@@ -286,7 +286,7 @@ public class PluginCore {
         PluginCore.log("Saving perks...");
 
         for (PerkEntity perk : perks)
-            FileManager.writeFile(perksFolder, perk.getId(), perk, PerkEntity.SERIALIZER);
+            FilingService.writeFile(perksFolder, perk.getId(), perk, PerkEntity.SERIALIZER);
 
         PluginCore.log(String.format(perks.size() == 1 ? "%d perk saved." : "%d perks saved.", perks.size()));
     }
@@ -299,7 +299,7 @@ public class PluginCore {
         PluginCore.log("Saving weapon classes...");
 
         for (WeaponClassEntity weaponClass : weaponsClasses)
-            FileManager.writeFile(weaponClassesFolder, weaponClass.getId(), weaponClass, WeaponClassEntity.SERIALIZER);
+            FilingService.writeFile(weaponClassesFolder, weaponClass.getId(), weaponClass, WeaponClassEntity.SERIALIZER);
 
         PluginCore.log(String.format(weaponsClasses.size() == 1 ? "%d weapon class saved." : "%d weapon classes saved.", weaponsClasses.size()));
     }
@@ -312,7 +312,7 @@ public class PluginCore {
         PluginCore.log("Saving weapons...");
 
         for (WeaponEntity weapon : weapons)
-            FileManager.writeFile(weaponsFolder, weapon.getId(), weapon, WeaponEntity.SERIALIZER);
+            FilingService.writeFile(weaponsFolder, weapon.getId(), weapon, WeaponEntity.SERIALIZER);
 
         PluginCore.log(String.format(weapons.size() == 1 ? "%d weapon saved." : "%d weapons saved.", weapons.size()));
     }

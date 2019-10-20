@@ -3,11 +3,10 @@ package com.mango.zombies.commands;
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.base.BaseCommandExecutor;
 import com.mango.zombies.entities.WeaponClassEntity;
-import com.mango.zombies.helper.Messaging;
+import com.mango.zombies.services.MessagingService;
 import com.mango.zombies.schema.WeaponType;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 public class CreateWeaponClassCommandExecutor extends BaseCommandExecutor {
@@ -22,17 +21,17 @@ public class CreateWeaponClassCommandExecutor extends BaseCommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
 		if (args.length < 5) {
-			Messaging.showError(sender, CORRECT_USAGE_ERROR);
+			MessagingService.showError(sender, CORRECT_USAGE_ERROR);
 			return true;
 		}
 		
 		if (!isValidWeaponClassId(args[0])) {
-			Messaging.showError(sender, String.format(WEAPON_CLASS_ID_ALREADY_EXISTS_ERROR, args[0]));
+			MessagingService.showError(sender, String.format(WEAPON_CLASS_ID_ALREADY_EXISTS_ERROR, args[0]));
 			return true;
 		}
 		
-		if (!isValidWeaponType(args[2])) {
-			Messaging.showError(sender, String.format(WEAPON_TYPE_DOES_NOT_EXIST_ERROR, args[2]));
+		if (!args[2].equalsIgnoreCase(WeaponType.GUNSHOT) && !args[2].equalsIgnoreCase(WeaponType.MELEE)) {
+			MessagingService.showError(sender, String.format(WEAPON_TYPE_DOES_NOT_EXIST_ERROR, args[2]));
 			return true;
 		}
 
@@ -41,7 +40,7 @@ public class CreateWeaponClassCommandExecutor extends BaseCommandExecutor {
 		try {
 			cost = Integer.parseInt(args[1]);
 		} catch (Exception ex) {
-			Messaging.showError(sender, INVALID_COST);
+			MessagingService.showError(sender, INVALID_COST);
 			return true;
 		}
 
@@ -52,7 +51,7 @@ public class CreateWeaponClassCommandExecutor extends BaseCommandExecutor {
 		else if (args[3].equalsIgnoreCase("no"))
 			canPackAPunch = false;
 		else {
-			Messaging.showError(sender, CAN_PACK_A_PUNCH_SYNTAX_ERROR);
+			MessagingService.showError(sender, CAN_PACK_A_PUNCH_SYNTAX_ERROR);
 			return true;
 		}
 
@@ -68,7 +67,7 @@ public class CreateWeaponClassCommandExecutor extends BaseCommandExecutor {
 
 		WeaponClassEntity weaponClass = new WeaponClassEntity(args[0], name.toString(), cost, args[2], canPackAPunch);
 		PluginCore.getWeaponsClasses().add(weaponClass);
-		Messaging.showSuccess(sender, "Successfully created weapon class: " + ChatColor.BOLD + weaponClass.getName());
+		MessagingService.showSuccess(sender, "Successfully created weapon class: " + ChatColor.BOLD + weaponClass.getName());
 		
 		return true;
 	}
@@ -82,16 +81,5 @@ public class CreateWeaponClassCommandExecutor extends BaseCommandExecutor {
 		}
 
 		return true;
-	}
-	
-	private boolean isValidWeaponType(String weaponType) {
-
-		for (String type : WeaponType.toArray()) {
-
-			if (type.equalsIgnoreCase(weaponType))
-				return true;
-		}
-		
-		return false;
 	}
 }

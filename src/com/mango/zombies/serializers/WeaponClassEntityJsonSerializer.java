@@ -15,10 +15,11 @@ public class WeaponClassEntityJsonSerializer implements JsonSerializer<WeaponCla
 
         WeaponClassEntity weaponClass = new WeaponClassEntity();
 
-        weaponClass.setId(jsonObject.get(WeaponClassEntity.ID_JSON_TAG).getAsString());
-        weaponClass.setName(jsonObject.get(WeaponClassEntity.NAME_JSON_TAG).getAsString());
         weaponClass.setColor(jsonObject.get(WeaponClassEntity.COLOR_JSON_TAG).getAsString());
         weaponClass.setDefaultItem(jsonObject.get(WeaponClassEntity.DEFAULT_ITEM_JSON_TAG).getAsString());
+        weaponClass.setDefaultWeaponCost(jsonObject.get(WeaponClassEntity.DEFAULT_WEAPON_COST_JSON_TAG).getAsInt());
+        weaponClass.setId(jsonObject.get(WeaponClassEntity.ID_JSON_TAG).getAsString());
+        weaponClass.setName(jsonObject.get(WeaponClassEntity.NAME_JSON_TAG).getAsString());
 
         for (JsonElement jsonService : jsonObject.get(WeaponClassEntity.DEFAULT_SERVICES_JSON_TAG).getAsJsonArray())
             weaponClass.getDefaultServices().add(WeaponServiceEntity.SERIALIZER.deserialize(jsonService, WeaponServiceEntity.class, jsonDeserializationContext));
@@ -33,6 +34,7 @@ public class WeaponClassEntityJsonSerializer implements JsonSerializer<WeaponCla
 
         jsonObject.add(WeaponClassEntity.ID_JSON_TAG, new JsonPrimitive(weaponClassEntity.getId()));
         jsonObject.add(WeaponClassEntity.NAME_JSON_TAG, new JsonPrimitive(weaponClassEntity.getName()));
+        jsonObject.add(WeaponClassEntity.DEFAULT_WEAPON_COST_JSON_TAG, new JsonPrimitive(weaponClassEntity.getDefaultWeaponCost()));
         jsonObject.add(WeaponClassEntity.COLOR_JSON_TAG, new JsonPrimitive(weaponClassEntity.getColor()));
         jsonObject.add(WeaponClassEntity.DEFAULT_ITEM_JSON_TAG, new JsonPrimitive(weaponClassEntity.getDefaultItem()));
 

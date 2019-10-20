@@ -17,6 +17,7 @@ public class WeaponServiceEntityJsonSerializer implements JsonSerializer<WeaponS
         WeaponServiceEntity service = new WeaponServiceEntity();
 
         service.setDamage(jsonObject.get(WeaponServiceEntity.DAMAGE_JSON_TAG).getAsInt());
+        service.setDoesRequirePackAPunch(jsonObject.get(WeaponServiceEntity.DOES_REQUIRE_PACK_A_PUNCH_JSON_TAG).getAsBoolean());
         service.setTypeUUID(UUID.fromString(jsonObject.get(WeaponServiceEntity.TYPE_UUID_JSON_TAG).getAsString()));
 
         for (JsonElement jsonCharacteristic : jsonObject.get(WeaponServiceEntity.CHARACTERISTICS_JSON_TAG).getAsJsonArray())
@@ -31,6 +32,7 @@ public class WeaponServiceEntityJsonSerializer implements JsonSerializer<WeaponS
         JsonObject jsonObject = new JsonObject();
 
         jsonObject.add(WeaponServiceEntity.DAMAGE_JSON_TAG, new JsonPrimitive(weaponServiceEntity.getDamage()));
+        jsonObject.add(WeaponServiceEntity.DOES_REQUIRE_PACK_A_PUNCH_JSON_TAG, new JsonPrimitive(weaponServiceEntity.doesRequirePackAPunch()));
         jsonObject.add(WeaponServiceEntity.TYPE_UUID_JSON_TAG, new JsonPrimitive(weaponServiceEntity.getTypeUUID().toString()));
 
         JsonArray characteristicsArray = new JsonArray();

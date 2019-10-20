@@ -15,9 +15,11 @@ public class WeaponEntityJsonSerializer implements JsonSerializer<WeaponEntity>,
 
         WeaponEntity weapon = new WeaponEntity();
 
+        weapon.setCost(jsonObject.get(WeaponEntity.COST_JSON_TAG).getAsInt());
         weapon.setId(jsonObject.get(WeaponEntity.ID_JSON_TAG).getAsString());
         weapon.setItem(jsonObject.get(WeaponEntity.ITEM_JSON_TAG).getAsString());
         weapon.setName(jsonObject.get(WeaponEntity.NAME_JSON_TAG).getAsString());
+        weapon.setPackAPunchName(jsonObject.get(WeaponEntity.PACK_A_PUNCH_NAME_JSON_TAG).getAsString());
         weapon.setIsWonderWeapon(jsonObject.get(WeaponEntity.IS_WONDER_WEAPON_JSON_TAG).getAsBoolean());
         weapon.setWeaponClassId(jsonObject.get(WeaponEntity.WEAPON_CLASS_ID_JSON_TAG).getAsString());
 
@@ -34,6 +36,8 @@ public class WeaponEntityJsonSerializer implements JsonSerializer<WeaponEntity>,
 
         jsonObject.add(WeaponEntity.ID_JSON_TAG, new JsonPrimitive(weaponEntity.getId()));
         jsonObject.add(WeaponEntity.NAME_JSON_TAG, new JsonPrimitive(weaponEntity.getName()));
+        jsonObject.add(WeaponEntity.COST_JSON_TAG, new JsonPrimitive(weaponEntity.getCost()));
+        jsonObject.add(WeaponEntity.PACK_A_PUNCH_NAME_JSON_TAG, new JsonPrimitive(weaponEntity.getPackAPunchName()));
         jsonObject.add(WeaponEntity.WEAPON_CLASS_ID_JSON_TAG, new JsonPrimitive(weaponEntity.getWeaponClassId()));
         jsonObject.add(WeaponEntity.IS_WONDER_WEAPON_JSON_TAG, new JsonPrimitive(weaponEntity.isWonderWeapon()));
         jsonObject.add(WeaponEntity.ITEM_JSON_TAG, new JsonPrimitive(weaponEntity.getItem()));

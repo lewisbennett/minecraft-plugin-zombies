@@ -2,7 +2,7 @@ package com.mango.zombies.listeners;
 
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.entities.*;
-import com.mango.zombies.helper.Messaging;
+import com.mango.zombies.services.MessagingService;
 import com.mango.zombies.schema.MapItem;
 import com.mango.zombies.schema.Sign;
 import com.mango.zombies.schema.WeaponCharacteristic;
@@ -12,7 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 
-public class BlockEvents implements Listener {
+public class SignChangedListener implements Listener {
 
 	public static final String PERK_DOES_NOT_EXIST_ERROR = "\"%s\" is not a valid perk.";
 	public static final String PERK_DOES_NOT_EXIST_ERROR_GENERIC = "Invalid perk.";
@@ -69,7 +69,7 @@ public class BlockEvents implements Listener {
 				lineTwo = "Cost: " + perk.getCost();
 
 				break;
-				
+
 			case Sign.WEAPON:
 
 				WeaponEntity weapon = null;
@@ -88,35 +88,63 @@ public class BlockEvents implements Listener {
 				}
 
 				lineOne = weapon.getName();
+				lineTwo = "Cost: " + weapon.getCost();
 
-				WeaponServiceEntity standardService = null;
-				WeaponServiceEntity packAPunchService = null;
+				WeaponServiceEntity gunshotService = null;
+				WeaponServiceEntity packAPunchedGunshotService = null;
 
 				for (WeaponServiceEntity service : weapon.getServices()) {
 
-					if (service.getTypeUUID().equals(WeaponService.PACK_A_PUNCH))
-						packAPunchService = service;
+					if (!service.getTypeUUID().equals(WeaponService.GUNSHOT))
+						continue;
+
+					if (service.doesRequirePackAPunch())
+						packAPunchedGunshotService = service;
 					else
-						standardService = service;
+						gunshotService = service;
 				}
 
-				for (WeaponServiceCharacteristicEntity characteristic : standardService.getCharacteristics()) {
+				if (gunshotService == null && packAPunchedGunshotService == null)
+					break;
 
-					if (characteristic.getTypeUUID().equals(WeaponCharacteristic.WEAPON_COST))
-						lineTwo = "Cost: " + characteristic.getValue();
+				int normalAmmoCost = -1;
+				int packAPunchedAmmoCost = -1;
 
-					if (characteristic.getTypeUUID().equals(WeaponCharacteristic.AMMO_COST))
-						lineThree = "Ammo: " + characteristic.getValue();
-				}
+				for (WeaponServiceCharacteristicEntity characteristic : gunshotService.getCharacteristics()) {
 
-				if (packAPunchService != null) {
-
-					for (WeaponServiceCharacteristicEntity characteristic : packAPunchService.getCharacteristics()) {
-
-						if (characteristic.getTypeUUID().equals(WeaponCharacteristic.AMMO_COST))
-							lineThree += "/" + characteristic.getValue();
+					if (characteristic.getTypeUUID().equals(WeaponCharacteristic.AMMO_COST)) {
+						normalAmmoCost = (Integer)characteristic.getValue();
+						break;
 					}
 				}
+
+				if (packAPunchedGunshotService != null) {
+
+					for (WeaponServiceCharacteristicEntity characteristic : packAPunchedGunshotService.getCharacteristics()) {
+
+						if (characteristic.getTypeUUID().equals(WeaponCharacteristic.AMMO_COST)) {
+							packAPunchedAmmoCost = (Integer)characteristic.getValue();
+							break;
+						}
+					}
+				}
+
+				if (normalAmmoCost < 1 && packAPunchedAmmoCost < 1)
+					break;
+
+				lineThree = "Ammo: ";
+
+				if (normalAmmoCost < 1)
+					lineThree += "X";
+				else
+					lineThree += normalAmmoCost;
+
+				lineThree += "/";
+
+				if (packAPunchedAmmoCost < 1)
+					lineThree += "X";
+				else
+					lineThree += packAPunchedAmmoCost;
 
 				break;
 				
@@ -126,7 +154,7 @@ public class BlockEvents implements Listener {
 		}
 
 		if (error != null) {
-			Messaging.showError(event.getPlayer(), "Sign not created. " + error);
+			MessagingService.showError(event.getPlayer(), "Sign not created. " + error);
 			return;
 		}
 		
@@ -141,7 +169,7 @@ public class BlockEvents implements Listener {
 		}
 		
 		if (map == null) {
-			Messaging.showError(event.getPlayer(), mapId.isEmpty() ? MAP_DOES_NOT_EXIST_ERROR_GENERIC : String.format(MAP_DOES_NOT_EXIST_ERROR, mapId));
+			MessagingService.showError(event.getPlayer(), mapId.isEmpty() ? MAP_DOES_NOT_EXIST_ERROR_GENERIC : String.format(MAP_DOES_NOT_EXIST_ERROR, mapId));
 			return;
 		}
 		

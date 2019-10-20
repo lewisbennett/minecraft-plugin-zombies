@@ -3,7 +3,7 @@ package com.mango.zombies.commands;
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.base.BaseCommandExecutor;
 import com.mango.zombies.entities.MapEntity;
-import com.mango.zombies.helper.Messaging;
+import com.mango.zombies.services.MessagingService;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -17,7 +17,7 @@ public class MapInfoCommandExecutor extends BaseCommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
 		if (args.length != 1) {
-			Messaging.showError(sender, CORRECT_USAGE_ERROR);
+			MessagingService.showError(sender, CORRECT_USAGE_ERROR);
 			return true;
 		}
 		
@@ -32,7 +32,7 @@ public class MapInfoCommandExecutor extends BaseCommandExecutor {
 		}
 		
 		if (map == null) {
-			Messaging.showError(sender, String.format(MAP_DOES_NOT_EXIST_ERROR, args[0]));
+			MessagingService.showError(sender, String.format(MAP_DOES_NOT_EXIST_ERROR, args[0]));
 			return true;
 		}
 		

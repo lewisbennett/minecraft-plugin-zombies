@@ -9,20 +9,38 @@ import java.util.List;
 
 public class WeaponEntity {
 
+	public static final String COST_JSON_TAG = "cost";
 	public static final String ID_JSON_TAG = "id";
 	public static final String IS_WONDER_WEAPON_JSON_TAG = "is_wonder_weapon";
 	public static final String ITEM_JSON_TAG = "item";
 	public static final String NAME_JSON_TAG = "name";
+	public static final String PACK_A_PUNCH_NAME_JSON_TAG = "pack_a_punch_name";
 	public static final WeaponEntityJsonSerializer SERIALIZER = new WeaponEntityJsonSerializer();
 	public static final String SERVICES_JSON_TAG = "services";
 	public static final String WEAPON_CLASS_ID_JSON_TAG = "weapon_class_id";
 
+	private int cost;
 	private String id;
 	private boolean isWonderWeapon;
 	private String item;
 	private String name;
+	private String packAPunchName;
 	private List<WeaponServiceEntity> services = new ArrayList<WeaponServiceEntity>();
 	private String weaponClassId;
+
+	/**
+	 * Gets the cost of the weapon.
+	 */
+	public int getCost() {
+		return cost;
+	}
+
+	/**
+	 * Sets the cost of the weapon.
+	 */
+	public void setCost(int cost) {
+		this.cost = cost;
+	}
 
 	/**
 	 * Gets the weapon's ID.
@@ -81,6 +99,20 @@ public class WeaponEntity {
 	}
 
 	/**
+	 * Gets the name used when this weapon has been Pack-A-Punched.
+	 */
+	public String getPackAPunchName() {
+		return packAPunchName;
+	}
+
+	/**
+	 * Sets the name used when this weapon has been Pack-A-Punched.
+	 */
+	public void setPackAPunchName(String packAPunchName) {
+		this.packAPunchName = packAPunchName;
+	}
+
+	/**
 	 * Gets the weapon's services.
 	 */
 	public List<WeaponServiceEntity> getServices() {
@@ -107,7 +139,7 @@ public class WeaponEntity {
 	public boolean canPackAPunch() {
 
 		for (WeaponServiceEntity service : services) {
-			if (service.getTypeUUID().equals(WeaponService.PACK_A_PUNCH))
+			if (service.doesRequirePackAPunch())
 				return true;
 		}
 
@@ -137,12 +169,14 @@ public class WeaponEntity {
 		this.name = name;
 		this.weaponClassId = weaponClassId;
 		isWonderWeapon = false;
+		packAPunchName = "Upgraded " + this.name;
 
 		WeaponClassEntity weaponClass = getWeaponClass();
 
 		if (weaponClass == null)
 			return;
 
+		cost = weaponClass.getDefaultWeaponCost();
 		item = weaponClass.getDefaultItem();
 		services.addAll(weaponClass.getDefaultServices());
 	}

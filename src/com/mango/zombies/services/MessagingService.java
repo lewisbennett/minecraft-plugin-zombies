@@ -1,9 +1,9 @@
-package com.mango.zombies.helper;
+package com.mango.zombies.services;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-public class Messaging {
+public class MessagingService {
 
 	/**
 	 * Shows a formatted success message to the sender.

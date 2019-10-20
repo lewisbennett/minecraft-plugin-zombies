@@ -1,13 +1,23 @@
 package com.mango.zombies;
 
 import com.mango.zombies.commands.*;
-import com.mango.zombies.listeners.BlockEvents;
+import com.mango.zombies.listeners.PlayerClickListener;
+import com.mango.zombies.listeners.SignChangedListener;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.TimerTask;
 
 public class Main extends JavaPlugin {
+
+    private static Main instance;
+
+    /**
+     * Gets the plugin instance.
+     */
+    public static Main getInstance() {
+        return instance;
+    }
 
     @Override
     public void onEnable() {
@@ -32,6 +42,8 @@ public class Main extends JavaPlugin {
                 PluginCore.autoSave();
             }
         }, delay, delay);
+
+        instance = this;
     }
 
     @Override
@@ -63,6 +75,7 @@ public class Main extends JavaPlugin {
      */
     public void registerEvents() {
 
-        Bukkit.getPluginManager().registerEvents(new BlockEvents(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerClickListener(), this);
+        Bukkit.getPluginManager().registerEvents(new SignChangedListener(), this);
     }
 }

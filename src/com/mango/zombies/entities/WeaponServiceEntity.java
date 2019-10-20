@@ -10,11 +10,13 @@ public class WeaponServiceEntity {
 
 	public static final String CHARACTERISTICS_JSON_TAG = "characteristics";
 	public static final String DAMAGE_JSON_TAG = "damage";
+	public static final String DOES_REQUIRE_PACK_A_PUNCH_JSON_TAG = "does_require_pack_a_punch";
 	public static final WeaponServiceEntityJsonSerializer SERIALIZER = new WeaponServiceEntityJsonSerializer();
 	public static final String TYPE_UUID_JSON_TAG = "type_uuid";
 
 	private List<WeaponServiceCharacteristicEntity> characteristics = new ArrayList<WeaponServiceCharacteristicEntity>();
 	private int damage;
+	private boolean doesRequirePackAPunch;
 	private UUID typeUUID;
 
 	/**
@@ -39,6 +41,20 @@ public class WeaponServiceEntity {
 	}
 
 	/**
+	 * Gets whether Pack-A-Punch is required to use this service.
+	 */
+	public boolean doesRequirePackAPunch() {
+		return doesRequirePackAPunch;
+	}
+
+	/**
+	 * Sets whether Pack-A-Punch is required to use this service.
+	 */
+	public void setDoesRequirePackAPunch(boolean doesRequirePackAPunch) {
+		this.doesRequirePackAPunch = doesRequirePackAPunch;
+	}
+
+	/**
 	 * Gets the service's type UUID.
 	 */
 	public UUID getTypeUUID() {
@@ -55,8 +71,10 @@ public class WeaponServiceEntity {
 	public WeaponServiceEntity() {
 	}
 
-	public WeaponServiceEntity(int damage, UUID typeUUID) {
+	public WeaponServiceEntity(int damage, boolean doesRequirePackAPunch, UUID typeUUID) {
+
 		this.damage = damage;
+		this.doesRequirePackAPunch = doesRequirePackAPunch;
 		this.typeUUID = typeUUID;
 	}
 }

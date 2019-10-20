@@ -1,6 +1,6 @@
 package com.mango.zombies.base;
 
-import com.mango.zombies.helper.Messaging;
+import com.mango.zombies.services.MessagingService;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -15,7 +15,7 @@ public class PlayerOnlyCommandExecutor extends BaseCommandExecutor {
         if (commandSender instanceof Player)
             return onSuccessfulCommand((Player)commandSender, command, label, args);
 
-        Messaging.showError(commandSender, PLAYER_ONLY_COMMAND_ERROR);
+        MessagingService.showError(commandSender, PLAYER_ONLY_COMMAND_ERROR);
 
         return true;
     }
