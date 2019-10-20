@@ -32,22 +32,23 @@
   </component>
   <component name="ProjectId" id="1SLUQXE1KlEjQZfI6PbiSWHhAsS" />
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/craftbukkit.jar!/" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/com/mango/zombies/commands" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15429688" />
     <property name="project.structure.side.proportion" value="0.20416124" />
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Projects\GitHub\minecraft-plugin-zombies\src\com\mango\zombies\commands" />
+      <recent name="D:\Projects\minecraft-plugin-zombies\src\com\mango\zombies\commands" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Projects\GitHub\minecraft-plugin-zombies\src\com\mango\zombies\commands" />
       <recent name="D:\Projects\minecraft-plugin-zombies" />
       <recent name="D:\Projects\minecraft-plugin-zombies\src\com\mango\zombies\schema" />
       <recent name="D:\Projects\minecraft-plugin-zombies\src\com\mango\zombies\listeners" />
       <recent name="D:\Projects\minecraft-plugin-zombies\src\com\mango\zombies\helper" />
-      <recent name="D:\Projects\minecraft-plugin-zombies\src\com\mango\zombies\gameplay" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\Projects\minecraft-plugin-zombies\src\com\mango\zombies\commands" />
     </key>
   </component>
   <component name="RunDashboard">
