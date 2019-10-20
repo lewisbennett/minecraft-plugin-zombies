@@ -5,6 +5,8 @@ import com.mango.zombies.listeners.BlockEvents;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.TimerTask;
+
 public class Main extends JavaPlugin {
 
     @Override
@@ -21,6 +23,15 @@ public class Main extends JavaPlugin {
 
         registerCommands();
         registerEvents();
+
+        int delay = PluginCore.getConfig().getAutoSaveTimerInterval() * 60 * 1000;
+
+        PluginCore.getAutoSaveTimer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                PluginCore.autoSave();
+            }
+        }, delay, delay);
     }
 
     @Override

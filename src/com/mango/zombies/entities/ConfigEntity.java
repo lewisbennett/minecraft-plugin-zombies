@@ -1,6 +1,9 @@
 package com.mango.zombies.entities;
 
+import com.mango.zombies.PluginCore;
 import com.mango.zombies.serializers.ConfigEntityJsonSerializer;
+
+import java.util.TimerTask;
 
 public class ConfigEntity {
 
@@ -75,6 +78,15 @@ public class ConfigEntity {
 	 */
 	public void setAutoSaveTimerInterval(int autoSaveTimerInterval) {
 		this.autoSaveTimerInterval = autoSaveTimerInterval < 1 ? DEFAULT_AUTO_SAVE_TIMER_INTERVAL : autoSaveTimerInterval;
+
+		int delay = autoSaveTimerInterval * 60 * 1000;
+
+		PluginCore.getAutoSaveTimer().scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				PluginCore.autoSave();
+			}
+		}, delay, delay);
 	}
 
 	/**

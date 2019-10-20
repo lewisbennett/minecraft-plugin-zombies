@@ -9,9 +9,11 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 public class PluginCore {
 
+    private static Timer autoSaveTimer = new Timer();
     private static ConfigEntity config;
     private static File dataFolder;
     private static PluginDescriptionFile descriptionFile;
@@ -24,6 +26,13 @@ public class PluginCore {
     private static File weaponClassesFolder;
     private static List<WeaponEntity> weapons = new ArrayList<WeaponEntity>();
     private static File weaponsFolder;
+
+    /**
+     * Gets the auto save timer.
+     */
+    public static Timer getAutoSaveTimer() {
+        return autoSaveTimer;
+    }
 
     /**
      * Gets the plugin's configuration.
@@ -226,6 +235,22 @@ public class PluginCore {
             weapons.add(FileManager.readContents(file.toString(), WeaponEntity.SERIALIZER, WeaponEntity.class));
 
         log(String.format(weapons.size() == 1 ? "%d weapon imported." : "%d weapons imported.", weapons.size()));
+    }
+
+    /**
+     * Saves everything.
+     */
+    public static void autoSave() {
+
+        log("Auto save started.");
+
+        saveConfig();
+        saveMaps();
+        savePerks();
+        saveWeaponClasses();
+        saveWeapons();
+
+        log("Auto save completed.");
     }
 
     /**
