@@ -13,21 +13,34 @@ import java.util.UUID;
 
 public class WeaponClassEntity {
 
+	//region Constant Values
 	public static final String COLOR_JSON_TAG = "color";
 	public static final String DEFAULT_ITEM_JSON_TAG = "default_item";
+	public static final int DEFAULT_MAGAZINE_SIZE = 8;
+	public static final int DEFAULT_PACK_A_PUNCHED_MAGAZINE_SIZE = 12;
+	public static final int DEFAULT_PACK_A_PUNCHED_RELOAD_SPEED = 6;
+	public static final int DEFAULT_PACK_A_PUNCHED_TOTAL_AMMO_CAPACITY = 120;
+	public static final int DEFAULT_PACK_A_PUNCHED_PROJECTILE_COUNT = 1;
+	public static final int DEFAULT_PROJECTILE_COUNT = 1;
+	public static final int DEFAULT_RELOAD_SPEED = 4;
 	public static final String DEFAULT_SERVICES_JSON_TAG = "default_services";
+	public static final int DEFAULT_TOTAL_AMMO_CAPACITY = 80;
 	public static final String DEFAULT_WEAPON_COST_JSON_TAG = "default_weapon_cost_json_tag";
 	public static final String ID_JSON_TAG = "id";
 	public static final String NAME_JSON_TAG = "name";
 	public static final WeaponClassEntityJsonSerializer SERIALIZER = new WeaponClassEntityJsonSerializer();
+	//endregion
 
+	//region Fields
 	private String color;
 	private String defaultItem;
 	private List<WeaponServiceEntity> defaultServices = new ArrayList<WeaponServiceEntity>();
 	private int defaultWeaponCost;
 	private String id;
 	private String name;
+	//endregion
 
+	//region Getters/Setters
 	/**
 	 * Gets the color used for the weapon class.
 	 */
@@ -104,7 +117,9 @@ public class WeaponClassEntity {
 	public void setName(String name) {
 		this.name = name;
 	}
+	//endregion
 
+	//region Constructors
 	public WeaponClassEntity() {
 	}
 
@@ -141,9 +156,9 @@ public class WeaponClassEntity {
 		if (standardService.getTypeUUID() != WeaponService.MELEE) {
 
 			standardService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(defaultWeaponCost / 2, WeaponCharacteristic.AMMO_COST));
-			standardService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(8, WeaponCharacteristic.MAGAZINE_SIZE));
-			standardService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(4, WeaponCharacteristic.RELOAD_SPEED));
-			standardService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(80, WeaponCharacteristic.TOTAL_AMMO_CAPACITY));
+			standardService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_MAGAZINE_SIZE, WeaponCharacteristic.MAGAZINE_SIZE));
+			standardService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_RELOAD_SPEED, WeaponCharacteristic.RELOAD_SPEED));
+			standardService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_TOTAL_AMMO_CAPACITY, WeaponCharacteristic.TOTAL_AMMO_CAPACITY));
 		}
 
 		if (!canPackAPunch)
@@ -156,8 +171,9 @@ public class WeaponClassEntity {
 			return;
 
 		packAPunchService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(defaultWeaponCost, WeaponCharacteristic.AMMO_COST));
-		packAPunchService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(12, WeaponCharacteristic.MAGAZINE_SIZE));
-		packAPunchService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(6, WeaponCharacteristic.RELOAD_SPEED));
-		packAPunchService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(120, WeaponCharacteristic.TOTAL_AMMO_CAPACITY));
+		packAPunchService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_PACK_A_PUNCHED_MAGAZINE_SIZE, WeaponCharacteristic.MAGAZINE_SIZE));
+		packAPunchService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_PACK_A_PUNCHED_RELOAD_SPEED, WeaponCharacteristic.RELOAD_SPEED));
+		packAPunchService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_PACK_A_PUNCHED_TOTAL_AMMO_CAPACITY, WeaponCharacteristic.TOTAL_AMMO_CAPACITY));
 	}
+	//endregion
 }

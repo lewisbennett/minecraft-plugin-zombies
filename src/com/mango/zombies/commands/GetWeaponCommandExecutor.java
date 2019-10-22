@@ -4,13 +4,18 @@ import com.mango.zombies.base.PlayerOnlyCommandExecutor;
 import com.mango.zombies.gameplay.GameplayWeapon;
 import com.mango.zombies.services.MessagingService;
 import com.mango.zombies.services.GameplayService;
+import net.minecraft.server.v1_14_R1.Tuple;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class GetWeaponCommandExecutor extends PlayerOnlyCommandExecutor {
 
+	//region Constant Values
 	public static final String CORRECT_USAGE_ERROR = "Correct usage: /getweapon [weapon ID]";
+	//endregion
 
+	//region Event Handlers
 	@Override
 	public boolean onSuccessfulCommand(Player player, Command command, String label, String[] args) {
 
@@ -19,14 +24,15 @@ public class GetWeaponCommandExecutor extends PlayerOnlyCommandExecutor {
 			return true;
 		}
 
-		GameplayWeapon gameplayWeapon = GameplayService.giveWeapon(player, args[0]);
+		Tuple<ItemStack, GameplayWeapon> weapon = GameplayService.giveWeapon(player, args[0]);
 
-		if (gameplayWeapon == null)
+		if (weapon == null)
 			return true;
 
-		player.getInventory().addItem(gameplayWeapon.getItem());
-		MessagingService.showSuccess(player, gameplayWeapon.getWeapon().getName() + " added to inventory.");
+		player.getInventory().addItem(weapon.a());
+		MessagingService.showSuccess(player, weapon.b().getWeapon().getName() + " added to inventory.");
 
 		return true;
 	}
+	//endregion
 }

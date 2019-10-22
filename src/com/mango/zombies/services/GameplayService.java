@@ -6,6 +6,7 @@ import com.mango.zombies.entities.WeaponEntity;
 import com.mango.zombies.gameplay.GameplayCore;
 import com.mango.zombies.gameplay.GameplayWeapon;
 import com.mango.zombies.helper.HiddenStringUtils;
+import net.minecraft.server.v1_14_R1.Tuple;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -18,13 +19,16 @@ import java.util.UUID;
 
 public class GameplayService {
 
+    //region Constant Values
     public static final String WEAPON_CLASS_DOES_NOT_EXIST_ERROR = "Could not find weapon class \"%s\". This weapon cannot be used.";
     public static final String WEAPON_DOES_NOT_EXIST_ERROR = "%s is not a valid weapon ID.";
+    //endregion
 
+    //region Public Methods
     /**
      * Gives a player a weapon.
      */
-    public static GameplayWeapon giveWeapon(Player player, String weaponId) {
+    public static Tuple<ItemStack, GameplayWeapon> giveWeapon(Player player, String weaponId) {
 
         WeaponEntity weapon = null;
 
@@ -61,9 +65,10 @@ public class GameplayService {
         itemMeta.setLore(lore);
         itemStack.setItemMeta(itemMeta);
 
-        GameplayWeapon gameplayWeapon = new GameplayWeapon(itemStack, weapon);
+        GameplayWeapon gameplayWeapon = new GameplayWeapon(weapon);
         GameplayCore.getWeapons().put(uuid, gameplayWeapon);
 
-        return gameplayWeapon;
+        return new Tuple<ItemStack, GameplayWeapon>(itemStack, gameplayWeapon);
     }
+    //endregion
 }

@@ -1,7 +1,6 @@
 package com.mango.zombies.entities;
 
 import com.mango.zombies.PluginCore;
-import com.mango.zombies.schema.WeaponService;
 import com.mango.zombies.serializers.WeaponEntityJsonSerializer;
 
 import java.util.ArrayList;
@@ -9,6 +8,7 @@ import java.util.List;
 
 public class WeaponEntity {
 
+	//region Constant Values
 	public static final String COST_JSON_TAG = "cost";
 	public static final String ID_JSON_TAG = "id";
 	public static final String IS_WONDER_WEAPON_JSON_TAG = "is_wonder_weapon";
@@ -18,16 +18,16 @@ public class WeaponEntity {
 	public static final WeaponEntityJsonSerializer SERIALIZER = new WeaponEntityJsonSerializer();
 	public static final String SERVICES_JSON_TAG = "services";
 	public static final String WEAPON_CLASS_ID_JSON_TAG = "weapon_class_id";
+	//endregion
 
+	//region Fields
 	private int cost;
-	private String id;
+	private String id, item, name, packAPunchName, weaponClassId;
 	private boolean isWonderWeapon;
-	private String item;
-	private String name;
-	private String packAPunchName;
 	private List<WeaponServiceEntity> services = new ArrayList<WeaponServiceEntity>();
-	private String weaponClassId;
+	//endregion
 
+	//region Getters/Setters
 	/**
 	 * Gets the cost of the weapon.
 	 */
@@ -132,20 +132,9 @@ public class WeaponEntity {
 	public void setWeaponClassId(String weaponClassId) {
 		this.weaponClassId = weaponClassId;
 	}
+	//endregion
 
-	/**
-	 * Gets whether this weapon can be Pack-A-Punched.
-	 */
-	public boolean canPackAPunch() {
-
-		for (WeaponServiceEntity service : services) {
-			if (service.doesRequirePackAPunch())
-				return true;
-		}
-
-		return false;
-	}
-
+	//region Public Methods
 	/**
 	 * Gets this weapon's class.
 	 */
@@ -159,7 +148,9 @@ public class WeaponEntity {
 
 		return null;
 	}
+	//endregion
 
+	//region Constructors
 	public WeaponEntity() {
 	}
 
@@ -180,4 +171,5 @@ public class WeaponEntity {
 		item = weaponClass.getDefaultItem();
 		services.addAll(weaponClass.getDefaultServices());
 	}
+	//endregion
 }
