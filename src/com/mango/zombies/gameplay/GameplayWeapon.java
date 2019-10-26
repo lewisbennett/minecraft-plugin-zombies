@@ -85,11 +85,7 @@ public class GameplayWeapon {
      * Gets the projectile count.
      */
     public int getProjectileCount() {
-
-        if (isPackAPunched)
-            return packAPunchedProjectileCount < 1 ? WeaponClassEntity.DEFAULT_PACK_A_PUNCHED_PROJECTILE_COUNT : packAPunchedProjectileCount;
-
-        return projectileCount < 1 ? WeaponClassEntity.DEFAULT_PROJECTILE_COUNT : projectileCount;
+        return isPackAPunched ? packAPunchedProjectileCount : projectileCount;
     }
 
     /**
@@ -195,21 +191,16 @@ public class GameplayWeapon {
             return;
         }
 
-        int delay = 0;
+        double multiply = 2.5;
         int projectiles = getProjectileCount();
 
         for (int i = 0; i < projectiles; i++) {
 
-            new BukkitRunnable() {
+            double finalMultiply = multiply;
 
-                @Override
-                public void run() {
-                    player.launchProjectile(Snowball.class, player.getLocation().getDirection().multiply(2.5));
-                }
+            player.launchProjectile(Snowball.class, player.getLocation().getDirection().multiply(finalMultiply));
 
-            }.runTaskLater(Main.getInstance(), delay);
-
-            delay += 2;
+            multiply *= 0.90;
         }
 
         ammoInMagazine--;
