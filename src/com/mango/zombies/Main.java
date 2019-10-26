@@ -10,15 +10,20 @@ import java.util.TimerTask;
 
 public class Main extends JavaPlugin {
 
+    //region Static Fields
     private static Main instance;
+    //endregion
 
+    //region Static Getters/Setters
     /**
      * Gets the plugin instance.
      */
     public static Main getInstance() {
         return instance;
     }
+    //endregion
 
+    //region Lifecycle
     @Override
     public void onEnable() {
 
@@ -30,6 +35,8 @@ public class Main extends JavaPlugin {
         PluginCore.importPerks();
         PluginCore.importWeaponClasses();
         PluginCore.importWeapons();
+
+        PluginCore.enableMaps();
 
         registerCommands();
         registerEvents();
@@ -55,7 +62,9 @@ public class Main extends JavaPlugin {
         PluginCore.saveWeaponClasses();
         PluginCore.saveWeapons();
     }
+    //endregion
 
+    //region Public Methods
     /**
      * Registers all plugin commands with corresponding executors.
      */
@@ -78,4 +87,5 @@ public class Main extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PlayerClickListener(), this);
         Bukkit.getPluginManager().registerEvents(new SignChangedListener(), this);
     }
+    //endregion
 }

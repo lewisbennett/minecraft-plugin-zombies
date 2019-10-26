@@ -17,6 +17,7 @@ public class MapEntityJsonSerializer implements JsonSerializer<MapEntity>, JsonD
         MapEntity map = new MapEntity();
 
         map.setDeleteKey(jsonObject.get(MapEntity.DELETE_KEY_JSON_TAG).getAsString());
+        map.setEnabled(jsonObject.get(MapEntity.ENABLED_JSON_TAG).getAsBoolean());
         map.setId(jsonObject.get(MapEntity.ID_JSON_TAG).getAsString());
         map.setName(jsonObject.get(MapEntity.NAME_JSON_TAG).getAsString());
         map.setOriginPoint(LocationEntity.SERIALIZER.deserialize(jsonObject.get(MapEntity.ORIGIN_POINT_JSON_TAG), LocationEntity.class, jsonDeserializationContext));
@@ -38,6 +39,7 @@ public class MapEntityJsonSerializer implements JsonSerializer<MapEntity>, JsonD
         jsonObject.add(MapEntity.ID_JSON_TAG, new JsonPrimitive(mapEntity.getId()));
         jsonObject.add(MapEntity.NAME_JSON_TAG, new JsonPrimitive(mapEntity.getName()));
         jsonObject.add(MapEntity.DELETE_KEY_JSON_TAG, new JsonPrimitive(mapEntity.getDeleteKey()));
+        jsonObject.add(MapEntity.ENABLED_JSON_TAG, new JsonPrimitive(mapEntity.isEnabled()));
         jsonObject.add(MapEntity.ORIGIN_POINT_JSON_TAG, LocationEntity.SERIALIZER.serialize(mapEntity.getOriginPoint(), LocationEntity.class, jsonSerializationContext));
 
         JsonArray playerSpawnsJsonArray = new JsonArray();

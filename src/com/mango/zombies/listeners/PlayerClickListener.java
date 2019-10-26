@@ -1,10 +1,8 @@
 package com.mango.zombies.listeners;
 
-import com.mango.zombies.entities.WeaponServiceEntity;
 import com.mango.zombies.gameplay.GameplayCore;
 import com.mango.zombies.gameplay.GameplayWeapon;
 import com.mango.zombies.helper.HiddenStringUtils;
-import com.mango.zombies.schema.WeaponService;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;

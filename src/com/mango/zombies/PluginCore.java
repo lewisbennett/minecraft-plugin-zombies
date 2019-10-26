@@ -3,6 +3,7 @@ package com.mango.zombies;
 import com.mango.zombies.entities.*;
 import com.mango.zombies.services.FilingService;
 import com.mango.zombies.schema.FileName;
+import net.minecraft.server.v1_14_R1.Tuple;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginDescriptionFile;
 
@@ -13,6 +14,7 @@ import java.util.Timer;
 
 public class PluginCore {
 
+    //region Fields
     private static Timer autoSaveTimer = new Timer();
     private static ConfigEntity config;
     private static File dataFolder;
@@ -26,7 +28,9 @@ public class PluginCore {
     private static File weaponClassesFolder;
     private static List<WeaponEntity> weapons = new ArrayList<WeaponEntity>();
     private static File weaponsFolder;
+    //endregion
 
+    //region Getters/Setters
     /**
      * Gets the auto save timer.
      */
@@ -131,32 +135,40 @@ public class PluginCore {
     public static File getWeaponsFolder() {
         return weaponsFolder;
     }
+    //endregion
 
+    //region Public Methods
     /**
-     * Formats then logs a message to the console.
+     * Saves everything.
      */
-    public static void log(String message) {
-        System.out.println("[Zombies] " + message);
+    public static void autoSave() {
+
+        log("Auto save started.");
+
+        saveConfig();
+        saveMaps();
+        savePerks();
+        saveWeaponClasses();
+        saveWeapons();
+
+        log("Auto save completed.");
     }
 
     /**
-     * Creates the folders needed for the plugin.
+     * Enables all available maps.
      */
-    public static void setupFolders(File pluginRoot) {
+    public static void enableMaps() {
 
-        dataFolder = pluginRoot;
-        mapsFolder = new File(dataFolder + "/Maps/");
-        importFolder = new File(dataFolder + "/Import/");
-        weaponsFolder = new File(dataFolder + "/Weapons/");
-        weaponClassesFolder = new File(dataFolder + "/Weapon Classes/");
-        perksFolder = new File(dataFolder + "/Perks/");
+        for (MapEntity map : maps) {
 
-        createDirectory(dataFolder);
-        createDirectory(importFolder);
-        createDirectory(mapsFolder);
-        createDirectory(perksFolder);
-        createDirectory(weaponsFolder);
-        createDirectory(weaponClassesFolder);
+            if (!map.isEnabled())
+                continue;
+
+            Tuple<Boolean, String> enabled = map.enableMap();
+
+            if (!enabled.a())
+                log(enabled.b());
+        }
     }
 
     /**
@@ -238,19 +250,10 @@ public class PluginCore {
     }
 
     /**
-     * Saves everything.
+     * Formats then logs a message to the console.
      */
-    public static void autoSave() {
-
-        log("Auto save started.");
-
-        saveConfig();
-        saveMaps();
-        savePerks();
-        saveWeaponClasses();
-        saveWeapons();
-
-        log("Auto save completed.");
+    public static void log(String message) {
+        System.out.println("[Zombies] " + message);
     }
 
     /**
@@ -317,8 +320,32 @@ public class PluginCore {
         PluginCore.log(String.format(weapons.size() == 1 ? "%d weapon saved." : "%d weapons saved.", weapons.size()));
     }
 
+    /**
+     * Creates the folders needed for the plugin.
+     */
+    public static void setupFolders(File pluginRoot) {
+
+        dataFolder = pluginRoot;
+        mapsFolder = new File(dataFolder + "/Maps/");
+        importFolder = new File(dataFolder + "/Import/");
+        weaponsFolder = new File(dataFolder + "/Weapons/");
+        weaponClassesFolder = new File(dataFolder + "/Weapon Classes/");
+        perksFolder = new File(dataFolder + "/Perks/");
+
+        createDirectory(dataFolder);
+        createDirectory(importFolder);
+        createDirectory(mapsFolder);
+        createDirectory(perksFolder);
+        createDirectory(weaponsFolder);
+        createDirectory(weaponClassesFolder);
+    }
+    //endregion
+
+    //region Private Methods
     private static void createDirectory(File file) {
+
         if (!file.exists() && !file.mkdir())
             System.out.println("[Zombies] Could not create plugin directory: " + file.toString());
     }
+    //endregion
 }
