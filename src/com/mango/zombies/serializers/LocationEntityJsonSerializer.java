@@ -8,6 +8,7 @@ import java.lang.reflect.Type;
 
 public class LocationEntityJsonSerializer implements JsonSerializer<LocationEntity>, JsonDeserializer<LocationEntity> {
 
+    //region Public Methods
     @Override
     public LocationEntity deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
 
@@ -33,4 +34,5 @@ public class LocationEntityJsonSerializer implements JsonSerializer<LocationEnti
 
         return jsonObject;
     }
+    //endregion
 }

@@ -6,33 +6,37 @@ author: Useless_Mango
 
 commands:
     info:
-        description: Get plugin information.
-        usage: /<command>
+      description: Get plugin information.
+      usage: /<command>
         
     mapinfo:
-       description: Gets information related to specified map.
-       usage: /<command> [map ID]
+      description: Gets information related to specified map.
+      usage: /<command> [map ID]
         
     createmap:
-        description: Creates a new map.
-        usage: /<command> [ID] [name]
+      description: Creates a new map.
+      usage: /<command> [ID] [name]
         
     createweaponclass:
-       description: Creates a new weapon class.
-       usage: /<command> [ID] [default cost] [weapon type] [can Pack-A-Punch yes/no] [name]
+      description: Creates a new weapon class.
+      usage: /<command> [ID] [default cost] [weapon type] [can Pack-A-Punch yes/no] [name]
         
     createweapon:
-        description: Creates a new weapon.
-        usage: /<command> [ID] [weapon class ID] [name]
+      description: Creates a new weapon.
+      usage: /<command> [ID] [weapon class ID] [name]
         
     createperk:
-       description: Creates a new perk.
-       usage: /<command> [ID] [cost] [name]
+      description: Creates a new perk.
+      usage: /<command> [ID] [cost] [name]
         
     getweapon:
-        description: Gets the specified weapon and adds it to your inventory.
-        usage: /<command> [weapon ID]
+      description: Gets the specified weapon and adds it to your inventory.
+      usage: /<command> [weapon ID]
 
     setposition:
       description: Sets either the top or bottom position of a map.
       usage: /<command> [map ID] [top/bottom]
+
+    deletemap:
+      description: Deletes a map.
+      usage: /<command> [map ID] [delete key]

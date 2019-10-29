@@ -24,6 +24,7 @@ public class MapEntityJsonSerializer implements JsonSerializer<MapEntity>, JsonD
         map.setId(jsonObject.get(MapEntity.ID_JSON_TAG).getAsString());
         map.setName(jsonObject.get(MapEntity.NAME_JSON_TAG).getAsString());
         map.setOriginPoint(BlockLocationEntity.SERIALIZER.deserialize(jsonObject.get(MapEntity.ORIGIN_POINT_JSON_TAG), BlockLocationEntity.class, jsonDeserializationContext));
+        map.setTop(LocationEntity.SERIALIZER.deserialize(jsonObject.get(MapEntity.TOP_JSON_TAG), LocationEntity.class, jsonDeserializationContext));
 
         for (JsonElement j : jsonObject.get(MapEntity.PLAYER_SPAWNS_JSON_TAG).getAsJsonArray())
             map.getPlayerSpawns().add(BlockLocationEntity.SERIALIZER.deserialize(j, BlockLocationEntity.class, jsonDeserializationContext));
