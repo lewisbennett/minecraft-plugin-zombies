@@ -11,25 +11,42 @@ import java.util.Random;
 public class MapEntity {
 
 	//region Constant Values
+	public static final String BOTTOM_JSON_TAG = "bottom";
 	public static final String DELETE_KEY_JSON_TAG = "delete_key";
 	public static final String ENABLED_JSON_TAG = "enabled";
+	public static final String ENEMY_SPAWNS_JSON_TAG = "enemy_spawns";
 	public static final String ID_JSON_TAG = "id";
 	public static final MapEntityJsonSerializer SERIALIZER = new MapEntityJsonSerializer();
 	public static final String NAME_JSON_TAG = "name";
 	public static final String ORIGIN_POINT_JSON_TAG = "origin_point";
 	public static final String PLAYER_SPAWNS_JSON_TAG = "player_spawns";
-	public static final String ENEMY_SPAWNS_JSON_TAG = "enemy_spawns";
+	public static final String TOP_JSON_TAG = "top";
 	//endregion
 
 	//region Fields
+	private LocationEntity bottom, top;
 	private String deleteKey, id, name;
 	private boolean enabled = false;
-	private LocationEntity originPoint;
-	private List<LocationEntity> playerSpawns = new ArrayList<LocationEntity>();
 	private List<EnemySpawnEntity> enemySpawns = new ArrayList<EnemySpawnEntity>();
+	private BlockLocationEntity originPoint;
+	private List<BlockLocationEntity> playerSpawns = new ArrayList<BlockLocationEntity>();
 	//endregion
 
 	//region Getters/Setters
+	/**
+	 * Gets the bottom corner of the map.
+	 */
+	public LocationEntity getBottom() {
+		return bottom;
+	}
+
+	/**
+	 * Sets the bottom corner of the map.
+	 */
+	public void setBottom(LocationEntity bottom) {
+		this.bottom = bottom;
+	}
+
 	/**
 	 * Gets the map's delete key.
 	 */
@@ -56,6 +73,13 @@ public class MapEntity {
 	 */
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	/**
+	 * Gets the locations where enemies can spawn in the map.
+	 */
+	public List<EnemySpawnEntity> getEnemySpawns() {
+		return enemySpawns;
 	}
 
 	/**
@@ -89,14 +113,14 @@ public class MapEntity {
 	/**
 	 * Gets the map's origin point.
 	 */
-	public LocationEntity getOriginPoint() {
+	public BlockLocationEntity getOriginPoint() {
 		return originPoint;
 	}
 
 	/**
 	 * Sets the map's origin point.
 	 */
-	public void setOriginPoint(LocationEntity originPoint) {
+	public void setOriginPoint(BlockLocationEntity originPoint) {
 		this.originPoint = originPoint;
 	}
 
@@ -104,21 +128,28 @@ public class MapEntity {
 	 * Sets the map's origin point.
 	 */
 	public void setOriginPoint(Location origin) {
-		originPoint = new LocationEntity(origin);
+		originPoint = new BlockLocationEntity(origin);
 	}
 
 	/**
 	 * Gets the locations where players can spawn in the map.
 	 */
-	public List<LocationEntity> getPlayerSpawns() {
+	public List<BlockLocationEntity> getPlayerSpawns() {
 		return playerSpawns;
 	}
 
 	/**
-	 * Gets the locations where enemies can spawn in the map.
+	 * Gets the top corner of the map.
 	 */
-	public List<EnemySpawnEntity> getEnemySpawns() {
-		return enemySpawns;
+	public LocationEntity getTop() {
+		return top;
+	}
+
+	/**
+	 * Sets the top corner of the map.
+	 */
+	public void setTop(LocationEntity top) {
+		this.top = top;
 	}
 	//endregion
 
@@ -155,7 +186,7 @@ public class MapEntity {
 
 		this.id = id;
 		this.name = name;
-		originPoint = new LocationEntity(origin);
+		originPoint = new BlockLocationEntity(origin);
 		deleteKey = Integer.toString(100000 + new Random().nextInt(999999)).substring(0, 6);
 	}
 	//endregion

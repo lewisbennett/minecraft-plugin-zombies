@@ -32,3 +32,7 @@ commands:
     getweapon:
         description: Gets the specified weapon and adds it to your inventory.
         usage: /<command> [weapon ID]
+
+    setposition:
+      description: Sets either the top or bottom position of a map.
+      usage: /<command> [map ID] [top/bottom]

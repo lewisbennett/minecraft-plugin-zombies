@@ -3,7 +3,7 @@ package com.mango.zombies.entities;
 import com.mango.zombies.serializers.EnemySpawnEntityJsonSerializer;
 import org.bukkit.Location;
 
-public class EnemySpawnEntity extends LocationEntity {
+public class EnemySpawnEntity extends BlockLocationEntity {
 
     public static final String ENEMY_JSON_TAG = "enemy";
     public static final EnemySpawnEntityJsonSerializer SERIALIZER = new EnemySpawnEntityJsonSerializer();

@@ -77,6 +77,7 @@ public class Main extends JavaPlugin {
         this.getCommand("createweapon").setExecutor(new CreateWeaponCommandExecutor());
         this.getCommand("createperk").setExecutor(new CreatePerkCommandExecutor());
         this.getCommand("getweapon").setExecutor(new GetWeaponCommandExecutor());
+        this.getCommand("setposition").setExecutor(new SetPositionCommandExecutor());
     }
 
     /**
