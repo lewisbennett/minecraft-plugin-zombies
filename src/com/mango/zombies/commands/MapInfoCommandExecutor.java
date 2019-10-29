@@ -10,9 +10,12 @@ import org.bukkit.command.CommandSender;
 
 public class MapInfoCommandExecutor extends BaseCommandExecutor {
 
+	//region Constant Values
 	public static final String CORRECT_USAGE_ERROR = "Correct usage: /mapinfo [map ID]";
 	public static final String MAP_DOES_NOT_EXIST_ERROR = "%s is not a valid map ID.";
-	
+	//endregion
+
+	//region Event Handlers
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
@@ -39,6 +42,8 @@ public class MapInfoCommandExecutor extends BaseCommandExecutor {
 		sender.sendMessage(new String[] {
 			ChatColor.GREEN + "" + "<==-- " + map.getName() + " --==>",
 			ChatColor.YELLOW + "ID: " + ChatColor.RESET + map.getId(),
+			ChatColor.YELLOW + "Top: " + ChatColor.RESET + map.getTop().toString(),
+			ChatColor.YELLOW + "Bottom: " + ChatColor.RESET + map.getBottom().toString(),
 			ChatColor.YELLOW + "Origin point: " + ChatColor.RESET + map.getOriginPoint().toString(),
 			ChatColor.YELLOW + "Player spawn points: " + ChatColor.RESET + map.getPlayerSpawns().size(),
 			ChatColor.YELLOW + "Enemy spawn points: " + ChatColor.RESET + map.getEnemySpawns().size(),
@@ -47,4 +52,5 @@ public class MapInfoCommandExecutor extends BaseCommandExecutor {
 		
 		return true;
 	}
+	//endregion
 }

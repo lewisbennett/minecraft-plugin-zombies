@@ -24,7 +24,7 @@ public class MapEntity {
 	//endregion
 
 	//region Fields
-	private LocationEntity bottom, top;
+	private LocationEntity bottom = new LocationEntity(), top = new LocationEntity();
 	private String deleteKey, id, name;
 	private boolean enabled = false;
 	private List<EnemySpawnEntity> enemySpawns = new ArrayList<EnemySpawnEntity>();
