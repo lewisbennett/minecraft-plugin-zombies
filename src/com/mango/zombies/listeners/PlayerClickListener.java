@@ -34,7 +34,7 @@ public class PlayerClickListener implements Listener {
                 return;
             }
 
-            gameplayWeapon.reload(event.getItem());
+            gameplayWeapon.reload(event.getPlayer(), event.getItem());
 
             return;
         }

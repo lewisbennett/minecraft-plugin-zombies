@@ -1,6 +1,6 @@
 package com.mango.zombies.helper;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import org.bukkit.ChatColor;
 
@@ -16,7 +16,7 @@ public class HiddenStringUtils {
     public static boolean hasHiddenString(String input) {
         if (input == null) return false;
 
-        return input.indexOf(ZOMBIES_SEQUENCE_HEADER) > -1 && input.indexOf(ZOMBIES_SEQUENCE_FOOTER) > -1;
+        return input.contains(ZOMBIES_SEQUENCE_HEADER) && input.contains(ZOMBIES_SEQUENCE_FOOTER);
     }
 
     public static String extractHiddenString(String input) {
@@ -61,7 +61,7 @@ public class HiddenStringUtils {
     private static String stringToColors(String normal) {
         if (normal == null) return null;
 
-        byte[] bytes = normal.getBytes(Charset.forName("UTF-8"));
+        byte[] bytes = normal.getBytes(StandardCharsets.UTF_8);
         char[] chars = new char[bytes.length * 4];
 
         for (int i = 0; i < bytes.length; i++) {
@@ -91,7 +91,7 @@ public class HiddenStringUtils {
             bytes[i / 2] = hexToByte(chars[i], chars[i + 1]);
         }
 
-        return new String(bytes, Charset.forName("UTF-8"));
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 
     private static int hexToUnsignedInt(char c) {

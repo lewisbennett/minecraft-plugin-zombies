@@ -8,17 +8,22 @@ import java.util.UUID;
 
 public class WeaponServiceEntity {
 
+	//region Constant Values
 	public static final String CHARACTERISTICS_JSON_TAG = "characteristics";
 	public static final String DAMAGE_JSON_TAG = "damage";
 	public static final String DOES_REQUIRE_PACK_A_PUNCH_JSON_TAG = "does_require_pack_a_punch";
 	public static final WeaponServiceEntityJsonSerializer SERIALIZER = new WeaponServiceEntityJsonSerializer();
 	public static final String TYPE_UUID_JSON_TAG = "type_uuid";
+	//endregion
 
+	//region Fields
 	private List<WeaponServiceCharacteristicEntity> characteristics = new ArrayList<WeaponServiceCharacteristicEntity>();
 	private int damage;
 	private boolean doesRequirePackAPunch;
 	private UUID typeUUID;
+	//endregion
 
+	//region Getters/Setters
 	/**
 	 * Gets the service's characteristics.
 	 */
@@ -67,7 +72,9 @@ public class WeaponServiceEntity {
 	public void setTypeUUID(UUID typeUUID) {
 		this.typeUUID = typeUUID;
 	}
+	//endregion
 
+	//region Constructors
 	public WeaponServiceEntity() {
 	}
 
@@ -77,4 +84,5 @@ public class WeaponServiceEntity {
 		this.doesRequirePackAPunch = doesRequirePackAPunch;
 		this.typeUUID = typeUUID;
 	}
+	//endregion
 }

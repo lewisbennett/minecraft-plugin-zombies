@@ -16,6 +16,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GameplayWeapon {
 
     //region Fields
@@ -25,6 +28,10 @@ public class GameplayWeapon {
 
     private int defaultAmmoInMagazine = WeaponClassEntity.DEFAULT_MAGAZINE_SIZE, defaultAvailableAmmo = WeaponClassEntity.DEFAULT_TOTAL_AMMO_CAPACITY;
     private int defaultPackAPunchedAmmoInMagazine = WeaponClassEntity.DEFAULT_PACK_A_PUNCHED_MAGAZINE_SIZE, defaultPackAPunchedAvailableAmmo = WeaponClassEntity.DEFAULT_PACK_A_PUNCHED_TOTAL_AMMO_CAPACITY;
+
+    private Sound gunshotSound = Sound.valueOf(WeaponClassEntity.DEFAULT_GUNSHOT_USAGE_SOUND), packAPunchedGunshotSound = Sound.valueOf(WeaponClassEntity.DEFAULT_GUNSHOT_USAGE_SOUND);
+    private Sound meleeSound = Sound.valueOf(WeaponClassEntity.DEFAULT_MELEE_USAGE_SOUND), packAPunchedMeleeSound = Sound.valueOf(WeaponClassEntity.DEFAULT_MELEE_USAGE_SOUND);
+    private Sound outOfAmmoSound = Sound.valueOf(WeaponClassEntity.DEFAULT_OUT_OF_AMMO_SOUND), packAPunchedOutOfAmmoSound = Sound.valueOf(WeaponClassEntity.DEFAULT_OUT_OF_AMMO_SOUND);
 
     private WeaponServiceEntity gunshotService, packAPunchedGunshotService, meleeService, packAPunchedMeleeService;
     private boolean isPackAPunched, isReloading;
@@ -65,6 +72,27 @@ public class GameplayWeapon {
      */
     public int getAvailableAmmo() {
         return availableAmmo;
+    }
+
+    /**
+     * Gets the sound emitted on gunshot.
+     */
+    public Sound getGunshotSound() {
+        return isPackAPunched ? packAPunchedGunshotSound : gunshotSound;
+    }
+
+    /**
+     * Gets the sound emitted on melee.
+     */
+    public Sound getMeleeSound() {
+        return isPackAPunched ? packAPunchedMeleeSound : meleeSound;
+    }
+
+    /**
+     * Gets the sound emitted when the player is out of ammo.
+     */
+    public Sound getOutOfAmmoSound() {
+        return isPackAPunched ? packAPunchedOutOfAmmoSound : outOfAmmoSound;
     }
 
     /**
@@ -132,39 +160,40 @@ public class GameplayWeapon {
     /**
      * Reloads this weapon.
      */
-    public void reload(ItemStack itemStack) {
+    public void reload(Player player, ItemStack itemStack) {
 
-        if (gunshotService == null || isReloading)
+        if (gunshotService == null || isReloading || ammoInMagazine == getDefaultAmmoInMagazine())
             return;
+
+        if (ammoInMagazine < 1 && availableAmmo < 1) {
+            remindOfNoAmmo(player, itemStack, true);
+            return;
+        }
 
         isReloading = true;
 
-        setReloadingNoAmmoDisplay(itemStack);
+        remindOfNoAmmo(player, itemStack, true);
 
         int defaultAmmo = getDefaultAmmoInMagazine();
 
-        new BukkitRunnable() {
+        Main.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(Main.getInstance(), () -> {
 
-            @Override
-            public void run() {
+            if (availableAmmo > defaultAmmo) {
 
-                if (availableAmmo > defaultAmmo) {
+                ammoInMagazine = defaultAmmo;
+                availableAmmo -= defaultAmmo;
 
-                    ammoInMagazine = defaultAmmo;
-                    availableAmmo -= defaultAmmo;
+            } else {
 
-                } else {
-
-                    ammoInMagazine = availableAmmo;
-                    availableAmmo = 0;
-                }
-
-                isReloading = false;
-
-                setAmmoDisplay(itemStack);
+                ammoInMagazine = availableAmmo;
+                availableAmmo = 0;
             }
 
-        }.runTaskLater(Main.getInstance(), getReloadSpeed() * 20);
+            isReloading = false;
+
+            setAmmoDisplay(itemStack);
+
+        }, getReloadSpeed() * 20);
     }
 
     /**
@@ -175,7 +204,7 @@ public class GameplayWeapon {
         setReloadingNoAmmoDisplay(itemStack);
 
         if (playSound)
-            player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 10, 1);
+            playOutOfAmmoSound(player);
     }
 
     /**
@@ -183,13 +212,20 @@ public class GameplayWeapon {
      */
     public void shoot(Player player, ItemStack itemStack) {
 
-        if (gunshotService == null || isReloading)
+        if (gunshotService == null)
             return;
+
+        if (isReloading) {
+            playOutOfAmmoSound(player);
+            return;
+        }
 
         if (!canShoot()) {
             remindOfNoAmmo(player, itemStack,true);
             return;
         }
+
+        playGunshotSound(player);
 
         double multiply = 2.5;
         int projectiles = getProjectileCount();
@@ -198,9 +234,9 @@ public class GameplayWeapon {
 
             double finalMultiply = multiply;
 
-            player.launchProjectile(Snowball.class, player.getLocation().getDirection().multiply(finalMultiply));
+            Snowball snowball = player.launchProjectile(Snowball.class, player.getLocation().getDirection().multiply(finalMultiply));
 
-            multiply *= 0.90;
+            multiply *= 0.8;
         }
 
         ammoInMagazine--;
@@ -214,7 +250,7 @@ public class GameplayWeapon {
         if (ammoInMagazine > 0)
             return;
 
-        reload(itemStack);
+        reload(player, itemStack);
         remindOfNoAmmo(player, itemStack,false);
     }
     //endregion
@@ -228,6 +264,9 @@ public class GameplayWeapon {
 
         breakdownGunshotService();
         breakdownPackAPunchedGunshotService();
+
+        breakdownMeleeService();
+        breakdownPackAPunchedMeleeService();
     }
     //endregion
 
@@ -255,10 +294,19 @@ public class GameplayWeapon {
                 continue;
             }
 
+            if (characteristic.getTypeUUID().equals(WeaponCharacteristic.OUT_OF_AMMO_SOUND)) {
+                outOfAmmoSound = Sound.valueOf((String)characteristic.getValue());
+                continue;
+            }
+
             if (characteristic.getTypeUUID().equals(WeaponCharacteristic.TOTAL_AMMO_CAPACITY)) {
                 availableAmmo = (Integer)characteristic.getValue();
                 defaultAvailableAmmo = (Integer)characteristic.getValue();
+                continue;
             }
+
+            if (characteristic.getTypeUUID().equals(WeaponCharacteristic.USAGE_SOUND))
+                gunshotSound = Sound.valueOf((String)characteristic.getValue());
         }
     }
 
@@ -284,15 +332,48 @@ public class GameplayWeapon {
                 continue;
             }
 
+            if (characteristic.getTypeUUID().equals(WeaponCharacteristic.OUT_OF_AMMO_SOUND)) {
+                packAPunchedOutOfAmmoSound = Sound.valueOf((String)characteristic.getValue());
+                continue;
+            }
+
             if (characteristic.getTypeUUID().equals(WeaponCharacteristic.TOTAL_AMMO_CAPACITY)) {
                 defaultPackAPunchedAvailableAmmo = (Integer)characteristic.getValue();
+                continue;
             }
+
+            if (characteristic.getTypeUUID().equals(WeaponCharacteristic.USAGE_SOUND))
+                packAPunchedGunshotSound = Sound.valueOf((String)characteristic.getValue());
+        }
+    }
+
+    private void breakdownMeleeService() {
+
+        if (meleeService == null)
+            return;
+
+        for (WeaponServiceCharacteristicEntity characteristic : meleeService.getCharacteristics()) {
+
+            if (characteristic.getTypeUUID().equals(WeaponCharacteristic.USAGE_SOUND))
+                meleeSound = Sound.valueOf((String)characteristic.getValue());
+        }
+    }
+
+    private void breakdownPackAPunchedMeleeService() {
+
+        if (packAPunchedMeleeService == null)
+            return;
+
+        for (WeaponServiceCharacteristicEntity characteristic : packAPunchedMeleeService.getCharacteristics()) {
+
+            if (characteristic.getTypeUUID().equals(WeaponCharacteristic.USAGE_SOUND))
+                packAPunchedMeleeSound = Sound.valueOf((String)characteristic.getValue());
         }
     }
 
     private void findServices() {
 
-        for (WeaponServiceEntity service : this.weapon.getServices()) {
+        for (WeaponServiceEntity service : weapon.getServices()) {
 
             if (service.getTypeUUID().equals(WeaponService.GUNSHOT)) {
 
@@ -310,6 +391,14 @@ public class GameplayWeapon {
                     meleeService = service;
             }
         }
+    }
+
+    private void playGunshotSound(Player player) {
+        player.playSound(player.getLocation(), getGunshotSound(), 10, 1);
+    }
+
+    private void playOutOfAmmoSound(Player player) {
+        player.playSound(player.getLocation(), getOutOfAmmoSound(), 10, 1);
     }
 
     private void setAmmoDisplay(ItemStack itemStack) {
