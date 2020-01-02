@@ -2,6 +2,7 @@ package com.mango.zombies;
 
 import com.mango.zombies.commands.*;
 import com.mango.zombies.listeners.PlayerClickListener;
+import com.mango.zombies.listeners.ProjectileHitListener;
 import com.mango.zombies.listeners.SignChangedListener;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -87,6 +88,7 @@ public class Main extends JavaPlugin {
     public void registerEvents() {
 
         Bukkit.getPluginManager().registerEvents(new PlayerClickListener(), this);
+        Bukkit.getPluginManager().registerEvents(new ProjectileHitListener(), this);
         Bukkit.getPluginManager().registerEvents(new SignChangedListener(), this);
     }
     //endregion

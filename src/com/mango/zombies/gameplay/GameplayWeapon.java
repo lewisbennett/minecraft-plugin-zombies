@@ -199,11 +199,15 @@ public class GameplayWeapon {
         double velocityMultiplier = 2.5;
         int projectiles = getProjectileCount();
 
+        int damage = (isPackAPunched && packAPunchedGunshotService != null ? packAPunchedGunshotService.getDamage() : gunshotService.getDamage()) / projectiles;
+
         for (int i = 0; i < projectiles; i++) {
 
             double finalVelocityMultiplier = velocityMultiplier;
 
             Snowball snowball = player.launchProjectile(Snowball.class, player.getLocation().getDirection().multiply(finalVelocityMultiplier));
+
+            snowball.setCustomName("zombies:" + damage);
 
             velocityMultiplier *= 0.8;
         }
