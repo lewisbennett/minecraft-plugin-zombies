@@ -27,9 +27,9 @@ public class MapEntity {
 	private LocationEntity bottom = new LocationEntity(), top = new LocationEntity();
 	private String deleteKey, id, name;
 	private boolean enabled = false;
-	private List<EnemySpawnEntity> enemySpawns = new ArrayList<EnemySpawnEntity>();
-	private BlockLocationEntity originPoint;
-	private List<BlockLocationEntity> playerSpawns = new ArrayList<BlockLocationEntity>();
+	private List<LocationEntity> enemySpawns = new ArrayList<LocationEntity>();
+	private LocationEntity originPoint;
+	private List<LocationEntity> playerSpawns = new ArrayList<LocationEntity>();
 	//endregion
 
 	//region Getters/Setters
@@ -78,7 +78,7 @@ public class MapEntity {
 	/**
 	 * Gets the locations where enemies can spawn in the map.
 	 */
-	public List<EnemySpawnEntity> getEnemySpawns() {
+	public List<LocationEntity> getEnemySpawns() {
 		return enemySpawns;
 	}
 
@@ -113,14 +113,14 @@ public class MapEntity {
 	/**
 	 * Gets the map's origin point.
 	 */
-	public BlockLocationEntity getOriginPoint() {
+	public LocationEntity getOriginPoint() {
 		return originPoint;
 	}
 
 	/**
 	 * Sets the map's origin point.
 	 */
-	public void setOriginPoint(BlockLocationEntity originPoint) {
+	public void setOriginPoint(LocationEntity originPoint) {
 		this.originPoint = originPoint;
 	}
 
@@ -128,13 +128,13 @@ public class MapEntity {
 	 * Sets the map's origin point.
 	 */
 	public void setOriginPoint(Location origin) {
-		originPoint = new BlockLocationEntity(origin);
+		originPoint = new LocationEntity(origin);
 	}
 
 	/**
 	 * Gets the locations where players can spawn in the map.
 	 */
-	public List<BlockLocationEntity> getPlayerSpawns() {
+	public List<LocationEntity> getPlayerSpawns() {
 		return playerSpawns;
 	}
 
@@ -186,7 +186,7 @@ public class MapEntity {
 
 		this.id = id;
 		this.name = name;
-		originPoint = new BlockLocationEntity(origin);
+		originPoint = new LocationEntity(origin);
 		deleteKey = Integer.toString(100000 + new Random().nextInt(999999)).substring(0, 6);
 	}
 	//endregion

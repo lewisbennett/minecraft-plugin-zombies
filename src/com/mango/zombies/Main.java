@@ -1,9 +1,9 @@
 package com.mango.zombies;
 
 import com.mango.zombies.commands.*;
-import com.mango.zombies.listeners.PlayerClickListener;
 import com.mango.zombies.listeners.ProjectileHitListener;
 import com.mango.zombies.listeners.SignChangedListener;
+import com.mango.zombies.listeners.WeaponInteractListener;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -13,6 +13,16 @@ public class Main extends JavaPlugin {
 
     //region Static Fields
     private static Main instance;
+
+    private static InfoCommandExecutor infoCommandExecutor = new InfoCommandExecutor();
+    private static MapInfoCommandExecutor mapInfoCommandExecutor = new MapInfoCommandExecutor();
+    private static CreateMapCommandExecutor createMapCommandExecutor = new CreateMapCommandExecutor();
+    private static CreateWeaponClassCommandExecutor createWeaponClassCommandExecutor = new CreateWeaponClassCommandExecutor();
+    private static CreateWeaponCommandExecutor createWeaponCommandExecutor = new CreateWeaponCommandExecutor();
+    private static CreatePerkCommandExecutor createPerkCommandExecutor = new CreatePerkCommandExecutor();
+    private static GetWeaponCommandExecutor getWeaponCommandExecutor = new GetWeaponCommandExecutor();
+    private static GetPositionToolCommandExecutor getPositionToolCommandExecutor = new GetPositionToolCommandExecutor();
+    private static DeleteMapCommandExecutor deleteMapCommandExecutor = new DeleteMapCommandExecutor();
     //endregion
 
     //region Static Getters/Setters
@@ -71,15 +81,15 @@ public class Main extends JavaPlugin {
      */
     public void registerCommands() {
 
-        this.getCommand("info").setExecutor(new InfoCommandExecutor());
-        this.getCommand("mapinfo").setExecutor(new MapInfoCommandExecutor());
-        this.getCommand("createmap").setExecutor(new CreateMapCommandExecutor());
-        this.getCommand("createweaponclass").setExecutor(new CreateWeaponClassCommandExecutor());
-        this.getCommand("createweapon").setExecutor(new CreateWeaponCommandExecutor());
-        this.getCommand("createperk").setExecutor(new CreatePerkCommandExecutor());
-        this.getCommand("getweapon").setExecutor(new GetWeaponCommandExecutor());
-        this.getCommand("setposition").setExecutor(new SetPositionCommandExecutor());
-        this.getCommand("deletemap").setExecutor(new DeleteMapCommandExecutor());
+        this.getCommand("info").setExecutor(infoCommandExecutor);
+        this.getCommand("mapinfo").setExecutor(mapInfoCommandExecutor);
+        this.getCommand("createmap").setExecutor(createMapCommandExecutor);
+        this.getCommand("createweaponclass").setExecutor(createWeaponClassCommandExecutor);
+        this.getCommand("createweapon").setExecutor(createWeaponCommandExecutor);
+        this.getCommand("createperk").setExecutor(createPerkCommandExecutor);
+        this.getCommand("getweapon").setExecutor(getWeaponCommandExecutor);
+        this.getCommand("getpositiontool").setExecutor(getPositionToolCommandExecutor);
+        this.getCommand("deletemap").setExecutor(deleteMapCommandExecutor);
     }
 
     /**
@@ -87,9 +97,11 @@ public class Main extends JavaPlugin {
      */
     public void registerEvents() {
 
-        Bukkit.getPluginManager().registerEvents(new PlayerClickListener(), this);
+        Bukkit.getPluginManager().registerEvents(getPositionToolCommandExecutor, this);
+
         Bukkit.getPluginManager().registerEvents(new ProjectileHitListener(), this);
         Bukkit.getPluginManager().registerEvents(new SignChangedListener(), this);
+        Bukkit.getPluginManager().registerEvents(new WeaponInteractListener(), this);
     }
     //endregion
 }
