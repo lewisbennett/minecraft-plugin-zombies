@@ -137,7 +137,7 @@ public class PluginCore {
     }
     //endregion
 
-    //region Public Methods
+    //region Public Static Methods
     /**
      * Saves everything.
      */

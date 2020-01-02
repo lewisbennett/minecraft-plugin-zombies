@@ -6,8 +6,9 @@ import com.google.gson.JsonSerializer;
 
 import java.io.*;
 
-public class FilingService
-{
+public class FilingService {
+
+	//region Public Static Methods
 	/**
 	 * Deletes a file from a directory.
 	 * @param directory The directory where the file is located.
@@ -35,8 +36,8 @@ public class FilingService
 
 			return new GsonBuilder().registerTypeAdapter(entity, deserializer).create().fromJson(contentBuilder.toString(), entity);
 
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println("Failed to open file: " + filePath);
 		}
 
 		return null;
@@ -51,12 +52,15 @@ public class FilingService
 	 */
 	public static <TReq> void writeFile(File directory, String name, TReq contents, JsonSerializer<TReq> serializer) {
 
-		try (FileWriter writer = new FileWriter(directory + "/" + name + ".json")) {
+		String fileName = name + ".json";
+
+		try (FileWriter writer = new FileWriter(directory + "/" + fileName)) {
 
 			new GsonBuilder().registerTypeAdapter(contents.getClass(), serializer).setPrettyPrinting().create().toJson(contents, writer);
 
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println("Failed to write file: " + fileName);
 		}
 	}
+	//endregion
 }
