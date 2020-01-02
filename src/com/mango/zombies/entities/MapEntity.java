@@ -194,7 +194,7 @@ public class MapEntity {
 	//region Private Methods
 	private Tuple<Boolean, String> configureEnabled(boolean enabled, String error) {
 		this.enabled = enabled;
-		return new Tuple<Boolean, String>(enabled, "Map not enabled (" + id + "). " + error);
+		return new Tuple<>(enabled, "Map not enabled (" + id + "). " + error);
 	}
 	//endregion
 }
