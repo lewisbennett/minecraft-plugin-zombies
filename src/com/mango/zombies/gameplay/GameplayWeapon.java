@@ -1,6 +1,7 @@
 package com.mango.zombies.gameplay;
 
 import com.mango.zombies.Main;
+import com.mango.zombies.PluginCore;
 import com.mango.zombies.entities.WeaponClassEntity;
 import com.mango.zombies.entities.WeaponEntity;
 import com.mango.zombies.entities.WeaponServiceCharacteristicEntity;
@@ -253,7 +254,12 @@ public class GameplayWeapon {
         breakdownMeleeService();
         breakdownPackAPunchedMeleeService();
 
-        setWeaponDisplay(getAmmoStatus());
+        if (gunshotService != null) {
+            setWeaponDisplay(getAmmoStatus());
+            return;
+        }
+
+        setWeaponDisplay();
     }
     //endregion
 
@@ -381,11 +387,15 @@ public class GameplayWeapon {
     }
 
     private String getAmmoStatus() {
-        return ChatColor.AQUA.toString() + ammoInMagazine + "/" + availableAmmo;
+        return PluginCore.getConfig().getAmmoIndicatorColor().toString() + ammoInMagazine + "/" + availableAmmo;
     }
 
     private String getReloadingNoAmmoStatus() {
-        return ChatColor.RED + (isReloading ? "Reloading" : "No ammo");
+
+        if (isReloading)
+            return PluginCore.getConfig().getReloadingIndicatorColor() + "Reloading";
+
+        return PluginCore.getConfig().getOutOfAmmoIndicatorColor() + "No ammo";
     }
 
     private void remindOfNoAmmo(Player player) {
@@ -393,6 +403,17 @@ public class GameplayWeapon {
         setWeaponDisplay(getReloadingNoAmmoStatus());
 
         playOutOfAmmoSound(player);
+    }
+
+    private void setWeaponDisplay() {
+
+        ItemMeta itemMeta = itemStack.getItemMeta();
+
+        if (itemMeta == null)
+            return;
+
+        itemMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.valueOf(weapon.getWeaponClass().getColor()) + weapon.getName());
+        itemStack.setItemMeta(itemMeta);
     }
 
     private void setWeaponDisplay(String status) {
