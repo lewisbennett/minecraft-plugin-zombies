@@ -7,7 +7,6 @@ import com.mango.zombies.gameplay.GameplayCore;
 import com.mango.zombies.gameplay.GameplayWeapon;
 import com.mango.zombies.helper.HiddenStringUtils;
 import net.minecraft.server.v1_14_R1.Tuple;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -57,7 +56,6 @@ public class GameplayService {
         ItemStack itemStack = new ItemStack(Material.getMaterial(weapon.getItem()), 1);
 
         ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.valueOf(weaponClass.getColor()) + weapon.getName());
 
         List<String> lore = new ArrayList<String>();
         lore.add(HiddenStringUtils.encodeString(uuid.toString()));
@@ -65,10 +63,10 @@ public class GameplayService {
         itemMeta.setLore(lore);
         itemStack.setItemMeta(itemMeta);
 
-        GameplayWeapon gameplayWeapon = new GameplayWeapon(weapon);
+        GameplayWeapon gameplayWeapon = new GameplayWeapon(itemStack, weapon);
         GameplayCore.getWeapons().put(uuid, gameplayWeapon);
 
-        return new Tuple<ItemStack, GameplayWeapon>(itemStack, gameplayWeapon);
+        return new Tuple<>(itemStack, gameplayWeapon);
     }
     //endregion
 }

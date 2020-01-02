@@ -5,19 +5,15 @@ import com.mango.zombies.entities.WeaponClassEntity;
 import com.mango.zombies.entities.WeaponEntity;
 import com.mango.zombies.entities.WeaponServiceCharacteristicEntity;
 import com.mango.zombies.entities.WeaponServiceEntity;
+import com.mango.zombies.helper.TickUtils;
 import com.mango.zombies.schema.WeaponCharacteristic;
 import com.mango.zombies.schema.WeaponService;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class GameplayWeapon {
 
@@ -35,29 +31,17 @@ public class GameplayWeapon {
 
     private WeaponServiceEntity gunshotService, packAPunchedGunshotService, meleeService, packAPunchedMeleeService;
     private boolean isPackAPunched, isReloading;
+
+    private ItemStack itemStack;
     private WeaponEntity weapon;
     //endregion
 
     //region Getters/Setters
     /**
-     * Gets how much ammo is in the current magazine.
-     */
-    public int getAmmoInMagazine() {
-        return ammoInMagazine;
-    }
-
-    /**
-     * Sets how much ammo is in the current magazine.
-     */
-    public void setAmmoInMagazine(int ammoInMagazine) {
-        this.ammoInMagazine = ammoInMagazine;
-    }
-
-    /**
      * Gets the default amount of ammo in a magazine for the weapon.
      */
     public int getDefaultAmmoInMagazine() {
-        return isPackAPunched ?  defaultPackAPunchedAmmoInMagazine : defaultAmmoInMagazine;
+        return isPackAPunched ? defaultPackAPunchedAmmoInMagazine : defaultAmmoInMagazine;
     }
 
     /**
@@ -68,17 +52,24 @@ public class GameplayWeapon {
     }
 
     /**
-     * Gets how much ammo the weapon has available, not including its current magazine.
-     */
-    public int getAvailableAmmo() {
-        return availableAmmo;
-    }
-
-    /**
      * Gets the sound emitted on gunshot.
      */
     public Sound getGunshotSound() {
         return isPackAPunched ? packAPunchedGunshotSound : gunshotSound;
+    }
+
+    /**
+     * Gets the weapon ItemStack.
+     */
+    public ItemStack getItemStack() {
+        return itemStack;
+    }
+
+    /**
+     * Sets the weapon ItemStack.
+     */
+    public void setItemStack(ItemStack itemStack) {
+        this.itemStack = itemStack;
     }
 
     /**
@@ -93,20 +84,6 @@ public class GameplayWeapon {
      */
     public Sound getOutOfAmmoSound() {
         return isPackAPunched ? packAPunchedOutOfAmmoSound : outOfAmmoSound;
-    }
-
-    /**
-     * Gets whether this weapon is Pack-A-Punched.
-     */
-    public boolean isPackAPunched() {
-        return isPackAPunched;
-    }
-
-    /**
-     * Gets whether the weapon is currently reloading.
-     */
-    public boolean isReloading() {
-        return isReloading;
     }
 
     /**
@@ -143,7 +120,7 @@ public class GameplayWeapon {
      * Gets whether the weapon can be Pack-A-Punched.
      */
     public boolean canPackAPunch() {
-        return packAPunchedGunshotService != null || packAPunchedMeleeService != null;
+        return (packAPunchedGunshotService != null || packAPunchedMeleeService != null) && !isPackAPunched;
     }
 
     /**
@@ -158,59 +135,50 @@ public class GameplayWeapon {
     }
 
     /**
+     * Plays the gunshot sound for the current weapon state.
+     */
+    public void playGunshotSound(Player player) {
+        player.playSound(player.getLocation(), getGunshotSound(), 10, 1);
+    }
+
+    /**
+     * Plays the out of ammo sound for the current weapon state.
+     */
+    public void playOutOfAmmoSound(Player player) {
+        player.playSound(player.getLocation(), getOutOfAmmoSound(), 10, 1);
+    }
+
+    /**
      * Reloads this weapon.
      */
-    public void reload(Player player, ItemStack itemStack) {
+    public void reload(Player player) {
 
         if (gunshotService == null || isReloading || ammoInMagazine == getDefaultAmmoInMagazine())
             return;
 
-        if (ammoInMagazine < 1 && availableAmmo < 1) {
-            remindOfNoAmmo(player, itemStack, true);
+        if (availableAmmo < 1) {
+
+            if (ammoInMagazine < 1) {
+                setWeaponDisplay(getReloadingNoAmmoStatus());
+                return;
+            }
+
             return;
         }
 
         isReloading = true;
 
-        remindOfNoAmmo(player, itemStack, true);
+        remindOfNoAmmo(player);
 
-        int defaultAmmo = getDefaultAmmoInMagazine();
+        Main instance = Main.getInstance();
 
-        Main.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(Main.getInstance(), () -> {
-
-            if (availableAmmo > defaultAmmo) {
-
-                ammoInMagazine = defaultAmmo;
-                availableAmmo -= defaultAmmo;
-
-            } else {
-
-                ammoInMagazine = availableAmmo;
-                availableAmmo = 0;
-            }
-
-            isReloading = false;
-
-            setAmmoDisplay(itemStack);
-
-        }, getReloadSpeed() * 20);
-    }
-
-    /**
-     * Reminds the player that they have no ammo.
-     */
-    public void remindOfNoAmmo(Player player, ItemStack itemStack, boolean playSound) {
-
-        setReloadingNoAmmoDisplay(itemStack);
-
-        if (playSound)
-            playOutOfAmmoSound(player);
+        instance.getServer().getScheduler().scheduleSyncDelayedTask(instance, this::reload_runnable, TickUtils.ticksFromSeconds(getReloadSpeed()));
     }
 
     /**
      * Shoots the weapon, if a gunshot service is available.
      */
-    public void shoot(Player player, ItemStack itemStack) {
+    public void shoot(Player player) {
 
         if (gunshotService == null)
             return;
@@ -221,43 +189,60 @@ public class GameplayWeapon {
         }
 
         if (!canShoot()) {
-            remindOfNoAmmo(player, itemStack,true);
+            remindOfNoAmmo(player);
             return;
         }
 
         playGunshotSound(player);
 
-        double multiply = 2.5;
+        double velocityMultiplier = 2.5;
         int projectiles = getProjectileCount();
 
         for (int i = 0; i < projectiles; i++) {
 
-            double finalMultiply = multiply;
+            double finalVelocityMultiplier = velocityMultiplier;
 
-            Snowball snowball = player.launchProjectile(Snowball.class, player.getLocation().getDirection().multiply(finalMultiply));
+            Snowball snowball = player.launchProjectile(Snowball.class, player.getLocation().getDirection().multiply(finalVelocityMultiplier));
 
-            multiply *= 0.8;
+            velocityMultiplier *= 0.8;
         }
 
         ammoInMagazine--;
-        setAmmoDisplay(itemStack);
+        setWeaponDisplay(getAmmoStatus());
 
-        if (ammoInMagazine < 1 && availableAmmo < 0) {
-            remindOfNoAmmo(player, itemStack,false);
-            return;
+        if (ammoInMagazine < 1)
+            reload(player);
+    }
+    //endregion
+
+    //region Runnables
+    private void reload_runnable() {
+
+        int defaultAmmoInMagazine = getDefaultAmmoInMagazine();
+
+        if (availableAmmo > defaultAmmoInMagazine) {
+
+            availableAmmo -= defaultAmmoInMagazine - ammoInMagazine;
+            ammoInMagazine = defaultAmmoInMagazine;
+
+        } else {
+
+            while (ammoInMagazine < defaultAmmoInMagazine && availableAmmo > 0) {
+                ammoInMagazine++;
+                availableAmmo--;
+            }
         }
 
-        if (ammoInMagazine > 0)
-            return;
+        isReloading = false;
 
-        reload(player, itemStack);
-        remindOfNoAmmo(player, itemStack,false);
+        setWeaponDisplay(getAmmoStatus());
     }
     //endregion
 
     //region Constructors
-    public GameplayWeapon(WeaponEntity weapon) {
+    public GameplayWeapon(ItemStack itemStack, WeaponEntity weapon) {
 
+        this.itemStack = itemStack;
         this.weapon = weapon;
 
         findServices();
@@ -267,6 +252,8 @@ public class GameplayWeapon {
 
         breakdownMeleeService();
         breakdownPackAPunchedMeleeService();
+
+        setWeaponDisplay(getAmmoStatus());
     }
     //endregion
 
@@ -310,6 +297,18 @@ public class GameplayWeapon {
         }
     }
 
+    private void breakdownMeleeService() {
+
+        if (meleeService == null)
+            return;
+
+        for (WeaponServiceCharacteristicEntity characteristic : meleeService.getCharacteristics()) {
+
+            if (characteristic.getTypeUUID().equals(WeaponCharacteristic.USAGE_SOUND))
+                meleeSound = Sound.valueOf((String)characteristic.getValue());
+        }
+    }
+
     private void breakdownPackAPunchedGunshotService() {
 
         if (packAPunchedGunshotService == null)
@@ -347,18 +346,6 @@ public class GameplayWeapon {
         }
     }
 
-    private void breakdownMeleeService() {
-
-        if (meleeService == null)
-            return;
-
-        for (WeaponServiceCharacteristicEntity characteristic : meleeService.getCharacteristics()) {
-
-            if (characteristic.getTypeUUID().equals(WeaponCharacteristic.USAGE_SOUND))
-                meleeSound = Sound.valueOf((String)characteristic.getValue());
-        }
-    }
-
     private void breakdownPackAPunchedMeleeService() {
 
         if (packAPunchedMeleeService == null)
@@ -393,25 +380,29 @@ public class GameplayWeapon {
         }
     }
 
-    private void playGunshotSound(Player player) {
-        player.playSound(player.getLocation(), getGunshotSound(), 10, 1);
+    private String getAmmoStatus() {
+        return ChatColor.AQUA.toString() + ammoInMagazine + "/" + availableAmmo;
     }
 
-    private void playOutOfAmmoSound(Player player) {
-        player.playSound(player.getLocation(), getOutOfAmmoSound(), 10, 1);
+    private String getReloadingNoAmmoStatus() {
+        return ChatColor.RED + (isReloading ? "Reloading" : "No ammo");
     }
 
-    private void setAmmoDisplay(ItemStack itemStack) {
+    private void remindOfNoAmmo(Player player) {
+
+        setWeaponDisplay(getReloadingNoAmmoStatus());
+
+        playOutOfAmmoSound(player);
+    }
+
+    private void setWeaponDisplay(String status) {
 
         ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.AQUA + ammoInMagazine + "/" + availableAmmo);
-        itemStack.setItemMeta(itemMeta);
-    }
 
-    private void setReloadingNoAmmoDisplay(ItemStack itemStack) {
+        if (itemMeta == null)
+            return;
 
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.RED + (isReloading ? "Reloading" : "No ammo"));
+        itemMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.valueOf(weapon.getWeaponClass().getColor()) + weapon.getName() + ": " + ChatColor.RESET + "" + status);
         itemStack.setItemMeta(itemMeta);
     }
     //endregion
