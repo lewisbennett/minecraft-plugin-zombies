@@ -18,6 +18,7 @@ public class PluginCore {
     private static Timer autoSaveTimer = new Timer();
     private static ConfigEntity config;
     private static File dataFolder;
+    private static File debugFolder;
     private static PluginDescriptionFile descriptionFile;
     private static File importFolder;
     private static List<MapEntity> maps = new ArrayList<MapEntity>();
@@ -57,6 +58,13 @@ public class PluginCore {
      */
     public static File getDataFolder() {
         return dataFolder;
+    }
+
+    /**
+     * Gets the debug folder.
+     */
+    public static File getDebugFolder() {
+        return debugFolder;
     }
 
     /**
@@ -263,9 +271,9 @@ public class PluginCore {
 
         PluginCore.log("Saving config file...");
 
-        FilingService.writeFile(dataFolder, "config", config, ConfigEntity.SERIALIZER);
+        boolean result = FilingService.writeFile(dataFolder, "config", config, ConfigEntity.SERIALIZER);
 
-        PluginCore.log("Config file saved.");
+        PluginCore.log(result ? "Config file saved." : "Failed to save config file.");
     }
 
     /**
@@ -275,10 +283,23 @@ public class PluginCore {
 
         PluginCore.log("Saving maps...");
 
-        for (MapEntity map : maps)
-            FilingService.writeFile(mapsFolder, map.getId(), map, MapEntity.SERIALIZER);
+        int successes = 0;
+        int failures = 0;
 
-        PluginCore.log(String.format(maps.size() == 1 ? "%d map saved." : "%d maps saved.", maps.size()));
+        for (MapEntity map : maps) {
+
+            boolean result = FilingService.writeFile(mapsFolder, map.getId(), map, MapEntity.SERIALIZER);
+
+            if (result)
+                successes++;
+            else
+                failures++;
+        }
+
+        String successMessage = String.format(weapons.size() == 1 ? "Saved %d map." : "Saved %d maps.", successes);
+        String failMessage = String.format(weapons.size() == 1 ? "Failed to save %d map." : "Failed to save %d maps.", failures);
+
+        PluginCore.log(successMessage + (failures > 0 ? " " + failMessage : ""));
     }
 
     /**
@@ -288,10 +309,23 @@ public class PluginCore {
 
         PluginCore.log("Saving perks...");
 
-        for (PerkEntity perk : perks)
-            FilingService.writeFile(perksFolder, perk.getId(), perk, PerkEntity.SERIALIZER);
+        int successes = 0;
+        int failures = 0;
 
-        PluginCore.log(String.format(perks.size() == 1 ? "%d perk saved." : "%d perks saved.", perks.size()));
+        for (PerkEntity perk : perks) {
+
+            boolean result = FilingService.writeFile(perksFolder, perk.getId(), perk, PerkEntity.SERIALIZER);
+
+            if (result)
+                successes++;
+            else
+                failures++;
+        }
+
+        String successMessage = String.format(weapons.size() == 1 ? "Saved %d perk." : "Saved %d perks.", successes);
+        String failMessage = String.format(weapons.size() == 1 ? "Failed to save %d perk." : "Failed to save %d perks.", failures);
+
+        PluginCore.log(successMessage + (failures > 0 ? " " + failMessage : ""));
     }
 
     /**
@@ -301,10 +335,23 @@ public class PluginCore {
 
         PluginCore.log("Saving weapon classes...");
 
-        for (WeaponClassEntity weaponClass : weaponsClasses)
-            FilingService.writeFile(weaponClassesFolder, weaponClass.getId(), weaponClass, WeaponClassEntity.SERIALIZER);
+        int successes = 0;
+        int failures = 0;
 
-        PluginCore.log(String.format(weaponsClasses.size() == 1 ? "%d weapon class saved." : "%d weapon classes saved.", weaponsClasses.size()));
+        for (WeaponClassEntity weaponClass : weaponsClasses) {
+
+            boolean result = FilingService.writeFile(weaponClassesFolder, weaponClass.getId(), weaponClass, WeaponClassEntity.SERIALIZER);
+
+            if (result)
+                successes++;
+            else
+                failures++;
+        }
+
+        String successMessage = String.format(weapons.size() == 1 ? "Saved %d weapon class." : "Saved %d weapon classes.", successes);
+        String failMessage = String.format(weapons.size() == 1 ? "Failed to save %d weapon class." : "Failed to save %d weapon classes.", failures);
+
+        PluginCore.log(successMessage + (failures > 0 ? " " + failMessage : ""));
     }
 
     /**
@@ -314,10 +361,23 @@ public class PluginCore {
 
         PluginCore.log("Saving weapons...");
 
-        for (WeaponEntity weapon : weapons)
-            FilingService.writeFile(weaponsFolder, weapon.getId(), weapon, WeaponEntity.SERIALIZER);
+        int successes = 0;
+        int failures = 0;
 
-        PluginCore.log(String.format(weapons.size() == 1 ? "%d weapon saved." : "%d weapons saved.", weapons.size()));
+        for (WeaponEntity weapon : weapons) {
+
+            boolean result = FilingService.writeFile(weaponsFolder, weapon.getId(), weapon, WeaponEntity.SERIALIZER);
+
+            if (result)
+                successes++;
+            else
+                failures++;
+        }
+
+        String successMessage = String.format(weapons.size() == 1 ? "Saved %d weapon." : "Saved %d weapons.", successes);
+        String failMessage = String.format(weapons.size() == 1 ? "Failed to save %d weapon." : "Failed to save %d weapons.", failures);
+
+        PluginCore.log(successMessage + (failures > 0 ? " " + failMessage : ""));
     }
 
     /**
@@ -326,6 +386,7 @@ public class PluginCore {
     public static void setupFolders(File pluginRoot) {
 
         dataFolder = pluginRoot;
+        debugFolder = new File(dataFolder + "/Debug/");
         mapsFolder = new File(dataFolder + "/Maps/");
         importFolder = new File(dataFolder + "/Import/");
         weaponsFolder = new File(dataFolder + "/Weapons/");
@@ -333,6 +394,7 @@ public class PluginCore {
         perksFolder = new File(dataFolder + "/Perks/");
 
         createDirectory(dataFolder);
+        createDirectory(debugFolder);
         createDirectory(importFolder);
         createDirectory(mapsFolder);
         createDirectory(perksFolder);

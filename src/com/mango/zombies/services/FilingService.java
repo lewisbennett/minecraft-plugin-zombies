@@ -3,8 +3,13 @@ package com.mango.zombies.services;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonSerializer;
+import com.mango.zombies.PluginCore;
+import org.apache.commons.lang.exception.ExceptionUtils;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class FilingService {
 
@@ -37,7 +42,18 @@ public class FilingService {
 			return new GsonBuilder().registerTypeAdapter(entity, deserializer).create().fromJson(contentBuilder.toString(), entity);
 
 		} catch (Exception e) {
-			System.out.println("Failed to open file: " + filePath);
+
+			String error = "Failed to open file: " + filePath;
+
+			if (PluginCore.getConfig().isDebuggingEnabled()) {
+
+				String stackTraceFileName = writeStackTraceFile(error, ExceptionUtils.getStackTrace(e));
+
+				if (stackTraceFileName != null)
+					error += ". View the stacktrace: " + stackTraceFileName;
+			}
+
+			PluginCore.log(error);
 		}
 
 		return null;
@@ -50,16 +66,52 @@ public class FilingService {
 	 * @param contents The contents of the file to be written.
 	 * @param serializer The serializer for the contents object.
 	 */
-	public static <TReq> void writeFile(File directory, String name, TReq contents, JsonSerializer<TReq> serializer) {
+	public static <TReq> boolean writeFile(File directory, String name, TReq contents, JsonSerializer<TReq> serializer) {
 
-		String fileName = name + ".json";
+		String filePath = directory + "/" + name + ".json";
 
-		try (FileWriter writer = new FileWriter(directory + "/" + fileName)) {
+		try (FileWriter writer = new FileWriter(filePath)) {
 
 			new GsonBuilder().registerTypeAdapter(contents.getClass(), serializer).setPrettyPrinting().create().toJson(contents, writer);
 
+			return true;
+
 		} catch (Exception e) {
-			System.out.println("Failed to write file: " + fileName);
+
+			String error = "Failed to write file: " + filePath;
+
+			if (PluginCore.getConfig().isDebuggingEnabled()) {
+
+				String stackTraceFileName = writeStackTraceFile(error, ExceptionUtils.getStackTrace(e));
+
+				if (stackTraceFileName != null)
+					error += ". View the stacktrace: " + stackTraceFileName;
+			}
+
+			PluginCore.log(error);
+
+			return false;
+		}
+	}
+	//endregion
+
+	//region Private Static Methods
+	private static String writeStackTraceFile(String error, String stackTrace) {
+
+		String stackTraceFileName = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss").format(new Date(System.currentTimeMillis())) + ".txt";
+
+		try (PrintWriter writer = new PrintWriter(PluginCore.getDebugFolder() + "/" + stackTraceFileName, "UTF-8")) {
+
+			writer.println(error);
+			writer.println("");
+			writer.println(stackTrace);
+
+			writer.close();
+
+			return stackTraceFileName;
+
+		} catch (Exception e) {
+			return null;
 		}
 	}
 	//endregion
