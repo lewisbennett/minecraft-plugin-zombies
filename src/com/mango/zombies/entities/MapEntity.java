@@ -14,22 +14,26 @@ public class MapEntity {
 	public static final String BOTTOM_JSON_TAG = "bottom";
 	public static final String DELETE_KEY_JSON_TAG = "delete_key";
 	public static final String ENABLED_JSON_TAG = "enabled";
+	public static final String ENEMY_BLACKLIST_JSON_TAG = "enemy_blacklist";
 	public static final String ENEMY_SPAWNS_JSON_TAG = "enemy_spawns";
+	public static final String ENEMY_WHITELIST_JSON_TAG = "enemy_whitelist";
 	public static final String ID_JSON_TAG = "id";
 	public static final MapEntityJsonSerializer SERIALIZER = new MapEntityJsonSerializer();
 	public static final String NAME_JSON_TAG = "name";
 	public static final String ORIGIN_POINT_JSON_TAG = "origin_point";
 	public static final String PLAYER_SPAWNS_JSON_TAG = "player_spawns";
 	public static final String TOP_JSON_TAG = "top";
+	public static final String WEAPON_BLACKLIST_JSON_TAG = "weapon_blacklist";
+	public static final String WEAPON_WHITELIST_JSON_TAG = "weapon_whitelist";
 	//endregion
 
 	//region Fields
-	private LocationEntity bottom = new LocationEntity(), top = new LocationEntity();
+	private LocationEntity bottom = new LocationEntity(), top = new LocationEntity(), originPoint;
 	private String deleteKey, id, name;
 	private boolean enabled = false;
-	private List<LocationEntity> enemySpawns = new ArrayList<LocationEntity>();
-	private LocationEntity originPoint;
-	private List<LocationEntity> playerSpawns = new ArrayList<LocationEntity>();
+	private List<String> enemyBlacklist = new ArrayList<String>(), enemyWhitelist = new ArrayList<String>();
+	private List<LocationEntity> enemySpawns = new ArrayList<LocationEntity>(), playerSpawns = new ArrayList<LocationEntity>();
+	private List<String> weaponBlacklist = new ArrayList<String>(), weaponWhitelist = new ArrayList<String>();
 	//endregion
 
 	//region Getters/Setters
@@ -76,10 +80,24 @@ public class MapEntity {
 	}
 
 	/**
+	 * Gets the enemy blacklist.
+	 */
+	public List<String> getEnemyBlacklist() {
+		return enemyBlacklist;
+	}
+
+	/**
 	 * Gets the locations where enemies can spawn in the map.
 	 */
 	public List<LocationEntity> getEnemySpawns() {
 		return enemySpawns;
+	}
+
+	/**
+	 * Gets the enemy whitelist.
+	 */
+	public List<String> getEnemyWhitelist() {
+		return enemyWhitelist;
 	}
 
 	/**
@@ -150,6 +168,20 @@ public class MapEntity {
 	 */
 	public void setTop(LocationEntity top) {
 		this.top = top;
+	}
+
+	/**
+	 * Gets the weapon blacklist.
+	 */
+	public List<String> getWeaponBlacklist() {
+		return weaponBlacklist;
+	}
+
+	/**
+	 * Gets the weapon whitelist.
+	 */
+	public List<String> getWeaponWhitelist() {
+		return weaponWhitelist;
 	}
 	//endregion
 
