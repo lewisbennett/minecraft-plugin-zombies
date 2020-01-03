@@ -2,11 +2,11 @@ package com.mango.zombies.gameplay;
 
 import com.mango.zombies.Main;
 import com.mango.zombies.PluginCore;
+import com.mango.zombies.Time;
 import com.mango.zombies.entities.WeaponClassEntity;
 import com.mango.zombies.entities.WeaponEntity;
 import com.mango.zombies.entities.WeaponServiceCharacteristicEntity;
 import com.mango.zombies.entities.WeaponServiceEntity;
-import com.mango.zombies.helper.TickUtils;
 import com.mango.zombies.schema.WeaponCharacteristic;
 import com.mango.zombies.schema.WeaponService;
 import org.bukkit.ChatColor;
@@ -173,7 +173,7 @@ public class GameplayWeapon {
 
         Main instance = Main.getInstance();
 
-        instance.getServer().getScheduler().scheduleSyncDelayedTask(instance, this::reload_runnable, TickUtils.ticksFromSeconds(getReloadSpeed()));
+        instance.getServer().getScheduler().scheduleSyncDelayedTask(instance, this::reload_runnable, Time.fromSeconds(getReloadSpeed()).totalTicks());
     }
 
     /**

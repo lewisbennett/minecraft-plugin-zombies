@@ -52,7 +52,7 @@ public class Main extends JavaPlugin {
         registerCommands();
         registerEvents();
 
-        int delay = PluginCore.getConfig().getAutoSaveTimerInterval() * 60 * 1000;
+        int delay = Time.fromMinutes(PluginCore.getConfig().getAutoSaveTimerInterval()).totalMilliseconds();
 
         PluginCore.getAutoSaveTimer().scheduleAtFixedRate(new TimerTask() {
             @Override

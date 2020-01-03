@@ -8,6 +8,7 @@ import java.util.List;
 
 public class PerkEntity {
 
+	//region Constant Values
 	public static final String COST_JSON_TAG = "cost";
 	public static final String DOES_REQUIRE_POWER_JSON_TAG = "does_require_power";
 	public static final String ID_JSON_TAG = "id";
@@ -15,14 +16,18 @@ public class PerkEntity {
 	public static final String NAME_JSON_TAG = "name";
 	public static final PerkEntityJsonSerializer SERIALIZER = new PerkEntityJsonSerializer();
 	public static final String SERVICES_JSON_TAG = "services";
+	//endregion
 
+	//region Fields
 	private int  cost;
 	private boolean doesRequirePower;
 	private String id;
 	private String item;
 	private String name;
 	private List<PerkServiceEntity> services = new ArrayList<PerkServiceEntity>();
+	//endregion
 
+	//region Getters/Setters
 	/**
 	 * Gets the perk's cost.
 	 */
@@ -99,7 +104,9 @@ public class PerkEntity {
 	public List<PerkServiceEntity> getServices() {
 		return services;
 	}
+	//endregion
 
+	//region Constructors
 	public PerkEntity() {
 	}
 
@@ -111,4 +118,5 @@ public class PerkEntity {
 		item = Material.DIAMOND.name();
 		doesRequirePower = true;
 	}
+	//endregion
 }
