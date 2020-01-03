@@ -18,10 +18,10 @@ import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.messaging.PluginMessageRecipient;
 
 import java.util.UUID;
 
@@ -107,6 +107,20 @@ public class GameplayWeapon implements Listener {
     //endregion
 
     //region Event Handlers
+    @EventHandler
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+
+        if (!(event.getDamager() instanceof Player))
+            return;
+
+        Player player = (Player)event.getDamager();
+
+        UUID uuid = extractUuidFromItemStack(player.getInventory().getItemInMainHand());
+
+        if (uuid != null && uuid.equals(this.uuid))
+            event.setCancelled(true);
+    }
+
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
 
