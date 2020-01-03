@@ -10,9 +10,12 @@ import org.bukkit.entity.Player;
 
 public class CreateMapCommandExecutor extends PlayerOnlyCommandExecutor {
 
+    //region Constant Values
     public static final String CORRECT_USAGE_ERROR = "Correct usage: /createmap [ID] [name]";
     public static final String MAP_ID_ALREADY_EXISTS_ERROR = "Map not created. %s already exists.";
+    //endregion
 
+    //region Event Handlers
     @Override
     public boolean onSuccessfulCommand(Player player, Command command, String label, String[] args) {
 
@@ -42,7 +45,9 @@ public class CreateMapCommandExecutor extends PlayerOnlyCommandExecutor {
 
         return true;
     }
+    //endregion
 
+    //region Private Methods
     private boolean isValidMapId(String mapId) {
 
         for (MapEntity map : PluginCore.getMaps()) {
@@ -53,4 +58,5 @@ public class CreateMapCommandExecutor extends PlayerOnlyCommandExecutor {
 
         return true;
     }
+    //endregion
 }

@@ -32,6 +32,7 @@ public class Main extends JavaPlugin {
 
         PluginCore.importConfig();
         PluginCore.importMaps();
+        PluginCore.importEnemies();
         PluginCore.importPerks();
         PluginCore.importWeaponClasses();
         PluginCore.importWeapons();
@@ -58,6 +59,7 @@ public class Main extends JavaPlugin {
 
         PluginCore.saveConfig();
         PluginCore.saveMaps();
+        PluginCore.saveEnemies();
         PluginCore.savePerks();
         PluginCore.saveWeaponClasses();
         PluginCore.saveWeapons();
@@ -73,11 +75,13 @@ public class Main extends JavaPlugin {
         this.getCommand("info").setExecutor(new InfoCommandExecutor());
         this.getCommand("mapinfo").setExecutor(new MapInfoCommandExecutor());
         this.getCommand("createmap").setExecutor(new CreateMapCommandExecutor());
+        this.getCommand("createenemy").setExecutor(new CreateEnemyCommandExecutor());
         this.getCommand("createweaponclass").setExecutor(new CreateWeaponClassCommandExecutor());
         this.getCommand("createweapon").setExecutor(new CreateWeaponCommandExecutor());
         this.getCommand("createperk").setExecutor(new CreatePerkCommandExecutor());
         this.getCommand("getweapon").setExecutor(new GetWeaponCommandExecutor());
         this.getCommand("getpositiontool").setExecutor(new GetPositionToolCommandExecutor());
+        this.getCommand("getspawningtool").setExecutor(new GetSpawningToolCommandExecutor());
         this.getCommand("deletemap").setExecutor(new DeleteMapCommandExecutor());
     }
 

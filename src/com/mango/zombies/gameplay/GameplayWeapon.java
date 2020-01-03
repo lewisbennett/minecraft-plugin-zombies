@@ -265,7 +265,7 @@ public class GameplayWeapon implements Listener {
 
             Snowball snowball = player.launchProjectile(Snowball.class, player.getLocation().getDirection().multiply(finalVelocityMultiplier));
 
-            snowball.setCustomName("zombies:" + damage);
+            snowball.setCustomName("zombies:bullet:" + damage);
 
             velocityMultiplier *= 0.8;
         }

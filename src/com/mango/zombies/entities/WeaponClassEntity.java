@@ -29,7 +29,7 @@ public class WeaponClassEntity {
 	public static final int DEFAULT_RELOAD_SPEED = 4;
 	public static final String DEFAULT_SERVICES_JSON_TAG = "default_services";
 	public static final int DEFAULT_TOTAL_AMMO_CAPACITY = 80;
-	public static final String DEFAULT_WEAPON_COST_JSON_TAG = "default_weapon_cost_json_tag";
+	public static final String DEFAULT_WEAPON_COST_JSON_TAG = "default_weapon_cost";
 	public static final String ID_JSON_TAG = "id";
 	public static final String NAME_JSON_TAG = "name";
 	public static final WeaponClassEntityJsonSerializer SERIALIZER = new WeaponClassEntityJsonSerializer();

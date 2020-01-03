@@ -24,7 +24,11 @@ commands:
     createweapon:
       description: Creates a new weapon.
       usage: /<command> [ID] [weapon class ID] [name]
-        
+
+    createenemy:
+      description: Creates a new enemy.
+      usage: /<command> [ID] [entity type] [round one health]
+
     createperk:
       description: Creates a new perk.
       usage: /<command> [ID] [cost] [name]
@@ -36,6 +40,10 @@ commands:
     getpositiontool:
       description: Gets the position tool.
       usage: /<command> [map/door] [map ID]
+
+    getspawningtool:
+      description: Gets the spawning tool.
+      usage: /<command> [enemy ID] [spawn round]
 
     deletemap:
       description: Deletes a map.
