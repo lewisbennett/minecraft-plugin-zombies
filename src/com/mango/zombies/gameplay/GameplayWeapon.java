@@ -12,6 +12,7 @@ import com.mango.zombies.schema.WeaponCharacteristic;
 import com.mango.zombies.schema.WeaponService;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
@@ -20,6 +21,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.messaging.PluginMessageRecipient;
 
 import java.util.UUID;
 
@@ -126,6 +128,7 @@ public class GameplayWeapon implements Listener {
         }
 
         reload(event.getPlayer());
+        event.setCancelled(true);
     }
     //endregion
 
@@ -173,21 +176,21 @@ public class GameplayWeapon implements Listener {
      * Plays the gunshot sound for the current weapon state.
      */
     public void playGunshotSound(Player player) {
-        player.playSound(player.getLocation(), getGunshotSound(), 10, 1);
+        playSound(player, getGunshotSound(), 4);
     }
 
     /**
      * Plays the melee sound for the current weapon state.
      */
     public void playMeleeSound(Player player) {
-        player.playSound(player.getLocation(), getMeleeSound(), 10, 1);
+        playSound(player, getMeleeSound(), 1);
     }
 
     /**
      * Plays the out of ammo sound for the current weapon state.
      */
     public void playOutOfAmmoSound(Player player) {
-        player.playSound(player.getLocation(), getOutOfAmmoSound(), 10, 1);
+        playSound(player, getOutOfAmmoSound(), 1);
     }
 
     /**
@@ -458,6 +461,18 @@ public class GameplayWeapon implements Listener {
             return PluginCore.getConfig().getReloadingIndicatorColor() + "Reloading";
 
         return PluginCore.getConfig().getOutOfAmmoIndicatorColor() + "No ammo";
+    }
+
+    private void playSound(Player player, Sound sound, float volume) {
+
+        World world = Main.getInstance().getServer().getWorld(PluginCore.getConfig().getWorldName());
+
+        if (world == null) {
+            player.playSound(player.getLocation(), sound, volume, 1);
+            return;
+        }
+
+        world.playSound(player.getLocation(), sound, volume, 1);
     }
 
     private void remindOfNoAmmo(Player player) {
