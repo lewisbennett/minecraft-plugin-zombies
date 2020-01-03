@@ -7,16 +7,23 @@ import com.mango.zombies.entities.WeaponClassEntity;
 import com.mango.zombies.entities.WeaponEntity;
 import com.mango.zombies.entities.WeaponServiceCharacteristicEntity;
 import com.mango.zombies.entities.WeaponServiceEntity;
+import com.mango.zombies.helper.HiddenStringUtils;
 import com.mango.zombies.schema.WeaponCharacteristic;
 import com.mango.zombies.schema.WeaponService;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class GameplayWeapon {
+import java.util.UUID;
+
+public class GameplayWeapon implements Listener {
 
     //region Fields
     private int ammoInMagazine = WeaponClassEntity.DEFAULT_MAGAZINE_SIZE, availableAmmo = WeaponClassEntity.DEFAULT_TOTAL_AMMO_CAPACITY;
@@ -35,6 +42,8 @@ public class GameplayWeapon {
 
     private ItemStack itemStack;
     private WeaponEntity weapon;
+
+    private UUID uuid;
     //endregion
 
     //region Getters/Setters
@@ -57,20 +66,6 @@ public class GameplayWeapon {
      */
     public Sound getGunshotSound() {
         return isPackAPunched ? packAPunchedGunshotSound : gunshotSound;
-    }
-
-    /**
-     * Gets the weapon ItemStack.
-     */
-    public ItemStack getItemStack() {
-        return itemStack;
-    }
-
-    /**
-     * Sets the weapon ItemStack.
-     */
-    public void setItemStack(ItemStack itemStack) {
-        this.itemStack = itemStack;
     }
 
     /**
@@ -109,6 +104,31 @@ public class GameplayWeapon {
     }
     //endregion
 
+    //region Event Handlers
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent event) {
+
+        UUID uuid = extractUuidFromItemStack(event.getItem());
+
+        if (uuid == null || !uuid.equals(this.uuid))
+            return;
+
+        itemStack = event.getItem();
+
+        if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            shoot(event.getPlayer());
+            return;
+        }
+
+        if (canMelee()) {
+            melee(event.getPlayer());
+            return;
+        }
+
+        reload(event.getPlayer());
+    }
+    //endregion
+
     //region Public Methods
     /**
      * Gets whether the weapon can be used to melee.
@@ -121,7 +141,14 @@ public class GameplayWeapon {
      * Gets whether the weapon can be Pack-A-Punched.
      */
     public boolean canPackAPunch() {
-        return (packAPunchedGunshotService != null || packAPunchedMeleeService != null) && !isPackAPunched;
+
+        if (isPackAPunched)
+            return false;
+
+        if (gunshotService != null && packAPunchedGunshotService != null)
+            return true;
+
+        return meleeService != null && packAPunchedMeleeService != null;
     }
 
     /**
@@ -136,10 +163,24 @@ public class GameplayWeapon {
     }
 
     /**
+     * Melees the weapon.
+     */
+    public void melee(Player player) {
+        playMeleeSound(player);
+    }
+
+    /**
      * Plays the gunshot sound for the current weapon state.
      */
     public void playGunshotSound(Player player) {
         player.playSound(player.getLocation(), getGunshotSound(), 10, 1);
+    }
+
+    /**
+     * Plays the melee sound for the current weapon state.
+     */
+    public void playMeleeSound(Player player) {
+        player.playSound(player.getLocation(), getMeleeSound(), 10, 1);
     }
 
     /**
@@ -245,10 +286,11 @@ public class GameplayWeapon {
     //endregion
 
     //region Constructors
-    public GameplayWeapon(ItemStack itemStack, WeaponEntity weapon) {
+    public GameplayWeapon(ItemStack itemStack, WeaponEntity weapon, UUID uuid) {
 
         this.itemStack = itemStack;
         this.weapon = weapon;
+        this.uuid = uuid;
 
         findServices();
 
@@ -365,6 +407,22 @@ public class GameplayWeapon {
 
             if (characteristic.getTypeUUID().equals(WeaponCharacteristic.USAGE_SOUND))
                 packAPunchedMeleeSound = Sound.valueOf((String)characteristic.getValue());
+        }
+    }
+
+    private UUID extractUuidFromItemStack(ItemStack itemStack) {
+
+        if (itemStack == null
+                || itemStack.getItemMeta() == null
+                || itemStack.getItemMeta().getLore() == null
+                || itemStack.getItemMeta().getLore().size() < 1
+                || itemStack.getItemMeta().getLore().get(0) == null)
+            return null;
+
+        try{
+            return UUID.fromString(HiddenStringUtils.extractHiddenString(itemStack.getItemMeta().getLore().get(0)));
+        } catch (Exception e) {
+            return null;
         }
     }
 

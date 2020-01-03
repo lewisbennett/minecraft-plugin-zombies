@@ -1,15 +1,16 @@
 package com.mango.zombies.services;
 
+import com.mango.zombies.Main;
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.entities.MapEntity;
 import com.mango.zombies.entities.WeaponClassEntity;
 import com.mango.zombies.entities.WeaponEntity;
-import com.mango.zombies.gameplay.GameplayCore;
 import com.mango.zombies.gameplay.GameplayWeapon;
 import com.mango.zombies.gameplay.PositionTool;
 import com.mango.zombies.helper.HiddenStringUtils;
 import com.mango.zombies.schema.Positionable;
 import net.minecraft.server.v1_14_R1.Tuple;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -77,8 +78,9 @@ public class GameplayService {
 
         itemStack.setItemMeta(itemMeta);
 
-        PositionTool positionTool = new PositionTool(itemStack, map, positionable);
-        GameplayCore.getPositionTools().put(uuid, positionTool);
+        PositionTool positionTool = new PositionTool(itemStack, map, positionable, uuid);
+
+        Bukkit.getPluginManager().registerEvents(positionTool, Main.getInstance());
 
         return new Tuple<>(itemStack, positionTool);
     }
@@ -113,7 +115,6 @@ public class GameplayService {
         UUID uuid = UUID.randomUUID();
 
         ItemStack itemStack = new ItemStack(Material.getMaterial(weapon.getItem()), 1);
-
         ItemMeta itemMeta = itemStack.getItemMeta();
 
         List<String> lore = new ArrayList<String>();
@@ -122,8 +123,9 @@ public class GameplayService {
         itemMeta.setLore(lore);
         itemStack.setItemMeta(itemMeta);
 
-        GameplayWeapon gameplayWeapon = new GameplayWeapon(itemStack, weapon);
-        GameplayCore.getWeapons().put(uuid, gameplayWeapon);
+        GameplayWeapon gameplayWeapon = new GameplayWeapon(itemStack, weapon, uuid);
+
+        Bukkit.getPluginManager().registerEvents(gameplayWeapon, Main.getInstance());
 
         return new Tuple<>(itemStack, gameplayWeapon);
     }
