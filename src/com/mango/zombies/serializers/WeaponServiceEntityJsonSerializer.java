@@ -5,10 +5,10 @@ import com.mango.zombies.entities.WeaponServiceCharacteristicEntity;
 import com.mango.zombies.entities.WeaponServiceEntity;
 
 import java.lang.reflect.Type;
-import java.util.UUID;
 
 public class WeaponServiceEntityJsonSerializer implements JsonSerializer<WeaponServiceEntity>, JsonDeserializer<WeaponServiceEntity> {
 
+    //region Public Methods
     @Override
     public WeaponServiceEntity deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
 
@@ -18,7 +18,7 @@ public class WeaponServiceEntityJsonSerializer implements JsonSerializer<WeaponS
 
         service.setDamage(jsonObject.get(WeaponServiceEntity.DAMAGE_JSON_TAG).getAsInt());
         service.setDoesRequirePackAPunch(jsonObject.get(WeaponServiceEntity.DOES_REQUIRE_PACK_A_PUNCH_JSON_TAG).getAsBoolean());
-        service.setTypeUUID(UUID.fromString(jsonObject.get(WeaponServiceEntity.TYPE_UUID_JSON_TAG).getAsString()));
+        service.setType(jsonObject.get(WeaponServiceEntity.TYPE_JSON_TAG).getAsString());
 
         for (JsonElement jsonCharacteristic : jsonObject.get(WeaponServiceEntity.CHARACTERISTICS_JSON_TAG).getAsJsonArray())
             service.getCharacteristics().add(WeaponServiceCharacteristicEntity.SERIALIZER.deserialize(jsonCharacteristic, WeaponServiceCharacteristicEntity.class, jsonDeserializationContext));
@@ -33,7 +33,7 @@ public class WeaponServiceEntityJsonSerializer implements JsonSerializer<WeaponS
 
         jsonObject.add(WeaponServiceEntity.DAMAGE_JSON_TAG, new JsonPrimitive(weaponServiceEntity.getDamage()));
         jsonObject.add(WeaponServiceEntity.DOES_REQUIRE_PACK_A_PUNCH_JSON_TAG, new JsonPrimitive(weaponServiceEntity.doesRequirePackAPunch()));
-        jsonObject.add(WeaponServiceEntity.TYPE_UUID_JSON_TAG, new JsonPrimitive(weaponServiceEntity.getTypeUUID().toString()));
+        jsonObject.add(WeaponServiceEntity.TYPE_JSON_TAG, new JsonPrimitive(weaponServiceEntity.getType()));
 
         JsonArray characteristicsArray = new JsonArray();
 
@@ -44,4 +44,5 @@ public class WeaponServiceEntityJsonSerializer implements JsonSerializer<WeaponS
 
         return jsonObject;
     }
+    //endregion
 }

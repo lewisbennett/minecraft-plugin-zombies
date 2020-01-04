@@ -2,7 +2,6 @@ package com.mango.zombies.entities;
 
 import com.mango.zombies.schema.WeaponCharacteristic;
 import com.mango.zombies.schema.WeaponService;
-import com.mango.zombies.schema.WeaponType;
 import com.mango.zombies.serializers.WeaponClassEntityJsonSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -10,14 +9,11 @@ import org.bukkit.Sound;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class WeaponClassEntity {
 
 	//region Constant Values
-	public static final String COLOR_JSON_TAG = "color";
 	public static final String DEFAULT_GUNSHOT_USAGE_SOUND = Sound.BLOCK_LAVA_POP.name();
-	public static final String DEFAULT_ITEM_JSON_TAG = "default_item";
 	public static final int DEFAULT_MAGAZINE_SIZE = 8;
 	public static final String DEFAULT_MELEE_USAGE_SOUND = Sound.BLOCK_PUMPKIN_CARVE.name();
 	public static final String DEFAULT_OUT_OF_AMMO_SOUND = Sound.BLOCK_DISPENSER_FAIL.name();
@@ -27,12 +23,16 @@ public class WeaponClassEntity {
 	public static final int DEFAULT_PACK_A_PUNCHED_PROJECTILE_COUNT = 1;
 	public static final int DEFAULT_PROJECTILE_COUNT = 1;
 	public static final int DEFAULT_RELOAD_SPEED = 4;
-	public static final String DEFAULT_SERVICES_JSON_TAG = "default_services";
 	public static final int DEFAULT_TOTAL_AMMO_CAPACITY = 80;
-	public static final String DEFAULT_WEAPON_COST_JSON_TAG = "default_weapon_cost";
-	public static final String ID_JSON_TAG = "id";
-	public static final String NAME_JSON_TAG = "name";
+
 	public static final WeaponClassEntityJsonSerializer SERIALIZER = new WeaponClassEntityJsonSerializer();
+
+	public static final String COLOR_JSON_TAG = "color";
+	public static final String ID_JSON_TAG = "id";
+	public static final String DEFAULT_ITEM_JSON_TAG = "default_item";
+	public static final String DEFAULT_SERVICES_JSON_TAG = "default_services";
+	public static final String DEFAULT_WEAPON_COST_JSON_TAG = "default_weapon_cost";
+	public static final String NAME_JSON_TAG = "name";
 	//endregion
 
 	//region Fields
@@ -135,37 +135,24 @@ public class WeaponClassEntity {
 		this.defaultWeaponCost = defaultWeaponCost;
 		color = ChatColor.RED.name();
 
-		int damage;
-		UUID typeUUID = null;
+		if (!WeaponService.toList().contains(type))
+			return;
 
-		switch (type) {
+		int damage = type.equals(WeaponService.MELEE) ? 155 : 20;
 
-			case WeaponType.GUNSHOT:
-				damage = 1;
-				typeUUID = WeaponService.GUNSHOT;
-				break;
-
-			case WeaponType.MELEE:
-				damage = 5;
-				typeUUID = WeaponService.MELEE;
-				break;
-
-			default:
-				return;
-		}
-
-		WeaponServiceEntity standardService = new WeaponServiceEntity(damage, false, typeUUID);
+		WeaponServiceEntity standardService = new WeaponServiceEntity(damage, false, type);
 		defaultServices.add(standardService);
 
-		if (standardService.getTypeUUID().equals(WeaponService.MELEE))
+		if (standardService.getType().equals(WeaponService.MELEE))
 			standardService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_MELEE_USAGE_SOUND, WeaponCharacteristic.USAGE_SOUND));
 
-		if (standardService.getTypeUUID() != WeaponService.MELEE) {
+		if (standardService.getType().equals(WeaponService.GUNSHOT)) {
 
 			standardService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(defaultWeaponCost / 2, WeaponCharacteristic.AMMO_COST));
 			standardService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_MAGAZINE_SIZE, WeaponCharacteristic.MAGAZINE_SIZE));
 			standardService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_RELOAD_SPEED, WeaponCharacteristic.RELOAD_SPEED));
 			standardService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_TOTAL_AMMO_CAPACITY, WeaponCharacteristic.TOTAL_AMMO_CAPACITY));
+			standardService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_PROJECTILE_COUNT, WeaponCharacteristic.PROJECTILES_IN_CARTRIDGE));
 			standardService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_GUNSHOT_USAGE_SOUND, WeaponCharacteristic.USAGE_SOUND));
 			standardService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_OUT_OF_AMMO_SOUND, WeaponCharacteristic.OUT_OF_AMMO_SOUND));
 		}
@@ -173,10 +160,10 @@ public class WeaponClassEntity {
 		if (!canPackAPunch)
 			return;
 
-		WeaponServiceEntity packAPunchService = new WeaponServiceEntity(standardService.getDamage(), true, typeUUID);
+		WeaponServiceEntity packAPunchService = new WeaponServiceEntity(standardService.getDamage() * 3, true, type);
 		defaultServices.add(packAPunchService);
 
-		if (packAPunchService.getTypeUUID() == WeaponService.MELEE) {
+		if (packAPunchService.getType().equals(WeaponService.MELEE)) {
 			packAPunchService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_MELEE_USAGE_SOUND, WeaponCharacteristic.USAGE_SOUND));
 			return;
 		}
@@ -185,6 +172,7 @@ public class WeaponClassEntity {
 		packAPunchService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_PACK_A_PUNCHED_MAGAZINE_SIZE, WeaponCharacteristic.MAGAZINE_SIZE));
 		packAPunchService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_PACK_A_PUNCHED_RELOAD_SPEED, WeaponCharacteristic.RELOAD_SPEED));
 		packAPunchService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_PACK_A_PUNCHED_TOTAL_AMMO_CAPACITY, WeaponCharacteristic.TOTAL_AMMO_CAPACITY));
+		standardService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_PROJECTILE_COUNT, WeaponCharacteristic.PROJECTILES_IN_CARTRIDGE));
 		packAPunchService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_GUNSHOT_USAGE_SOUND, WeaponCharacteristic.USAGE_SOUND));
 		packAPunchService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_OUT_OF_AMMO_SOUND, WeaponCharacteristic.OUT_OF_AMMO_SOUND));
 	}

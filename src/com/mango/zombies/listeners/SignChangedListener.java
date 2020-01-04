@@ -2,11 +2,11 @@ package com.mango.zombies.listeners;
 
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.entities.*;
-import com.mango.zombies.services.MessagingService;
 import com.mango.zombies.schema.MapItem;
 import com.mango.zombies.schema.Sign;
 import com.mango.zombies.schema.WeaponCharacteristic;
 import com.mango.zombies.schema.WeaponService;
+import com.mango.zombies.services.MessagingService;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -95,7 +95,7 @@ public class SignChangedListener implements Listener {
 
 				for (WeaponServiceEntity service : weapon.getServices()) {
 
-					if (!service.getTypeUUID().equals(WeaponService.GUNSHOT))
+					if (!service.getType().equals(WeaponService.GUNSHOT))
 						continue;
 
 					if (service.doesRequirePackAPunch())
@@ -112,7 +112,7 @@ public class SignChangedListener implements Listener {
 
 				for (WeaponServiceCharacteristicEntity characteristic : gunshotService.getCharacteristics()) {
 
-					if (characteristic.getTypeUUID().equals(WeaponCharacteristic.AMMO_COST)) {
+					if (characteristic.getType().equals(WeaponCharacteristic.AMMO_COST)) {
 						normalAmmoCost = (Integer)characteristic.getValue();
 						break;
 					}
@@ -122,7 +122,7 @@ public class SignChangedListener implements Listener {
 
 					for (WeaponServiceCharacteristicEntity characteristic : packAPunchedGunshotService.getCharacteristics()) {
 
-						if (characteristic.getTypeUUID().equals(WeaponCharacteristic.AMMO_COST)) {
+						if (characteristic.getType().equals(WeaponCharacteristic.AMMO_COST)) {
 							packAPunchedAmmoCost = (Integer)characteristic.getValue();
 							break;
 						}

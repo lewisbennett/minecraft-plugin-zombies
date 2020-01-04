@@ -334,34 +334,34 @@ public class GameplayWeapon implements Listener {
 
         for (WeaponServiceCharacteristicEntity characteristic : gunshotService.getCharacteristics()) {
 
-            if (characteristic.getTypeUUID().equals(WeaponCharacteristic.PROJECTILES_IN_CARTRIDGE)) {
+            if (characteristic.getType().equals(WeaponCharacteristic.PROJECTILES_IN_CARTRIDGE)) {
                 projectileCount = (Integer)characteristic.getValue();
                 continue;
             }
 
-            if (characteristic.getTypeUUID().equals(WeaponCharacteristic.RELOAD_SPEED)) {
+            if (characteristic.getType().equals(WeaponCharacteristic.RELOAD_SPEED)) {
                 reloadSpeed = (Integer)characteristic.getValue();
                 continue;
             }
 
-            if (characteristic.getTypeUUID().equals(WeaponCharacteristic.MAGAZINE_SIZE)) {
+            if (characteristic.getType().equals(WeaponCharacteristic.MAGAZINE_SIZE)) {
                 ammoInMagazine = (Integer)characteristic.getValue();
                 defaultAmmoInMagazine = (Integer)characteristic.getValue();
                 continue;
             }
 
-            if (characteristic.getTypeUUID().equals(WeaponCharacteristic.OUT_OF_AMMO_SOUND)) {
+            if (characteristic.getType().equals(WeaponCharacteristic.OUT_OF_AMMO_SOUND)) {
                 outOfAmmoSound = Sound.valueOf((String)characteristic.getValue());
                 continue;
             }
 
-            if (characteristic.getTypeUUID().equals(WeaponCharacteristic.TOTAL_AMMO_CAPACITY)) {
+            if (characteristic.getType().equals(WeaponCharacteristic.TOTAL_AMMO_CAPACITY)) {
                 availableAmmo = (Integer)characteristic.getValue();
                 defaultAvailableAmmo = (Integer)characteristic.getValue();
                 continue;
             }
 
-            if (characteristic.getTypeUUID().equals(WeaponCharacteristic.USAGE_SOUND))
+            if (characteristic.getType().equals(WeaponCharacteristic.USAGE_SOUND))
                 gunshotSound = Sound.valueOf((String)characteristic.getValue());
         }
     }
@@ -373,7 +373,7 @@ public class GameplayWeapon implements Listener {
 
         for (WeaponServiceCharacteristicEntity characteristic : meleeService.getCharacteristics()) {
 
-            if (characteristic.getTypeUUID().equals(WeaponCharacteristic.USAGE_SOUND))
+            if (characteristic.getType().equals(WeaponCharacteristic.USAGE_SOUND))
                 meleeSound = Sound.valueOf((String)characteristic.getValue());
         }
     }
@@ -385,32 +385,32 @@ public class GameplayWeapon implements Listener {
 
         for (WeaponServiceCharacteristicEntity characteristic : packAPunchedGunshotService.getCharacteristics()) {
 
-            if (characteristic.getTypeUUID().equals(WeaponCharacteristic.PROJECTILES_IN_CARTRIDGE)) {
+            if (characteristic.getType().equals(WeaponCharacteristic.PROJECTILES_IN_CARTRIDGE)) {
                 packAPunchedProjectileCount = (Integer)characteristic.getValue();
                 continue;
             }
 
-            if (characteristic.getTypeUUID().equals(WeaponCharacteristic.RELOAD_SPEED)) {
+            if (characteristic.getType().equals(WeaponCharacteristic.RELOAD_SPEED)) {
                 packAPunchedReloadSpeed = (Integer)characteristic.getValue();
                 continue;
             }
 
-            if (characteristic.getTypeUUID().equals(WeaponCharacteristic.MAGAZINE_SIZE)) {
+            if (characteristic.getType().equals(WeaponCharacteristic.MAGAZINE_SIZE)) {
                 defaultPackAPunchedAmmoInMagazine = (Integer)characteristic.getValue();
                 continue;
             }
 
-            if (characteristic.getTypeUUID().equals(WeaponCharacteristic.OUT_OF_AMMO_SOUND)) {
+            if (characteristic.getType().equals(WeaponCharacteristic.OUT_OF_AMMO_SOUND)) {
                 packAPunchedOutOfAmmoSound = Sound.valueOf((String)characteristic.getValue());
                 continue;
             }
 
-            if (characteristic.getTypeUUID().equals(WeaponCharacteristic.TOTAL_AMMO_CAPACITY)) {
+            if (characteristic.getType().equals(WeaponCharacteristic.TOTAL_AMMO_CAPACITY)) {
                 defaultPackAPunchedAvailableAmmo = (Integer)characteristic.getValue();
                 continue;
             }
 
-            if (characteristic.getTypeUUID().equals(WeaponCharacteristic.USAGE_SOUND))
+            if (characteristic.getType().equals(WeaponCharacteristic.USAGE_SOUND))
                 packAPunchedGunshotSound = Sound.valueOf((String)characteristic.getValue());
         }
     }
@@ -422,7 +422,7 @@ public class GameplayWeapon implements Listener {
 
         for (WeaponServiceCharacteristicEntity characteristic : packAPunchedMeleeService.getCharacteristics()) {
 
-            if (characteristic.getTypeUUID().equals(WeaponCharacteristic.USAGE_SOUND))
+            if (characteristic.getType().equals(WeaponCharacteristic.USAGE_SOUND))
                 packAPunchedMeleeSound = Sound.valueOf((String)characteristic.getValue());
         }
     }
@@ -447,7 +447,7 @@ public class GameplayWeapon implements Listener {
 
         for (WeaponServiceEntity service : weapon.getServices()) {
 
-            if (service.getTypeUUID().equals(WeaponService.GUNSHOT)) {
+            if (service.getType().equals(WeaponService.GUNSHOT)) {
 
                 if (service.doesRequirePackAPunch())
                     packAPunchedGunshotService = service;
@@ -455,7 +455,7 @@ public class GameplayWeapon implements Listener {
                     gunshotService = service;
             }
 
-            if (service.getTypeUUID().equals(WeaponService.MELEE)) {
+            if (service.getType().equals(WeaponService.MELEE)) {
 
                 if (service.doesRequirePackAPunch())
                     packAPunchedMeleeService = service;

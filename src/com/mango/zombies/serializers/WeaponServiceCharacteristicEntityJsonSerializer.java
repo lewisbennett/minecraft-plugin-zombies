@@ -4,18 +4,17 @@ import com.google.gson.*;
 import com.mango.zombies.entities.WeaponServiceCharacteristicEntity;
 
 import java.lang.reflect.Type;
-import java.util.UUID;
 
 public class WeaponServiceCharacteristicEntityJsonSerializer implements JsonSerializer<WeaponServiceCharacteristicEntity>, JsonDeserializer<WeaponServiceCharacteristicEntity> {
 
+    //region Public Methods
     @Override
     public WeaponServiceCharacteristicEntity deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
 
         JsonObject jsonObject = jsonElement.getAsJsonObject();
 
         WeaponServiceCharacteristicEntity characteristicEntity = new WeaponServiceCharacteristicEntity();
-
-        characteristicEntity.setTypeUUID(UUID.fromString(jsonObject.get(WeaponServiceCharacteristicEntity.TYPE_UUID_JSON_TAG).getAsString()));
+        characteristicEntity.setType(jsonObject.get(WeaponServiceCharacteristicEntity.TYPE_JSON_TAG).getAsString());
 
         Object o;
         JsonElement jsonValue = jsonObject.get(WeaponServiceCharacteristicEntity.VALUE_JSON_TAG);
@@ -47,8 +46,9 @@ public class WeaponServiceCharacteristicEntityJsonSerializer implements JsonSeri
             valueJson = new JsonPrimitive((String)weaponServiceCharacteristicEntity.getValue());
 
         jsonObject.add(WeaponServiceCharacteristicEntity.VALUE_JSON_TAG, valueJson);
-        jsonObject.add(WeaponServiceCharacteristicEntity.TYPE_UUID_JSON_TAG, new JsonPrimitive(weaponServiceCharacteristicEntity.getTypeUUID().toString()));
+        jsonObject.add(WeaponServiceCharacteristicEntity.TYPE_JSON_TAG, new JsonPrimitive(weaponServiceCharacteristicEntity.getType()));
 
         return jsonObject;
     }
+    //endregion
 }

@@ -2,7 +2,6 @@ package com.mango.zombies.serializers;
 
 import com.google.gson.*;
 import com.mango.zombies.entities.LocationEntity;
-import com.mango.zombies.entities.LocationEntity;
 
 import java.lang.reflect.Type;
 

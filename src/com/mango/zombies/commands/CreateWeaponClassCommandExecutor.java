@@ -3,20 +3,23 @@ package com.mango.zombies.commands;
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.base.BaseCommandExecutor;
 import com.mango.zombies.entities.WeaponClassEntity;
+import com.mango.zombies.schema.WeaponService;
 import com.mango.zombies.services.MessagingService;
-import com.mango.zombies.schema.WeaponType;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 public class CreateWeaponClassCommandExecutor extends BaseCommandExecutor {
 
+	//region Constant Values
 	public static final String CAN_PACK_A_PUNCH_SYNTAX_ERROR = "Weapon class not created. You need to enter \"yes\" or \"no\" for whether this weapon class can be Pack-A-Punched.";
 	public static final String CORRECT_USAGE_ERROR = "Correct usage: /createweaponclass [ID] [default cost] [weapon type] [can Pack-A-Punch yes/no] [name]";
 	public static final String INVALID_COST = "Weapon class not created. You need to enter a valid cost.";
 	public static final String WEAPON_CLASS_ID_ALREADY_EXISTS_ERROR = "Weapon class not created. %s already exists.";
 	public static final String WEAPON_TYPE_DOES_NOT_EXIST_ERROR = "Weapon class not created. %s is not a valid weapon type.";
+	//endregion
 
+	//region Event Handlers
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
@@ -24,13 +27,13 @@ public class CreateWeaponClassCommandExecutor extends BaseCommandExecutor {
 			MessagingService.showError(sender, CORRECT_USAGE_ERROR);
 			return true;
 		}
-		
+
 		if (!isValidWeaponClassId(args[0])) {
 			MessagingService.showError(sender, String.format(WEAPON_CLASS_ID_ALREADY_EXISTS_ERROR, args[0]));
 			return true;
 		}
-		
-		if (!args[2].equalsIgnoreCase(WeaponType.GUNSHOT) && !args[2].equalsIgnoreCase(WeaponType.MELEE)) {
+
+		if (!args[2].equalsIgnoreCase(WeaponService.GUNSHOT) && !args[2].equalsIgnoreCase(WeaponService.MELEE)) {
 			MessagingService.showError(sender, String.format(WEAPON_TYPE_DOES_NOT_EXIST_ERROR, args[2]));
 			return true;
 		}
@@ -68,10 +71,12 @@ public class CreateWeaponClassCommandExecutor extends BaseCommandExecutor {
 		WeaponClassEntity weaponClass = new WeaponClassEntity(args[0], name.toString(), cost, args[2], canPackAPunch);
 		PluginCore.getWeaponsClasses().add(weaponClass);
 		MessagingService.showSuccess(sender, "Successfully created weapon class: " + ChatColor.BOLD + weaponClass.getName());
-		
+
 		return true;
 	}
+	//endregion
 
+	//region Private Methods
 	private boolean isValidWeaponClassId(String weaponClassId) {
 
 		for (WeaponClassEntity weaponClass : PluginCore.getWeaponsClasses()) {
@@ -82,4 +87,5 @@ public class CreateWeaponClassCommandExecutor extends BaseCommandExecutor {
 
 		return true;
 	}
+	//endregion
 }

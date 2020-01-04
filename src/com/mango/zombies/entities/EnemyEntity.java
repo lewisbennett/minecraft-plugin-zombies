@@ -1,10 +1,7 @@
 package com.mango.zombies.entities;
 
 import com.mango.zombies.serializers.EnemyEntityJsonSerializer;
-import org.bukkit.World;
 import org.bukkit.entity.EntityType;
-
-import java.util.Random;
 
 public class EnemyEntity {
 

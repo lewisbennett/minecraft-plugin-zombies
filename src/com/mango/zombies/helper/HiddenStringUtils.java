@@ -1,10 +1,10 @@
 package com.mango.zombies.helper;
 
-import java.nio.charset.StandardCharsets;
-import java.util.UUID;
-
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
+
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 public class HiddenStringUtils {
 

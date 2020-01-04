@@ -4,23 +4,23 @@ import com.mango.zombies.serializers.WeaponServiceEntityJsonSerializer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class WeaponServiceEntity {
 
 	//region Constant Values
+	public static final WeaponServiceEntityJsonSerializer SERIALIZER = new WeaponServiceEntityJsonSerializer();
+
 	public static final String CHARACTERISTICS_JSON_TAG = "characteristics";
 	public static final String DAMAGE_JSON_TAG = "damage";
 	public static final String DOES_REQUIRE_PACK_A_PUNCH_JSON_TAG = "does_require_pack_a_punch";
-	public static final WeaponServiceEntityJsonSerializer SERIALIZER = new WeaponServiceEntityJsonSerializer();
-	public static final String TYPE_UUID_JSON_TAG = "type_uuid";
+	public static final String TYPE_JSON_TAG = "type";
 	//endregion
 
 	//region Fields
 	private List<WeaponServiceCharacteristicEntity> characteristics = new ArrayList<WeaponServiceCharacteristicEntity>();
 	private int damage;
 	private boolean doesRequirePackAPunch;
-	private UUID typeUUID;
+	private String type;
 	//endregion
 
 	//region Getters/Setters
@@ -60,17 +60,17 @@ public class WeaponServiceEntity {
 	}
 
 	/**
-	 * Gets the service's type UUID.
+	 * Gets this service's type.
 	 */
-	public UUID getTypeUUID() {
-		return typeUUID;
+	public String getType() {
+		return type;
 	}
 
 	/**
-	 * Sets the service's type UUID.
+	 * Sets this service's type.
 	 */
-	public void setTypeUUID(UUID typeUUID) {
-		this.typeUUID = typeUUID;
+	public void setType(String type) {
+		this.type = type;
 	}
 	//endregion
 
@@ -78,11 +78,11 @@ public class WeaponServiceEntity {
 	public WeaponServiceEntity() {
 	}
 
-	public WeaponServiceEntity(int damage, boolean doesRequirePackAPunch, UUID typeUUID) {
+	public WeaponServiceEntity(int damage, boolean doesRequirePackAPunch, String type) {
 
 		this.damage = damage;
 		this.doesRequirePackAPunch = doesRequirePackAPunch;
-		this.typeUUID = typeUUID;
+		this.type = type;
 	}
 	//endregion
 }

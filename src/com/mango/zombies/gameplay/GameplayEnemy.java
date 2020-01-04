@@ -6,7 +6,6 @@ import com.mango.zombies.Time;
 import com.mango.zombies.entities.EnemyEntity;
 import com.mango.zombies.listeners.ProjectileHitListener;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;

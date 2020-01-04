@@ -9,13 +9,14 @@ import java.util.List;
 public class WeaponEntity {
 
 	//region Constant Values
+	public static final WeaponEntityJsonSerializer SERIALIZER = new WeaponEntityJsonSerializer();
+
 	public static final String COST_JSON_TAG = "cost";
 	public static final String ID_JSON_TAG = "id";
 	public static final String IS_WONDER_WEAPON_JSON_TAG = "is_wonder_weapon";
 	public static final String ITEM_JSON_TAG = "item";
 	public static final String NAME_JSON_TAG = "name";
 	public static final String PACK_A_PUNCH_NAME_JSON_TAG = "pack_a_punch_name";
-	public static final WeaponEntityJsonSerializer SERIALIZER = new WeaponEntityJsonSerializer();
 	public static final String SERVICES_JSON_TAG = "services";
 	public static final String WEAPON_CLASS_ID_JSON_TAG = "weapon_class_id";
 	//endregion
@@ -155,6 +156,8 @@ public class WeaponEntity {
 	}
 
 	public WeaponEntity(String id, String name, String weaponClassId) {
+
+		this();
 
 		this.id = id;
 		this.name = name;

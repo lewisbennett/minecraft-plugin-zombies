@@ -1,7 +1,6 @@
 package com.mango.zombies.commands;
 
 import com.mango.zombies.base.PlayerOnlyCommandExecutor;
-import com.mango.zombies.gameplay.PositionTool;
 import com.mango.zombies.gameplay.SpawningTool;
 import com.mango.zombies.services.GameplayService;
 import com.mango.zombies.services.MessagingService;

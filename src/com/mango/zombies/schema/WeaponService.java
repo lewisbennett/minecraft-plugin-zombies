@@ -1,9 +1,27 @@
 package com.mango.zombies.schema;
 
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WeaponService {
 
-	public static final UUID GUNSHOT = UUID.fromString("894a03c1-601c-44c3-a0a6-9a2db455fa8b");
-	public static final UUID MELEE = UUID.fromString("6d0aa430-0884-11e9-b568-0800200c9a66");
+	//region Constant Values
+	public static final String GUNSHOT = "gunshot";
+	public static final String MELEE = "melee";
+	//endregion
+
+	//region Public Static Methods
+	/**
+	 * Gets all weapon service types as a list.
+	 */
+	public static List<String> toList() {
+
+		List<String> types = new ArrayList<String>();
+
+		types.add(GUNSHOT);
+		types.add(MELEE);
+
+		return types;
+	}
+	//endregion
 }
