@@ -7,7 +7,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="29650a7b-3f89-4df9-bc36-b5aa3b568d39" name="Default Changelist" comment="" />
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -31,8 +30,13 @@
     </option>
   </component>
   <component name="ProjectId" id="1SLUQXE1KlEjQZfI6PbiSWHhAsS" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/com/mango/zombies/commands" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/craftbukkit.jar!/" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15429688" />
     <property name="project.structure.side.proportion" value="0.20416124" />
@@ -51,15 +55,15 @@
       <recent name="D:\Projects\minecraft-plugin-zombies\src\com\mango\zombies\helper" />
     </key>
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
+  <component name="ServiceViewManager">
+    <option name="viewStates">
       <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
       </list>
     </option>
   </component>
@@ -88,5 +92,15 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="857" y="181" key="#Project_Structure" timestamp="1578245774829">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="857" y="181" key="#Project_Structure/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1578245774829" />
+    <state x="740" y="278" key="FileChooserDialogImpl" timestamp="1578245440008">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="740" y="278" key="FileChooserDialogImpl/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1578245440008" />
   </component>
 </project>

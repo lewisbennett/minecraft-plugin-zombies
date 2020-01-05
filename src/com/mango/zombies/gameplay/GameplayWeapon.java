@@ -10,6 +10,7 @@ import com.mango.zombies.entities.WeaponServiceEntity;
 import com.mango.zombies.helper.HiddenStringUtils;
 import com.mango.zombies.schema.WeaponCharacteristic;
 import com.mango.zombies.schema.WeaponService;
+import net.minecraft.server.v1_14_R1.BiomeMushroomIslandShore;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.World;
@@ -22,7 +23,9 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.util.Vector;
 
+import java.util.Random;
 import java.util.UUID;
 
 public class GameplayWeapon implements Listener {
@@ -254,20 +257,37 @@ public class GameplayWeapon implements Listener {
 
         playGunshotSound(player);
 
-        double velocityMultiplier = 2.5;
+        double accuracy;
+        int damage;
         int projectiles = getProjectileCount();
 
-        int damage = (isPackAPunched && packAPunchedGunshotService != null ? packAPunchedGunshotService.getDamage() : gunshotService.getDamage()) / projectiles;
+        if (isPackAPunched && packAPunchedGunshotService != null) {
+
+            accuracy = packAPunchedGunshotService.getAccuracy();
+            damage = packAPunchedGunshotService.getDamage();
+
+        } else {
+
+            accuracy = gunshotService.getAccuracy();
+            damage = gunshotService.getDamage();
+
+        }
+
+        // The accuracy setting is actually an inaccuracy setting so
+        // it needs to be inverted before we use it on a projectile.
+        accuracy = 1 - (accuracy / 100.0);
 
         for (int i = 0; i < projectiles; i++) {
 
-            double finalVelocityMultiplier = velocityMultiplier;
+            Snowball snowball = player.launchProjectile(Snowball.class);
 
-            Snowball snowball = player.launchProjectile(Snowball.class, player.getLocation().getDirection().multiply(finalVelocityMultiplier));
+            Vector vector = player.getLocation().getDirection().multiply(2.5);
+            vector.add(new Vector(Math.random() * accuracy - accuracy, Math.random() * accuracy - accuracy, Math.random() * accuracy - accuracy));
+
+            snowball.setVelocity(vector);
+            snowball.setGravity(false);
 
             snowball.setCustomName("zombies:bullet:" + damage);
-
-            velocityMultiplier *= 0.8;
         }
 
         ammoInMagazine--;

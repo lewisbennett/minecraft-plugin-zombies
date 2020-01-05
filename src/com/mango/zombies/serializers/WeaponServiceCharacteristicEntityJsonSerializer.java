@@ -12,23 +12,30 @@ public class WeaponServiceCharacteristicEntityJsonSerializer implements JsonSeri
     public WeaponServiceCharacteristicEntity deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
 
         JsonObject jsonObject = jsonElement.getAsJsonObject();
+        WeaponServiceCharacteristicEntity characteristic = new WeaponServiceCharacteristicEntity();
+        
+        JsonElement typeJson = jsonObject.get(WeaponServiceCharacteristicEntity.TYPE_JSON_TAG);
+        JsonElement valueJson = jsonObject.get(WeaponServiceCharacteristicEntity.VALUE_JSON_TAG);
+        
+        if (typeJson != null)
+            characteristic.setType(typeJson.getAsString());
+        
+        if (valueJson != null) {
 
-        WeaponServiceCharacteristicEntity characteristicEntity = new WeaponServiceCharacteristicEntity();
-        characteristicEntity.setType(jsonObject.get(WeaponServiceCharacteristicEntity.TYPE_JSON_TAG).getAsString());
+            Object o = null;
+            JsonPrimitive valuePrimitive = valueJson.getAsJsonPrimitive();
+            
+            if (valuePrimitive.isBoolean())
+                o = valueJson.getAsBoolean();
+            else if (valuePrimitive.isNumber())
+                o = valueJson.getAsInt();
+            else if (valuePrimitive.isString())
+                o = valueJson.getAsString();
 
-        Object o;
-        JsonElement jsonValue = jsonObject.get(WeaponServiceCharacteristicEntity.VALUE_JSON_TAG);
+            characteristic.setValue(o);
+        }
 
-        if (jsonValue.getAsJsonPrimitive().isBoolean())
-            o = jsonValue.getAsBoolean();
-        else if (jsonValue.getAsJsonPrimitive().isNumber())
-            o = jsonValue.getAsInt();
-        else
-            o = jsonValue.getAsString();
-
-        characteristicEntity.setValue(o);
-
-        return characteristicEntity;
+        return characteristic;
     }
 
     @Override

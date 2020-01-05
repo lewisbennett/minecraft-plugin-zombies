@@ -8,8 +8,11 @@ import java.util.List;
 public class WeaponServiceEntity {
 
 	//region Constant Values
+	public int DEFAULT_ACCURACY = 85;
+
 	public static final WeaponServiceEntityJsonSerializer SERIALIZER = new WeaponServiceEntityJsonSerializer();
 
+	public static final String ACCURACY_JSON_TAG = "accuracy";
 	public static final String CHARACTERISTICS_JSON_TAG = "characteristics";
 	public static final String DAMAGE_JSON_TAG = "damage";
 	public static final String DOES_REQUIRE_PACK_A_PUNCH_JSON_TAG = "does_require_pack_a_punch";
@@ -17,6 +20,7 @@ public class WeaponServiceEntity {
 	//endregion
 
 	//region Fields
+	private int accuracy = DEFAULT_ACCURACY;
 	private List<WeaponServiceCharacteristicEntity> characteristics = new ArrayList<WeaponServiceCharacteristicEntity>();
 	private int damage;
 	private boolean doesRequirePackAPunch;
@@ -24,6 +28,22 @@ public class WeaponServiceEntity {
 	//endregion
 
 	//region Getters/Setters
+	/**
+	 * Gets the accuracy of this service.
+	 */
+	public int getAccuracy() {
+		return accuracy;
+	}
+
+	/**
+	 * Sets the accuracy. Only values between 1 and 100 are accepted.
+	 */
+	public void setAccuracy(int accuracy) {
+
+		if (accuracy > 0 && accuracy <= 100)
+			this.accuracy = accuracy;
+	}
+
 	/**
 	 * Gets the service's characteristics.
 	 */

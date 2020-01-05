@@ -8,7 +8,7 @@
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
       </element>
-      <element id="module-output" name="com.mango.zombies" />
+      <element id="module-output" name="minecraft-plugin-zombies" />
     </root>
   </artifact>
 </component>
