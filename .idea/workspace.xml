@@ -6,7 +6,14 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="29650a7b-3f89-4df9-bc36-b5aa3b568d39" name="Default Changelist" comment="" />
+    <list default="true" id="29650a7b-3f89-4df9-bc36-b5aa3b568d39" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/entities/WeaponClassEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/entities/WeaponClassEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/entities/WeaponServiceEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/entities/WeaponServiceEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/GameplayWeapon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/GameplayWeapon.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/schema/WeaponCharacteristic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/schema/WeaponCharacteristic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/serializers/WeaponServiceEntityJsonSerializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/serializers/WeaponServiceEntityJsonSerializer.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -102,5 +109,9 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="740" y="278" key="FileChooserDialogImpl/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1578245440008" />
+    <state x="342" y="147" key="new project wizard" timestamp="1580206575797">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="342" y="147" key="new project wizard/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1580206575797" />
   </component>
 </project>

@@ -1,6 +1,7 @@
 package com.mango.zombies.entities;
 
 import com.mango.zombies.serializers.WeaponServiceEntityJsonSerializer;
+import org.bukkit.Sound;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +9,8 @@ import java.util.List;
 public class WeaponServiceEntity {
 
 	//region Constant Values
-	public int DEFAULT_ACCURACY = 85;
+	public static final int DEFAULT_ACCURACY = 85;
+	public static final Sound DEFAULT_USAGE_SOUND = Sound.BLOCK_PUMPKIN_CARVE;
 
 	public static final WeaponServiceEntityJsonSerializer SERIALIZER = new WeaponServiceEntityJsonSerializer();
 
@@ -17,14 +19,15 @@ public class WeaponServiceEntity {
 	public static final String DAMAGE_JSON_TAG = "damage";
 	public static final String DOES_REQUIRE_PACK_A_PUNCH_JSON_TAG = "does_require_pack_a_punch";
 	public static final String TYPE_JSON_TAG = "type";
+	public static final String USAGE_SOUND_JSON_TAG = "usage_sound";
 	//endregion
 
 	//region Fields
-	private int accuracy = DEFAULT_ACCURACY;
+	private int accuracy = DEFAULT_ACCURACY, damage;
 	private List<WeaponServiceCharacteristicEntity> characteristics = new ArrayList<WeaponServiceCharacteristicEntity>();
-	private int damage;
 	private boolean doesRequirePackAPunch;
 	private String type;
+	private Sound usageSound = DEFAULT_USAGE_SOUND;
 	//endregion
 
 	//region Getters/Setters
@@ -92,17 +95,19 @@ public class WeaponServiceEntity {
 	public void setType(String type) {
 		this.type = type;
 	}
-	//endregion
 
-	//region Constructors
-	public WeaponServiceEntity() {
+	/**
+	 * Gets the usage sound.
+	 */
+	public Sound getUsageSound() {
+		return usageSound;
 	}
 
-	public WeaponServiceEntity(int damage, boolean doesRequirePackAPunch, String type) {
-
-		this.damage = damage;
-		this.doesRequirePackAPunch = doesRequirePackAPunch;
-		this.type = type;
+	/**
+	 * Sets the usage sound.
+	 */
+	public void setUsageSound(Sound usageSound) {
+		this.usageSound = usageSound;
 	}
 	//endregion
 }

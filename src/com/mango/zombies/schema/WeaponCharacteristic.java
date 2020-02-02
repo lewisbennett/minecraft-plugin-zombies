@@ -8,5 +8,4 @@ public class WeaponCharacteristic {
 	public static final String RELOAD_SPEED = "reload_speed";
 	public static final String PROJECTILES_IN_CARTRIDGE = "projectiles_in_cartridge";
 	public static final String TOTAL_AMMO_CAPACITY = "total_ammo_capacity";
-	public static final String USAGE_SOUND = "usage_sound";
 }

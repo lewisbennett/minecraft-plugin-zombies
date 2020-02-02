@@ -38,9 +38,9 @@ public class GameplayWeapon implements Listener {
     private int defaultAmmoInMagazine = WeaponClassEntity.DEFAULT_MAGAZINE_SIZE, defaultAvailableAmmo = WeaponClassEntity.DEFAULT_TOTAL_AMMO_CAPACITY;
     private int defaultPackAPunchedAmmoInMagazine = WeaponClassEntity.DEFAULT_PACK_A_PUNCHED_MAGAZINE_SIZE, defaultPackAPunchedAvailableAmmo = WeaponClassEntity.DEFAULT_PACK_A_PUNCHED_TOTAL_AMMO_CAPACITY;
 
-    private Sound gunshotSound = Sound.valueOf(WeaponClassEntity.DEFAULT_GUNSHOT_USAGE_SOUND), packAPunchedGunshotSound = Sound.valueOf(WeaponClassEntity.DEFAULT_GUNSHOT_USAGE_SOUND);
-    private Sound meleeSound = Sound.valueOf(WeaponClassEntity.DEFAULT_MELEE_USAGE_SOUND), packAPunchedMeleeSound = Sound.valueOf(WeaponClassEntity.DEFAULT_MELEE_USAGE_SOUND);
-    private Sound outOfAmmoSound = Sound.valueOf(WeaponClassEntity.DEFAULT_OUT_OF_AMMO_SOUND), packAPunchedOutOfAmmoSound = Sound.valueOf(WeaponClassEntity.DEFAULT_OUT_OF_AMMO_SOUND);
+    private Sound gunshotSound = WeaponClassEntity.DEFAULT_GUNSHOT_USAGE_SOUND, packAPunchedGunshotSound = WeaponClassEntity.DEFAULT_GUNSHOT_USAGE_SOUND;
+    private Sound meleeSound = WeaponClassEntity.DEFAULT_MELEE_USAGE_SOUND, packAPunchedMeleeSound = WeaponClassEntity.DEFAULT_MELEE_USAGE_SOUND;
+    private Sound outOfAmmoSound = WeaponClassEntity.DEFAULT_OUT_OF_AMMO_SOUND, packAPunchedOutOfAmmoSound = WeaponClassEntity.DEFAULT_OUT_OF_AMMO_SOUND;
 
     private WeaponServiceEntity gunshotService, packAPunchedGunshotService, meleeService, packAPunchedMeleeService;
     private boolean isPackAPunched, isReloading;
@@ -334,9 +334,6 @@ public class GameplayWeapon implements Listener {
         breakdownGunshotService();
         breakdownPackAPunchedGunshotService();
 
-        breakdownMeleeService();
-        breakdownPackAPunchedMeleeService();
-
         if (gunshotService != null) {
             setWeaponDisplay(getAmmoStatus());
             return;
@@ -378,23 +375,7 @@ public class GameplayWeapon implements Listener {
             if (characteristic.getType().equals(WeaponCharacteristic.TOTAL_AMMO_CAPACITY)) {
                 availableAmmo = (Integer)characteristic.getValue();
                 defaultAvailableAmmo = (Integer)characteristic.getValue();
-                continue;
             }
-
-            if (characteristic.getType().equals(WeaponCharacteristic.USAGE_SOUND))
-                gunshotSound = Sound.valueOf((String)characteristic.getValue());
-        }
-    }
-
-    private void breakdownMeleeService() {
-
-        if (meleeService == null)
-            return;
-
-        for (WeaponServiceCharacteristicEntity characteristic : meleeService.getCharacteristics()) {
-
-            if (characteristic.getType().equals(WeaponCharacteristic.USAGE_SOUND))
-                meleeSound = Sound.valueOf((String)characteristic.getValue());
         }
     }
 
@@ -425,25 +406,8 @@ public class GameplayWeapon implements Listener {
                 continue;
             }
 
-            if (characteristic.getType().equals(WeaponCharacteristic.TOTAL_AMMO_CAPACITY)) {
+            if (characteristic.getType().equals(WeaponCharacteristic.TOTAL_AMMO_CAPACITY))
                 defaultPackAPunchedAvailableAmmo = (Integer)characteristic.getValue();
-                continue;
-            }
-
-            if (characteristic.getType().equals(WeaponCharacteristic.USAGE_SOUND))
-                packAPunchedGunshotSound = Sound.valueOf((String)characteristic.getValue());
-        }
-    }
-
-    private void breakdownPackAPunchedMeleeService() {
-
-        if (packAPunchedMeleeService == null)
-            return;
-
-        for (WeaponServiceCharacteristicEntity characteristic : packAPunchedMeleeService.getCharacteristics()) {
-
-            if (characteristic.getType().equals(WeaponCharacteristic.USAGE_SOUND))
-                packAPunchedMeleeSound = Sound.valueOf((String)characteristic.getValue());
         }
     }
 

@@ -13,10 +13,10 @@ import java.util.List;
 public class WeaponClassEntity {
 
 	//region Constant Values
-	public static final String DEFAULT_GUNSHOT_USAGE_SOUND = Sound.BLOCK_LAVA_POP.name();
+	public static final Sound DEFAULT_GUNSHOT_USAGE_SOUND = Sound.BLOCK_LAVA_POP;
 	public static final int DEFAULT_MAGAZINE_SIZE = 8;
-	public static final String DEFAULT_MELEE_USAGE_SOUND = Sound.BLOCK_PUMPKIN_CARVE.name();
-	public static final String DEFAULT_OUT_OF_AMMO_SOUND = Sound.BLOCK_DISPENSER_FAIL.name();
+	public static final Sound DEFAULT_MELEE_USAGE_SOUND = Sound.BLOCK_PUMPKIN_CARVE;
+	public static final Sound DEFAULT_OUT_OF_AMMO_SOUND = Sound.BLOCK_DISPENSER_FAIL;
 	public static final int DEFAULT_PACK_A_PUNCHED_MAGAZINE_SIZE = 12;
 	public static final int DEFAULT_PACK_A_PUNCHED_RELOAD_SPEED = 6;
 	public static final int DEFAULT_PACK_A_PUNCHED_TOTAL_AMMO_CAPACITY = 120;
@@ -138,13 +138,24 @@ public class WeaponClassEntity {
 		if (!WeaponService.toList().contains(type))
 			return;
 
-		int damage = type.equals(WeaponService.MELEE) ? 155 : 20;
+		int damage;
+		Sound usageSound;
 
-		WeaponServiceEntity standardService = new WeaponServiceEntity(damage, false, type);
+		if (type.equals(WeaponService.GUNSHOT)) {
+			damage = 20;
+			usageSound = DEFAULT_GUNSHOT_USAGE_SOUND;
+		} else {
+			damage = 155;
+			usageSound = DEFAULT_MELEE_USAGE_SOUND;
+		}
+
+		WeaponServiceEntity standardService = new WeaponServiceEntity();
+		standardService.setDamage(damage);
+		standardService.setDoesRequirePackAPunch(false);
+		standardService.setType(type);
+		standardService.setUsageSound(usageSound);
+
 		defaultServices.add(standardService);
-
-		if (standardService.getType().equals(WeaponService.MELEE))
-			standardService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_MELEE_USAGE_SOUND, WeaponCharacteristic.USAGE_SOUND));
 
 		if (standardService.getType().equals(WeaponService.GUNSHOT)) {
 
@@ -153,27 +164,28 @@ public class WeaponClassEntity {
 			standardService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_RELOAD_SPEED, WeaponCharacteristic.RELOAD_SPEED));
 			standardService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_TOTAL_AMMO_CAPACITY, WeaponCharacteristic.TOTAL_AMMO_CAPACITY));
 			standardService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_PROJECTILE_COUNT, WeaponCharacteristic.PROJECTILES_IN_CARTRIDGE));
-			standardService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_GUNSHOT_USAGE_SOUND, WeaponCharacteristic.USAGE_SOUND));
 			standardService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_OUT_OF_AMMO_SOUND, WeaponCharacteristic.OUT_OF_AMMO_SOUND));
 		}
 
 		if (!canPackAPunch)
 			return;
 
-		WeaponServiceEntity packAPunchService = new WeaponServiceEntity(standardService.getDamage() * 3, true, type);
+		WeaponServiceEntity packAPunchService = new WeaponServiceEntity();
+		packAPunchService.setDamage(standardService.getDamage() * 3);
+		packAPunchService.setDoesRequirePackAPunch(true);
+		packAPunchService.setType(type);
+		packAPunchService.setUsageSound(usageSound);
+
 		defaultServices.add(packAPunchService);
 
-		if (packAPunchService.getType().equals(WeaponService.MELEE)) {
-			packAPunchService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_MELEE_USAGE_SOUND, WeaponCharacteristic.USAGE_SOUND));
+		if (!packAPunchService.getType().equals(WeaponService.GUNSHOT))
 			return;
-		}
 
 		packAPunchService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(defaultWeaponCost, WeaponCharacteristic.AMMO_COST));
 		packAPunchService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_PACK_A_PUNCHED_MAGAZINE_SIZE, WeaponCharacteristic.MAGAZINE_SIZE));
 		packAPunchService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_PACK_A_PUNCHED_RELOAD_SPEED, WeaponCharacteristic.RELOAD_SPEED));
 		packAPunchService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_PACK_A_PUNCHED_TOTAL_AMMO_CAPACITY, WeaponCharacteristic.TOTAL_AMMO_CAPACITY));
-		standardService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_PROJECTILE_COUNT, WeaponCharacteristic.PROJECTILES_IN_CARTRIDGE));
-		packAPunchService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_GUNSHOT_USAGE_SOUND, WeaponCharacteristic.USAGE_SOUND));
+		packAPunchService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_PROJECTILE_COUNT, WeaponCharacteristic.PROJECTILES_IN_CARTRIDGE));
 		packAPunchService.getCharacteristics().add(new WeaponServiceCharacteristicEntity(DEFAULT_OUT_OF_AMMO_SOUND, WeaponCharacteristic.OUT_OF_AMMO_SOUND));
 	}
 	//endregion
