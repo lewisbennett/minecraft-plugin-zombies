@@ -8,12 +8,14 @@ import com.mango.zombies.entities.WeaponEntity;
 import com.mango.zombies.entities.WeaponServiceCharacteristicEntity;
 import com.mango.zombies.entities.WeaponServiceEntity;
 import com.mango.zombies.helper.HiddenStringUtils;
+import com.mango.zombies.listeners.ProjectileHitListener;
 import com.mango.zombies.schema.WeaponCharacteristic;
 import com.mango.zombies.schema.WeaponService;
 import net.minecraft.server.v1_14_R1.BiomeMushroomIslandShore;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.World;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
@@ -45,9 +47,8 @@ public class GameplayWeapon implements Listener {
     private WeaponServiceEntity gunshotService, packAPunchedGunshotService, meleeService, packAPunchedMeleeService;
     private boolean isPackAPunched, isReloading;
 
-    private ItemStack itemStack;
+    private Player player;
     private WeaponEntity weapon;
-
     private UUID uuid;
     //endregion
 
@@ -113,26 +114,45 @@ public class GameplayWeapon implements Listener {
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
 
-        if (!(event.getDamager() instanceof Player))
+        if (!(event.getDamager() instanceof Player) || !(event.getEntity() instanceof LivingEntity))
             return;
 
-        Player player = (Player)event.getDamager();
+        player = (Player)event.getDamager();
+        LivingEntity livingEntity = (LivingEntity)event.getEntity();
 
-        UUID uuid = extractUuidFromItemStack(player.getInventory().getItemInMainHand());
+        if (fetchItemStack() == null)
+            return;
 
-        if (uuid != null && uuid.equals(this.uuid))
+        if (meleeService == null) {
             event.setCancelled(true);
+            return;
+        }
+
+        GameplayEnemy enemy = null;
+
+        for (GameplayEnemy queryEnemy : ProjectileHitListener.getGameplayEnemies()) {
+
+            if (queryEnemy.getEntity().getUniqueId().equals(livingEntity.getUniqueId())) {
+                enemy = queryEnemy;
+                break;
+            }
+        }
+
+        if (enemy == null)
+            return;
+
+        livingEntity.setHealth(20);
+        enemy.damage(isPackAPunched ? packAPunchedMeleeService.getDamage() : meleeService.getDamage());
     }
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
 
-        UUID uuid = extractUuidFromItemStack(event.getItem());
+        player = event.getPlayer();
+        ItemStack itemStack = fetchItemStack();
 
-        if (uuid == null || !uuid.equals(this.uuid))
+        if (itemStack == null)
             return;
-
-        itemStack = event.getItem();
 
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             shoot(event.getPlayer());
@@ -323,9 +343,9 @@ public class GameplayWeapon implements Listener {
     //endregion
 
     //region Constructors
-    public GameplayWeapon(ItemStack itemStack, WeaponEntity weapon, UUID uuid) {
+    public GameplayWeapon(Player player, WeaponEntity weapon, UUID uuid) {
 
-        this.itemStack = itemStack;
+        this.player = player;
         this.weapon = weapon;
         this.uuid = uuid;
 
@@ -453,6 +473,22 @@ public class GameplayWeapon implements Listener {
         return PluginCore.getConfig().getAmmoIndicatorColor().toString() + ammoInMagazine + "/" + availableAmmo;
     }
 
+    private ItemStack fetchItemStack() {
+
+        if (player == null)
+            return null;
+
+        for (int i = 0; i < player.getInventory().getSize(); i++) {
+
+            ItemStack itemStack = player.getInventory().getItem(i);
+
+            if (itemStack != null && extractUuidFromItemStack(itemStack).equals(uuid))
+                return itemStack;
+        }
+
+        return null;
+    }
+
     private String getReloadingNoAmmoStatus() {
 
         if (isReloading)
@@ -482,6 +518,11 @@ public class GameplayWeapon implements Listener {
 
     private void setWeaponDisplay() {
 
+        ItemStack itemStack = fetchItemStack();
+
+        if (itemStack == null)
+            return;
+
         ItemMeta itemMeta = itemStack.getItemMeta();
 
         if (itemMeta == null)
@@ -492,6 +533,11 @@ public class GameplayWeapon implements Listener {
     }
 
     private void setWeaponDisplay(String status) {
+
+        ItemStack itemStack = fetchItemStack();;
+
+        if (itemStack == null)
+            return;
 
         ItemMeta itemMeta = itemStack.getItemMeta();
 

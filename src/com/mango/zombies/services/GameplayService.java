@@ -158,7 +158,7 @@ public class GameplayService {
     /**
      * Gives a player a weapon.
      */
-    public static Tuple<ItemStack, GameplayWeapon> giveWeapon(Player player, String weaponId) {
+    public static GameplayWeapon giveWeapon(Player player, String weaponId) {
 
         WeaponEntity weapon = null;
 
@@ -193,11 +193,12 @@ public class GameplayService {
         itemMeta.setLore(lore);
         itemStack.setItemMeta(itemMeta);
 
-        GameplayWeapon gameplayWeapon = new GameplayWeapon(itemStack, weapon, uuid);
+        player.getInventory().addItem(itemStack);
+        GameplayWeapon gameplayWeapon = new GameplayWeapon(player, weapon, uuid);
 
         Bukkit.getPluginManager().registerEvents(gameplayWeapon, Main.getInstance());
 
-        return new Tuple<>(itemStack, gameplayWeapon);
+        return gameplayWeapon;
     }
     //endregion
 }
