@@ -8,9 +8,7 @@
   <component name="ChangeListManager">
     <list default="true" id="29650a7b-3f89-4df9-bc36-b5aa3b568d39" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/commands/GetWeaponCommandExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/commands/GetWeaponCommandExecutor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/GameplayWeapon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/GameplayWeapon.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/services/GameplayService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/services/GameplayService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

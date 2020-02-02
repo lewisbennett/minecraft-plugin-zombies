@@ -141,6 +141,15 @@ public class GameplayWeapon implements Listener {
         if (enemy == null)
             return;
 
+        boolean isWithinRangeX = isWithinRange(player.getLocation().getX(), livingEntity.getLocation().getX(), 3);
+        boolean isWithinRangeY = isWithinRange(player.getLocation().getY(), livingEntity.getLocation().getY(), 3);
+        boolean isWithinRangeZ = isWithinRange(player.getLocation().getZ(), livingEntity.getLocation().getZ(), 3);
+
+        if (!isWithinRangeX || !isWithinRangeY || !isWithinRangeZ) {
+            event.setCancelled(true);
+            return;
+        }
+
         livingEntity.setHealth(20);
         enemy.damage(isPackAPunched ? packAPunchedMeleeService.getDamage() : meleeService.getDamage());
     }
@@ -495,6 +504,10 @@ public class GameplayWeapon implements Listener {
             return PluginCore.getConfig().getReloadingIndicatorColor() + "Reloading";
 
         return PluginCore.getConfig().getOutOfAmmoIndicatorColor() + "No ammo";
+    }
+
+    private boolean isWithinRange(double positionOne, double positionTwo, double max) {
+        return Math.max(positionOne, positionTwo) - Math.min(positionOne, positionTwo) < max;
     }
 
     private void playSound(Player player, Sound sound, float volume) {
