@@ -1,8 +1,5 @@
 package com.mango.zombies.schema;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class WeaponService {
 
 	//region Constant Values
@@ -12,16 +9,14 @@ public class WeaponService {
 
 	//region Public Static Methods
 	/**
-	 * Gets all weapon service types as a list.
+	 * Gets the available weapon service types as an array.
 	 */
-	public static List<String> toList() {
+	public static String[] toArray() {
 
-		List<String> types = new ArrayList<String>();
-
-		types.add(GUNSHOT);
-		types.add(MELEE);
-
-		return types;
+		return new String[] {
+			GUNSHOT,
+			MELEE
+		};
 	}
 	//endregion
 }

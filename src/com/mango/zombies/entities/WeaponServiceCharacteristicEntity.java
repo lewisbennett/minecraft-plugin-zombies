@@ -5,15 +5,16 @@ import com.mango.zombies.serializers.WeaponServiceCharacteristicEntityJsonSerial
 public class WeaponServiceCharacteristicEntity {
 
 	//region Constant Values
-	public static final WeaponServiceCharacteristicEntityJsonSerializer SERIALIZER = new WeaponServiceCharacteristicEntityJsonSerializer();
-
 	public static final String TYPE_JSON_TAG = "type";
 	public static final String VALUE_JSON_TAG = "value";
+
+	public static final WeaponServiceCharacteristicEntityJsonSerializer SERIALIZER = new WeaponServiceCharacteristicEntityJsonSerializer();
 	//endregion
 
 	//region Fields
-	private String type;
 	private Object value;
+
+	private String type;
 	//endregion
 
 	//region Getters/Setters
@@ -43,17 +44,6 @@ public class WeaponServiceCharacteristicEntity {
 	 */
 	public void setValue(Object value) {
 		this.value = value;
-	}
-	//endregion
-
-	//region Constructors
-	public WeaponServiceCharacteristicEntity() {
-	}
-
-	public WeaponServiceCharacteristicEntity(Object value, String type) {
-
-		this.value = value;
-		this.type = type;
 	}
 	//endregion
 }

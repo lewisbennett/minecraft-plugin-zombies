@@ -1,43 +1,39 @@
 package com.mango.zombies.commands;
 
 import com.mango.zombies.PluginCore;
-import com.mango.zombies.base.BaseCommandExecutor;
+import com.mango.zombies.commands.base.BaseCommandExecutor;
 import com.mango.zombies.entities.PerkEntity;
-import com.mango.zombies.services.MessagingService;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 
 public class CreatePerkCommandExecutor extends BaseCommandExecutor {
 
 	//region Constant Values
 	public static final String CORRECT_USAGE_ERROR = "Correct usage: /createperk [ID] [cost] [name]";
-	public static final String INVALID_COST = "Perk not created. You need to enter a valid cost.";
+	public static final String INVALID_COST = "Perk not created. %s is not a valid cost.";
 	public static final String PERK_ID_ALREADY_EXISTS_ERROR = "Perk not created. %s already exists.";
 	//endregion
 
 	//region Event Handlers
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public String executeCommand(CommandSender sender, Command command, String label, String[] args) {
 
-		if (args.length < 3) {
-			MessagingService.showError(sender, CORRECT_USAGE_ERROR);
-			return true;
-		}
+		if (args.length < 3)
+			throw new CommandException(CORRECT_USAGE_ERROR);
 
-		if (!isValidPerkId(args[0])) {
-			MessagingService.showError(sender, String.format(PERK_ID_ALREADY_EXISTS_ERROR, args[0]));
-			return true;
-		}
+		if (!isValidPerkId(args[0]))
+			throw new CommandException(String.format(PERK_ID_ALREADY_EXISTS_ERROR, args[0]));
 
-		int cost;
+		int cost = 0;
 
 		try {
 			cost = Integer.parseInt(args[1]);
-		} catch (Exception ex) {
-			MessagingService.showError(sender, INVALID_COST);
-			return true;
-		}
+		} catch (Exception ignored) { }
+
+		if (cost < 1)
+			throw new CommandException(String.format(INVALID_COST, args[1]));
 
 		StringBuilder name = new StringBuilder();
 
@@ -50,10 +46,9 @@ public class CreatePerkCommandExecutor extends BaseCommandExecutor {
 		}
 
 		PerkEntity perk = new PerkEntity(args[0], name.toString(), cost);
-		PluginCore.getPerks().add(perk);
-		MessagingService.showSuccess(sender, "Successfully created perk: " + ChatColor.BOLD + perk.getName());
+		PluginCore.addPerk(perk);
 
-		return true;
+		return "Successfully created perk: " + ChatColor.BOLD + perk.getName();
 	}
 	//endregion
 
@@ -62,7 +57,7 @@ public class CreatePerkCommandExecutor extends BaseCommandExecutor {
 
 		for (PerkEntity perk : PluginCore.getPerks()) {
 
-			if (perk.getId().equalsIgnoreCase(perkId))
+			if (perk.getId().equals(perkId))
 				return false;
 		}
 

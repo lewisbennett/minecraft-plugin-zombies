@@ -1,30 +1,30 @@
 package com.mango.zombies.entities;
 
+import com.mango.zombies.PluginCore;
 import com.mango.zombies.serializers.PerkEntityJsonSerializer;
 import org.bukkit.Material;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class PerkEntity {
 
 	//region Constant Values
+	public static final PerkEntityJsonSerializer SERIALIZER = new PerkEntityJsonSerializer();
+
 	public static final String COST_JSON_TAG = "cost";
 	public static final String DOES_REQUIRE_POWER_JSON_TAG = "does_require_power";
 	public static final String ID_JSON_TAG = "id";
 	public static final String ITEM_JSON_TAG = "item";
 	public static final String NAME_JSON_TAG = "name";
-	public static final PerkEntityJsonSerializer SERIALIZER = new PerkEntityJsonSerializer();
-	public static final String SERVICES_JSON_TAG = "services";
 	//endregion
 
 	//region Fields
-	private int  cost;
 	private boolean doesRequirePower;
+
+	private int  cost;
+
+	private Material item;
+
 	private String id;
-	private String item;
 	private String name;
-	private List<PerkServiceEntity> services = new ArrayList<PerkServiceEntity>();
 	//endregion
 
 	//region Getters/Setters
@@ -73,14 +73,14 @@ public class PerkEntity {
 	/**
 	 * Gets the perk's item.
 	 */
-	public String getItem() {
+	public Material getItem() {
 		return item;
 	}
 
 	/**
 	 * Sets the perk's item.
 	 */
-	public void setItem(String item) {
+	public void setItem(Material item) {
 		this.item = item;
 	}
 
@@ -97,26 +97,21 @@ public class PerkEntity {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	/**
-	 * Gets the perk's services.
-	 */
-	public List<PerkServiceEntity> getServices() {
-		return services;
-	}
 	//endregion
 
 	//region Constructors
-	public PerkEntity() {
-	}
+	public PerkEntity() { }
 
 	public PerkEntity(String id, String name, int cost) {
 
 		this.id = id;
 		this.name = name;
 		this.cost = cost;
-		item = Material.DIAMOND.name();
-		doesRequirePower = true;
+
+		PerkConfigEntity config = PluginCore.getPerkConfig();
+
+		doesRequirePower = config.getDefaultDoesRequirePower();
+		item = config.getDefaultMaterial();
 	}
 	//endregion
 }

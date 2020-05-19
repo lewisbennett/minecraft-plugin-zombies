@@ -1,33 +1,69 @@
 package com.mango.zombies.commands;
 
-import com.mango.zombies.base.PlayerOnlyCommandExecutor;
+import com.mango.zombies.PluginCore;
+import com.mango.zombies.commands.base.BaseCommandExecutor;
+import com.mango.zombies.entities.WeaponEntity;
 import com.mango.zombies.gameplay.GameplayWeapon;
-import com.mango.zombies.services.GameplayService;
-import com.mango.zombies.services.MessagingService;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandException;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class GetWeaponCommandExecutor extends PlayerOnlyCommandExecutor {
+public class GetWeaponCommandExecutor extends BaseCommandExecutor {
 
 	//region Constant Values
-	public static final String CORRECT_USAGE_ERROR = "Correct usage: /getweapon [weapon ID]";
+	public static final String CORRECT_USAGE_ERROR_CONSOLE = "Correct usage: /getweapon [weapon ID] [player name]";
+	public static final String CORRECT_USAGE_ERROR_PLAYER = "Correct usage: /getweapon [weapon ID]";
+	public static final String PLAYER_NOT_FOUND_ERROR = "Player not found.";
+	public static final String WEAPON_NOT_FOUND_ERROR = "%s is not a valid weapon ID.";
 	//endregion
 
 	//region Event Handlers
 	@Override
-	public boolean onSuccessfulCommand(Player player, Command command, String label, String[] args) {
+	public String executeCommand(CommandSender commandSender, Command command, String label, String[] args) {
 
-		if (args.length != 1) {
-			MessagingService.showError(player, CORRECT_USAGE_ERROR);
-			return true;
+		Player player;
+
+		if (commandSender instanceof Player) {
+
+			player = (Player)commandSender;
+
+			if (args.length != 1)
+				throw new CommandException(CORRECT_USAGE_ERROR_PLAYER);
+
+		} else {
+
+			if (args.length != 2)
+				throw new CommandException(CORRECT_USAGE_ERROR_CONSOLE);
+
+			player = Bukkit.getPlayer(args[1]);
+
+			if (player == null)
+				throw new CommandException(PLAYER_NOT_FOUND_ERROR);
 		}
 
-		GameplayWeapon weapon = GameplayService.giveWeapon(player, args[0]);
+		// Find the weapon.
+		WeaponEntity weaponEntity = null;
 
-		if (weapon != null)
-			MessagingService.showSuccess(player, weapon.getWeapon().getName() + " added to inventory.");
+		for (WeaponEntity queryWeapon : PluginCore.getWeapons()) {
 
-		return true;
+			if (queryWeapon.getId().equals(args[0])) {
+				weaponEntity = queryWeapon;
+				break;
+			}
+		}
+
+		if (weaponEntity == null)
+			throw new CommandException(String.format(WEAPON_NOT_FOUND_ERROR, args[0]));
+
+		GameplayWeapon gameplayWeapon = new GameplayWeapon(weaponEntity);
+
+		PluginCore.getGameplayService().register(gameplayWeapon);
+
+		player.getInventory().addItem(gameplayWeapon.createItemStack());
+
+		return weaponEntity.getName() + " added to inventory.";
 	}
 	//endregion
 }

@@ -1,9 +1,9 @@
 package com.mango.zombies.entities;
 
 import com.mango.zombies.serializers.MapEntityJsonSerializer;
-import net.minecraft.server.v1_14_R1.Tuple;
 import org.bukkit.Location;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -11,14 +11,14 @@ import java.util.Random;
 public class MapEntity {
 
 	//region Constant Values
+	public static final MapEntityJsonSerializer SERIALIZER = new MapEntityJsonSerializer();
+
 	public static final String BOTTOM_JSON_TAG = "bottom";
 	public static final String DELETE_KEY_JSON_TAG = "delete_key";
-	public static final String ENABLED_JSON_TAG = "enabled";
 	public static final String ENEMY_BLACKLIST_JSON_TAG = "enemy_blacklist";
 	public static final String ENEMY_SPAWNS_JSON_TAG = "enemy_spawns";
 	public static final String ENEMY_WHITELIST_JSON_TAG = "enemy_whitelist";
 	public static final String ID_JSON_TAG = "id";
-	public static final MapEntityJsonSerializer SERIALIZER = new MapEntityJsonSerializer();
 	public static final String NAME_JSON_TAG = "name";
 	public static final String ORIGIN_POINT_JSON_TAG = "origin_point";
 	public static final String PLAYER_SPAWNS_JSON_TAG = "player_spawns";
@@ -28,12 +28,20 @@ public class MapEntity {
 	//endregion
 
 	//region Fields
-	private LocationEntity bottom = new LocationEntity(), top = new LocationEntity(), originPoint;
-	private String deleteKey, id, name;
-	private boolean enabled = false;
-	private List<String> enemyBlacklist = new ArrayList<String>(), enemyWhitelist = new ArrayList<String>();
-	private List<LocationEntity> enemySpawns = new ArrayList<LocationEntity>(), playerSpawns = new ArrayList<LocationEntity>();
-	private List<String> weaponBlacklist = new ArrayList<String>(), weaponWhitelist = new ArrayList<String>();
+	private List<String> enemyBlacklist = new ArrayList<String>();
+	private List<String> enemyWhitelist = new ArrayList<String>();
+	private List<LocationEntity> enemySpawns = new ArrayList<LocationEntity>();
+	private List<LocationEntity> playerSpawns = new ArrayList<LocationEntity>();
+	private List<String> weaponBlacklist = new ArrayList<String>();
+	private List<String> weaponWhitelist = new ArrayList<String>();
+
+	private LocationEntity bottom = new LocationEntity();
+	private LocationEntity top = new LocationEntity();
+	private LocationEntity originPoint;
+
+	private String deleteKey;
+	private String id;
+	private String name;
 	//endregion
 
 	//region Getters/Setters
@@ -66,38 +74,24 @@ public class MapEntity {
 	}
 
 	/**
-	 * Gets whether the map is enabled.
-	 */
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-	/**
-	 * Sets whether the map is enabled.
-	 */
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	/**
 	 * Gets the enemy blacklist.
 	 */
 	public List<String> getEnemyBlacklist() {
-		return enemyBlacklist;
+		return new ArrayList<String>(enemyBlacklist);
 	}
 
 	/**
 	 * Gets the locations where enemies can spawn in the map.
 	 */
 	public List<LocationEntity> getEnemySpawns() {
-		return enemySpawns;
+		return new ArrayList<LocationEntity>(enemySpawns);
 	}
 
 	/**
 	 * Gets the enemy whitelist.
 	 */
 	public List<String> getEnemyWhitelist() {
-		return enemyWhitelist;
+		return new ArrayList<String>(enemyWhitelist);
 	}
 
 	/**
@@ -153,7 +147,7 @@ public class MapEntity {
 	 * Gets the locations where players can spawn in the map.
 	 */
 	public List<LocationEntity> getPlayerSpawns() {
-		return playerSpawns;
+		return new ArrayList<LocationEntity>(playerSpawns);
 	}
 
 	/**
@@ -174,44 +168,117 @@ public class MapEntity {
 	 * Gets the weapon blacklist.
 	 */
 	public List<String> getWeaponBlacklist() {
-		return weaponBlacklist;
+		return new ArrayList<String>(weaponBlacklist);
 	}
 
 	/**
 	 * Gets the weapon whitelist.
 	 */
 	public List<String> getWeaponWhitelist() {
-		return weaponWhitelist;
+		return new ArrayList<String>(weaponWhitelist);
 	}
 	//endregion
 
 	//region Public Methods
 	/**
-	 * Disables the map if it's in an acceptable state.
+	 * Adds an entry to the enemy blacklist.
+	 * @param enemyId The ID of the enemy to add.
 	 */
-	public Tuple<Boolean, String> disableMap() {
-		enabled = false;
-		return new Tuple<Boolean, String>(true, null);
+	public void addEnemyBlacklistEntry(String enemyId) {
+		enemyBlacklist.add(enemyId);
 	}
 
 	/**
-	 * Enables the map if it's in an acceptable state.
+	 * Adds an entry to the enemy whitelist.
+	 * @param enemyId The ID of the enemy to add.
 	 */
-	public Tuple<Boolean, String> enableMap() {
+	public void addEnemyWhitelistEntry(String enemyId) {
+		enemyWhitelist.add(enemyId);
+	}
 
-		if (playerSpawns.size() < 1)
-			return configureEnabled(false, "At least 1 player spawn point is required.");
+	/**
+	 * Adds an enemy spawn location.
+	 * @param location The enemy spawn location.
+	 */
+	public void addEnemySpawnLocation(LocationEntity location) {
+		enemySpawns.add(location);
+	}
 
-		if (enemySpawns.size() < 1)
-			return configureEnabled(false, "At least 1 enemy spawn point is required.");
+	/**
+	 * Adds a player spawn location.
+	 * @param location The player spawn location.
+	 */
+	public void addPlayerSpawnLocation(LocationEntity location) {
+		playerSpawns.add(location);
+	}
 
-		return configureEnabled(true, null);
+	/**
+	 * Adds an entry to the weapon blacklist.
+	 * @param weaponId The ID of the enemy to add.
+	 */
+	public void addWeaponBlacklistEntry(String weaponId) {
+		weaponBlacklist.add(weaponId);
+	}
+
+	/**
+	 * Adds an entry to the weapon whitelist.
+	 * @param weaponId The ID of the weapon to add.
+	 */
+	public void addWeaponWhitelistEntry(String weaponId) {
+		weaponWhitelist.add(weaponId);
+	}
+
+	/**
+	 * Removes an entry from the enemy blacklist.
+	 * @param enemyId The ID of the enemy to remove.
+	 */
+	public void removeEnemyBlacklistEntry(String enemyId) {
+		enemyBlacklist.remove(enemyId);
+	}
+
+	/**
+	 * Removes an entry from the enemy whitelist.
+	 * @param enemyId The ID of the enemy to remove.
+	 */
+	public void removeEnemyWhitelistEntry(String enemyId) {
+		enemyWhitelist.remove(enemyId);
+	}
+
+	/**
+	 * Removes an enemy spawn location.
+	 * @param location The enemy spawn location to remove.
+	 */
+	public void removeEnemySpawnLocation(LocationEntity location) {
+		enemySpawns.remove(location);
+	}
+
+	/**
+	 * Removes a player spawn location.
+	 * @param location The player spawn location to remove.
+	 */
+	public void removePlayerSpawnLocation(LocationEntity location) {
+		playerSpawns.remove(location);
+	}
+
+	/**
+	 * Removes an entry from the weapon blacklist.
+	 * @param weaponId The ID of the weapon to remove.
+	 */
+	public void removeWeaponBlacklistEntry(String weaponId) {
+		weaponBlacklist.remove(weaponId);
+	}
+
+	/**
+	 * Removes an entry from the weapon whitelist.
+	 * @param weaponId The ID of the weapon to remove.
+	 */
+	public void removeWeaponWhitelistEntry(String weaponId) {
+		weaponWhitelist.remove(weaponId);
 	}
 	//endregion
 
 	//region Constructors
-	public MapEntity() {
-	}
+	public MapEntity() { }
 
 	public MapEntity(String id, String name, Location origin) {
 		this();
@@ -220,13 +287,6 @@ public class MapEntity {
 		this.name = name;
 		originPoint = new LocationEntity(origin);
 		deleteKey = Integer.toString(100000 + new Random().nextInt(999999)).substring(0, 6);
-	}
-	//endregion
-
-	//region Private Methods
-	private Tuple<Boolean, String> configureEnabled(boolean enabled, String error) {
-		this.enabled = enabled;
-		return new Tuple<>(enabled, "Map not enabled (" + id + "). " + error);
 	}
 	//endregion
 }

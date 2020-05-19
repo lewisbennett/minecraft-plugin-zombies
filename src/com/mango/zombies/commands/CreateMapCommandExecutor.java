@@ -1,11 +1,11 @@
 package com.mango.zombies.commands;
 
 import com.mango.zombies.PluginCore;
-import com.mango.zombies.base.PlayerOnlyCommandExecutor;
+import com.mango.zombies.commands.base.PlayerOnlyCommandExecutor;
 import com.mango.zombies.entities.MapEntity;
-import com.mango.zombies.services.MessagingService;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandException;
 import org.bukkit.entity.Player;
 
 public class CreateMapCommandExecutor extends PlayerOnlyCommandExecutor {
@@ -17,17 +17,13 @@ public class CreateMapCommandExecutor extends PlayerOnlyCommandExecutor {
 
     //region Event Handlers
     @Override
-    public boolean onSuccessfulCommand(Player player, Command command, String label, String[] args) {
+    public String executePlayerOnlyCommand(Player player, Command command, String label, String[] args) {
 
-        if (args.length < 2) {
-            MessagingService.showError(player, CORRECT_USAGE_ERROR);
-            return true;
-        }
+        if (args.length < 2)
+            throw new CommandException(CORRECT_USAGE_ERROR);
 
-        if (!isValidMapId(args[0])) {
-            MessagingService.showError(player, String.format(MAP_ID_ALREADY_EXISTS_ERROR, args[0]));
-            return true;
-        }
+        if (!isValidMapId(args[0]))
+            throw new CommandException(String.format(MAP_ID_ALREADY_EXISTS_ERROR, args[0]));
 
         StringBuilder name = new StringBuilder();
 
@@ -40,10 +36,9 @@ public class CreateMapCommandExecutor extends PlayerOnlyCommandExecutor {
         }
 
         MapEntity map = new MapEntity(args[0], name.toString(), player.getLocation().subtract(0, 1, 0));
-        PluginCore.getMaps().add(map);
-        MessagingService.showSuccess(player, "Successfully created map: " + ChatColor.BOLD + map.getName());
+        PluginCore.addMap(map);
 
-        return true;
+        return "Successfully created map: " + ChatColor.BOLD + map.getName();
     }
     //endregion
 
@@ -52,7 +47,7 @@ public class CreateMapCommandExecutor extends PlayerOnlyCommandExecutor {
 
         for (MapEntity map : PluginCore.getMaps()) {
 
-            if (map.getId().equalsIgnoreCase(mapId))
+            if (map.getId().equals(mapId))
                 return false;
         }
 

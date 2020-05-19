@@ -7,6 +7,7 @@ public class LocationEntity {
 
     //region Constant Values
     public static final LocationEntityJsonSerializer SERIALIZER = new LocationEntityJsonSerializer();
+
     public static final String X_JSON_TAG = "x";
     public static final String Y_JSON_TAG = "y";
     public static final String Z_JSON_TAG = "z";
@@ -65,13 +66,12 @@ public class LocationEntity {
     //region Public Methods
     @Override
     public String toString() {
-        return Integer.toString(x) + ", " + Integer.toString(y) + ", " + Integer.toString(z);
+        return x + ", " + y + ", " + z;
     }
     //endregion
 
     //region Constructors
-    public LocationEntity() {
-    }
+    public LocationEntity() { }
 
     public LocationEntity(Location location) {
         this();

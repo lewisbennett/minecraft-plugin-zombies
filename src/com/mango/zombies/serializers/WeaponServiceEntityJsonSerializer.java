@@ -14,31 +14,32 @@ public class WeaponServiceEntityJsonSerializer implements JsonSerializer<WeaponS
     public WeaponServiceEntity deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
 
         JsonObject jsonObject = jsonElement.getAsJsonObject();
+
         WeaponServiceEntity service = new WeaponServiceEntity();
 
-        JsonElement accuracyJson = jsonObject.get(WeaponServiceEntity.ACCURACY_JSON_TAG);
-        JsonElement damageJson = jsonObject.get(WeaponServiceEntity.DAMAGE_JSON_TAG);
-        JsonElement doesRequirePackAPunchJson = jsonObject.get(WeaponServiceEntity.DOES_REQUIRE_PACK_A_PUNCH_JSON_TAG);
-        JsonElement typeJson = jsonObject.get(WeaponServiceEntity.TYPE_JSON_TAG);
-        JsonElement usageSoundJson = jsonObject.get(WeaponServiceEntity.USAGE_SOUND_JSON_TAG);
+        JsonElement characteristicsJsonElement = jsonObject.get(WeaponServiceEntity.CHARACTERISTICS_JSON_TAG);
+        JsonElement damageJsonElement = jsonObject.get(WeaponServiceEntity.DAMAGE_JSON_TAG);
+        JsonElement doesRequirePackAPunchJsonElement = jsonObject.get(WeaponServiceEntity.DOES_REQUIRE_PACK_A_PUNCH_JSON_TAG);
+        JsonElement typeJsonElement = jsonObject.get(WeaponServiceEntity.TYPE_JSON_TAG);
+        JsonElement usageSoundJsonElement = jsonObject.get(WeaponServiceEntity.USAGE_SOUND_JSON_TAG);
 
-        if (accuracyJson != null)
-            service.setAccuracy(accuracyJson.getAsInt());
+        if (characteristicsJsonElement != null) {
 
-        if (damageJson != null)
-            service.setDamage(damageJson.getAsInt());
+            for (JsonElement jsonCharacteristic : characteristicsJsonElement.getAsJsonArray())
+                service.getCharacteristics().add(WeaponServiceCharacteristicEntity.SERIALIZER.deserialize(jsonCharacteristic, WeaponServiceCharacteristicEntity.class, jsonDeserializationContext));
+        }
 
-        if (doesRequirePackAPunchJson != null)
-            service.setDoesRequirePackAPunch(doesRequirePackAPunchJson.getAsBoolean());
+        if (damageJsonElement != null)
+            service.setDamage(damageJsonElement.getAsInt());
 
-        if (typeJson != null)
-            service.setType(typeJson.getAsString());
+        if (doesRequirePackAPunchJsonElement != null)
+            service.setDoesRequirePackAPunch(doesRequirePackAPunchJsonElement.getAsBoolean());
 
-        if (usageSoundJson != null)
-            service.setUsageSound(Sound.valueOf(usageSoundJson.getAsString()));
+        if (typeJsonElement != null)
+            service.setType(typeJsonElement.getAsString());
 
-        for (JsonElement jsonCharacteristic : jsonObject.get(WeaponServiceEntity.CHARACTERISTICS_JSON_TAG).getAsJsonArray())
-            service.getCharacteristics().add(WeaponServiceCharacteristicEntity.SERIALIZER.deserialize(jsonCharacteristic, WeaponServiceCharacteristicEntity.class, jsonDeserializationContext));
+        if (usageSoundJsonElement != null)
+            service.setUsageSound(Sound.valueOf(usageSoundJsonElement.getAsString()));
 
         return service;
     }
@@ -49,10 +50,9 @@ public class WeaponServiceEntityJsonSerializer implements JsonSerializer<WeaponS
         JsonObject jsonObject = new JsonObject();
 
         jsonObject.add(WeaponServiceEntity.DAMAGE_JSON_TAG, new JsonPrimitive(weaponServiceEntity.getDamage()));
-        jsonObject.add(WeaponServiceEntity.ACCURACY_JSON_TAG, new JsonPrimitive(weaponServiceEntity.getAccuracy()));
         jsonObject.add(WeaponServiceEntity.DOES_REQUIRE_PACK_A_PUNCH_JSON_TAG, new JsonPrimitive(weaponServiceEntity.doesRequirePackAPunch()));
-        jsonObject.add(WeaponServiceEntity.TYPE_JSON_TAG, new JsonPrimitive(weaponServiceEntity.getType()));
         jsonObject.add(WeaponServiceEntity.USAGE_SOUND_JSON_TAG, new JsonPrimitive(weaponServiceEntity.getUsageSound().name()));
+        jsonObject.add(WeaponServiceEntity.TYPE_JSON_TAG, new JsonPrimitive(weaponServiceEntity.getType()));
 
         JsonArray characteristicsArray = new JsonArray();
 

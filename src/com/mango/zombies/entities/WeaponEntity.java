@@ -1,7 +1,16 @@
 package com.mango.zombies.entities;
 
 import com.mango.zombies.PluginCore;
+import com.mango.zombies.schema.WeaponService;
+import com.mango.zombies.schema.WeaponServiceCharacteristic;
 import com.mango.zombies.serializers.WeaponEntityJsonSerializer;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Egg;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Snowball;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,23 +18,29 @@ import java.util.List;
 public class WeaponEntity {
 
 	//region Constant Values
-	public static final WeaponEntityJsonSerializer SERIALIZER = new WeaponEntityJsonSerializer();
-
 	public static final String COST_JSON_TAG = "cost";
 	public static final String ID_JSON_TAG = "id";
-	public static final String IS_WONDER_WEAPON_JSON_TAG = "is_wonder_weapon";
 	public static final String ITEM_JSON_TAG = "item";
 	public static final String NAME_JSON_TAG = "name";
 	public static final String PACK_A_PUNCH_NAME_JSON_TAG = "pack_a_punch_name";
 	public static final String SERVICES_JSON_TAG = "services";
-	public static final String WEAPON_CLASS_ID_JSON_TAG = "weapon_class_id";
+	public static final String WEAPON_COLOR_JSON_TAG = "weapon_color";
+
+	public static final WeaponEntityJsonSerializer SERIALIZER = new WeaponEntityJsonSerializer();
 	//endregion
 
 	//region Fields
+	private ChatColor weaponColor;
+
 	private int cost;
-	private String id, item, name, packAPunchName, weaponClassId;
-	private boolean isWonderWeapon;
+
 	private List<WeaponServiceEntity> services = new ArrayList<WeaponServiceEntity>();
+
+	private Material item;
+
+	private String id;
+	private String name;
+	private String packAPunchName;
 	//endregion
 
 	//region Getters/Setters
@@ -58,30 +73,16 @@ public class WeaponEntity {
 	}
 
 	/**
-	 * Gets whether the weapon is a wonder weapon.
-	 */
-	public boolean isWonderWeapon() {
-		return isWonderWeapon;
-	}
-
-	/**
-	 * Sets whether the weapon is a wonder weapon.
-	 */
-	public void setIsWonderWeapon(boolean isWonderWeapon) {
-		this.isWonderWeapon = isWonderWeapon;
-	}
-
-	/**
 	 * Gets the weapon's item.
 	 */
-	public String getItem() {
+	public Material getItem() {
 		return item;
 	}
 
 	/**
 	 * Sets the weapon's item.
 	 */
-	public void setItem(String item) {
+	public void setItem(Material item) {
 		this.item = item;
 	}
 
@@ -117,62 +118,405 @@ public class WeaponEntity {
 	 * Gets the weapon's services.
 	 */
 	public List<WeaponServiceEntity> getServices() {
-		return services;
+		return new ArrayList<WeaponServiceEntity>(services);
 	}
 
 	/**
-	 * Gets the weapon class ID.
+	 * Gets the weapon color.
 	 */
-	public String getWeaponClassId() {
-		return weaponClassId;
+	public ChatColor getWeaponColor() {
+		return weaponColor;
 	}
 
 	/**
-	 * Sets the weapon class ID.
+	 * Sets the weapon color.
 	 */
-	public void setWeaponClassId(String weaponClassId) {
-		this.weaponClassId = weaponClassId;
+	public void setWeaponColor(ChatColor weaponColor) {
+		this.weaponColor = weaponColor;
 	}
 	//endregion
 
 	//region Public Methods
 	/**
-	 * Gets this weapon's class.
+	 * Adds a service to this weapon.
+	 * @param service The service to add.
 	 */
-	public WeaponClassEntity getWeaponClass() {
+	public void addService(WeaponServiceEntity service) {
+		services.add(service);
+	}
 
-		for (WeaponClassEntity weaponClass : PluginCore.getWeaponsClasses()) {
+	/**
+	 * Gets the accuracy from a service, if available, or default.
+	 * @param isPackAPunched Whether to look for a Pack-A-Punched service.
+	 */
+	public int getAccuracy(boolean isPackAPunched) {
+		return getAccuracy(getService(WeaponService.GUNSHOT, isPackAPunched));
+	}
 
-			if (weaponClass.getId().equals(weaponClassId))
-				return weaponClass;
+	/**
+	 * Gets the accuracy from a service, if available, or default.
+	 * @param service The service to look for the accuracy in.
+	 */
+	public int getAccuracy(WeaponServiceEntity service) {
+
+		if (service == null || !service.getType().equals(WeaponService.GUNSHOT))
+			throw new IllegalArgumentException("Gunshot service required.");
+
+		WeaponServiceCharacteristicEntity accuracyCharacteristic = getCharacteristic(service, WeaponServiceCharacteristic.ACCURACY);
+
+		if (accuracyCharacteristic == null || !(accuracyCharacteristic.getValue() instanceof Integer))
+			return service.doesRequirePackAPunch() ? PluginCore.getWeaponConfig().getDefaultPackAPunchAccuracy() : PluginCore.getWeaponConfig().getDefaultAccuracy();
+
+		return (int)accuracyCharacteristic.getValue();
+	}
+
+	/**
+	 * Gets a specific characteristic from a service, if available.
+	 * @param service The service to look for the characteristic in.
+	 * @param characteristicType The characteristic type to search for.
+	 */
+	public WeaponServiceCharacteristicEntity getCharacteristic(WeaponServiceEntity service, String characteristicType) {
+
+		for (WeaponServiceCharacteristicEntity queryCharacteristic : service.getCharacteristics()) {
+
+			if (queryCharacteristic.getType().equals(characteristicType))
+				return queryCharacteristic;
 		}
 
 		return null;
 	}
+
+	/**
+	 * Gets the damage dealt by a specific service type, if available, or 0.
+	 * @param serviceType The service type to find the damage for.
+	 * @param isPackAPunched Whether the weapon is Pack-A-Punched.
+	 */
+	public int getDamage(String serviceType, boolean isPackAPunched) {
+
+		WeaponServiceEntity service = getService(serviceType, isPackAPunched);
+
+		return service == null ? 0 : service.getDamage();
+	}
+
+	/**
+	 * Gets the magazine capacity from a service, if available, or default.
+	 * @param isPackAPunched Whether to look for a Pack-A-Punch service.
+	 */
+	public int getMagazineCapacity(boolean isPackAPunched) {
+		return getMagazineCapacity(getService(WeaponService.GUNSHOT, isPackAPunched));
+	}
+
+	/**
+	 * Gets the magazine capacity from a service, if available, or default.
+	 * @param service The service to look for the magazine capacity in.
+	 */
+	public int getMagazineCapacity(WeaponServiceEntity service) {
+
+		if (service == null || !service.getType().equals(WeaponService.GUNSHOT))
+			throw new IllegalArgumentException("Gunshot service required.");
+
+		WeaponServiceCharacteristicEntity magazineCapacityCharacteristic = getCharacteristic(service, WeaponServiceCharacteristic.MAGAZINE_CAPACITY);
+
+		if (magazineCapacityCharacteristic == null || !(magazineCapacityCharacteristic.getValue() instanceof Integer))
+			return service.doesRequirePackAPunch() ? PluginCore.getWeaponConfig().getDefaultPackAPunchMagazineCapacity() : PluginCore.getWeaponConfig().getDefaultMagazineCapacity();
+
+		return (int)magazineCapacityCharacteristic.getValue();
+	}
+
+	/**
+	 * Gets the out of ammo sound from a service, if available, or default.
+	 * @param isPackAPunched Whether to look for a Pack-A-Punch service.
+	 */
+	public Sound getOutOfAmmoSound(boolean isPackAPunched) {
+		return getOutOfAmmoSound(getService(WeaponService.GUNSHOT, isPackAPunched));
+	}
+
+	/**
+	 * Gets the out of ammo sound from a service, if available, or default.
+	 * @param service The service to look for the out of ammo sound in.
+	 */
+	public Sound getOutOfAmmoSound(WeaponServiceEntity service) {
+
+		if (service == null || !service.getType().equals(WeaponService.GUNSHOT))
+			throw new IllegalArgumentException("Gunshot service required.");
+
+		WeaponServiceCharacteristicEntity outOfAmmoSoundCharacteristic = getCharacteristic(service, WeaponServiceCharacteristic.OUT_OF_AMMO_SOUND);
+
+		if (outOfAmmoSoundCharacteristic == null || !(outOfAmmoSoundCharacteristic.getValue() instanceof Sound))
+			return service.doesRequirePackAPunch() ? PluginCore.getWeaponConfig().getDefaultPackAPunchOutOfAmmoSound() : PluginCore.getWeaponConfig().getDefaultOutOfAmmoSound();
+
+		return (Sound)outOfAmmoSoundCharacteristic.getValue();
+	}
+
+	/**
+	 * Gets the projectile count from a gunshot service, if available, or default.
+	 * @param isPackAPunched Whether to look for a Pack-A-Punch service.
+	 */
+	public int getProjectileCount(boolean isPackAPunched) {
+		return getProjectileCount(getService(WeaponService.GUNSHOT, isPackAPunched));
+	}
+
+	/**
+	 * Gets the projectile count from a gunshot service, if available, or default.
+	 * @param service The service to look for the projectile count in.
+	 */
+	public int getProjectileCount(WeaponServiceEntity service) {
+
+		if (service == null || !service.getType().equals(WeaponService.GUNSHOT))
+			throw new IllegalArgumentException("Gunshot service required.");
+
+		WeaponServiceCharacteristicEntity projectileCountCharacteristic = getCharacteristic(service, WeaponServiceCharacteristic.PROJECTILES_IN_CARTRIDGE);
+
+		if (projectileCountCharacteristic == null || !(projectileCountCharacteristic.getValue() instanceof Integer))
+			return service.doesRequirePackAPunch() ? PluginCore.getWeaponConfig().getDefaultPackAPunchProjectileCount() : PluginCore.getWeaponConfig().getDefaultProjectileCount();
+
+		return (int)projectileCountCharacteristic.getValue();
+	}
+
+	/**
+	 * Gets the projectile type from a gunshot service, if available, or default.
+	 * @param isPackAPunched Whether to look for a Pack-A-Punch service.
+	 */
+	public Class<? extends Projectile> getProjectileType(boolean isPackAPunched) {
+		return getProjectileType(getService(WeaponService.GUNSHOT, isPackAPunched));
+	}
+
+	/**
+	 * Gets the projectile type from a gunshot service, if available, or default.
+	 * @param service The service to look for the projectile type in.
+	 */
+	public Class<? extends Projectile> getProjectileType(WeaponServiceEntity service) {
+
+		if (service == null || !service.getType().equals(WeaponService.GUNSHOT))
+			throw new IllegalArgumentException("Gunshot service required.");
+
+		WeaponServiceCharacteristicEntity projectileTypeCharacteristic = getCharacteristic(service, WeaponServiceCharacteristic.PROJECTILE_TYPE);
+
+		if (projectileTypeCharacteristic != null && projectileTypeCharacteristic.getValue() instanceof String) {
+
+			Class<? extends Projectile> clazz = getClassForType((String)projectileTypeCharacteristic.getValue());
+
+			if (clazz != null)
+				return clazz;
+		}
+
+		Class<? extends Projectile> clazz = getClassForType(service.doesRequirePackAPunch() ? PluginCore.getWeaponConfig().getDefaultProjectile() : PluginCore.getWeaponConfig().getDefaultPackAPunchProjectile());
+
+		return clazz == null ? Snowball.class : clazz;
+	}
+
+	/**
+	 * Gets the reload speed from a gunshot service, if available, or default.
+	 * @param isPackAPunched Whether to look for a Pack-A-Punch service.
+	 */
+	public int getReloadSpeed(boolean isPackAPunched) {
+		return getReloadSpeed(getService(WeaponService.GUNSHOT, isPackAPunched));
+	}
+
+	/**
+	 * Gets the reload speed from a gunshot service, if available, or default.
+	 * @param service The service to look for the reload speed in.
+	 */
+	public int getReloadSpeed(WeaponServiceEntity service) {
+
+		if (service == null || !service.getType().equals(WeaponService.GUNSHOT))
+			throw new IllegalArgumentException("Gunshot service required.");
+
+		WeaponServiceCharacteristicEntity reloadSpeedCharacteristic = getCharacteristic(service, WeaponServiceCharacteristic.RELOAD_SPEED);
+
+		if (reloadSpeedCharacteristic == null || !(reloadSpeedCharacteristic.getValue() instanceof Integer))
+			return service.doesRequirePackAPunch() ? PluginCore.getWeaponConfig().getDefaultPackAPunchReloadSpeed() : PluginCore.getWeaponConfig().getDefaultReloadSpeed();
+
+		return (int)reloadSpeedCharacteristic.getValue();
+	}
+
+	/**
+	 * Gets a specific service from the weapon, if available.
+	 * @param serviceType The service type to search for.
+	 * @param isPackAPunched Whether to search for a standard or Pack-A-Punched service. Standard will be returned if Pack-A-Punched is not available.
+	 */
+	public WeaponServiceEntity getService(String serviceType, boolean isPackAPunched) {
+
+		WeaponServiceEntity standardService = null;
+		WeaponServiceEntity packAPunchedService = null;
+
+		for (WeaponServiceEntity queryService : services) {
+
+			if (!queryService.getType().equals(serviceType))
+				continue;
+
+			if (queryService.doesRequirePackAPunch())
+				packAPunchedService = queryService;
+			else
+				standardService = queryService;
+		}
+
+		if (isPackAPunched && packAPunchedService != null)
+			return packAPunchedService;
+
+		return standardService;
+	}
 	//endregion
 
 	//region Constructors
-	public WeaponEntity() {
+	public WeaponEntity() { }
+
+	public WeaponEntity(String id, String weaponType, String name, int cost) {
+		this(id, weaponType, name, cost, null);
 	}
 
-	public WeaponEntity(String id, String name, String weaponClassId) {
+	public WeaponEntity(String id, String weaponType, String name, int cost, Material item) {
 
 		this();
 
+		this.cost = cost;
 		this.id = id;
+		this.item = item;
 		this.name = name;
-		this.weaponClassId = weaponClassId;
-		isWonderWeapon = false;
 		packAPunchName = "Upgraded " + this.name;
 
-		WeaponClassEntity weaponClass = getWeaponClass();
+		configureWeaponDefaults(weaponType);
+	}
+	//endregion
 
-		if (weaponClass == null)
-			return;
+	//region Private Methods
+	private void configureWeaponDefaults(String weaponType) {
 
-		cost = weaponClass.getDefaultWeaponCost();
-		item = weaponClass.getDefaultItem();
-		services.addAll(weaponClass.getDefaultServices());
+		WeaponConfigEntity config = PluginCore.getWeaponConfig();
+
+		WeaponServiceEntity standardService = new WeaponServiceEntity();
+		WeaponServiceEntity packAPunchService = new WeaponServiceEntity();
+
+		standardService.setDoesRequirePackAPunch(false);
+		packAPunchService.setDoesRequirePackAPunch(true);
+
+		if (weaponType.equals(WeaponService.GUNSHOT)) {
+
+			if (item == null)
+				item = config.getDefaultGunshotItem();
+
+			standardService.setDamage(config.getDefaultGunshotDamage());
+			standardService.setType(WeaponService.GUNSHOT);
+			standardService.setUsageSound(config.getDefaultGunshotUsageSound());
+
+			WeaponServiceCharacteristicEntity accuracyCharacteristic = new WeaponServiceCharacteristicEntity();
+			accuracyCharacteristic.setType(WeaponServiceCharacteristic.ACCURACY);
+			accuracyCharacteristic.setValue(config.getDefaultAccuracy());
+
+			WeaponServiceCharacteristicEntity ammoCostCharacteristic = new WeaponServiceCharacteristicEntity();
+			ammoCostCharacteristic.setType(WeaponServiceCharacteristic.AMMO_COST);
+			ammoCostCharacteristic.setValue(cost / 2);
+
+			WeaponServiceCharacteristicEntity magazineCapacityCharacteristic = new WeaponServiceCharacteristicEntity();
+			magazineCapacityCharacteristic.setType(WeaponServiceCharacteristic.MAGAZINE_CAPACITY);
+			magazineCapacityCharacteristic.setValue(config.getDefaultMagazineCapacity());
+
+			WeaponServiceCharacteristicEntity outOfAmmoSoundCharacteristic = new WeaponServiceCharacteristicEntity();
+			outOfAmmoSoundCharacteristic.setType(WeaponServiceCharacteristic.OUT_OF_AMMO_SOUND);
+			outOfAmmoSoundCharacteristic.setValue(config.getDefaultOutOfAmmoSound());
+
+			WeaponServiceCharacteristicEntity reloadSpeedCharacteristic = new WeaponServiceCharacteristicEntity();
+			reloadSpeedCharacteristic.setType(WeaponServiceCharacteristic.RELOAD_SPEED);
+			reloadSpeedCharacteristic.setValue(config.getDefaultReloadSpeed());
+
+			WeaponServiceCharacteristicEntity projectileTypeCharacteristic = new WeaponServiceCharacteristicEntity();
+			projectileTypeCharacteristic.setType(WeaponServiceCharacteristic.PROJECTILE_TYPE);
+			projectileTypeCharacteristic.setValue(config.getDefaultProjectile());
+
+			WeaponServiceCharacteristicEntity projectilesInCartridgeCharacteristic = new WeaponServiceCharacteristicEntity();
+			projectilesInCartridgeCharacteristic.setType(WeaponServiceCharacteristic.PROJECTILES_IN_CARTRIDGE);
+			projectilesInCartridgeCharacteristic.setValue(config.getDefaultProjectileCount());
+
+			WeaponServiceCharacteristicEntity totalAmmoCapacityCharacteristic = new WeaponServiceCharacteristicEntity();
+			totalAmmoCapacityCharacteristic.setType(WeaponServiceCharacteristic.TOTAL_AMMO_CAPACITY);
+			totalAmmoCapacityCharacteristic.setValue(config.getDefaultTotalAmmoCapacity());
+
+			standardService.addCharacteristic(accuracyCharacteristic);
+			standardService.addCharacteristic(ammoCostCharacteristic);
+			standardService.addCharacteristic(magazineCapacityCharacteristic);
+			standardService.addCharacteristic(outOfAmmoSoundCharacteristic);
+			standardService.addCharacteristic(reloadSpeedCharacteristic);
+			standardService.addCharacteristic(projectileTypeCharacteristic);
+			standardService.addCharacteristic(projectilesInCartridgeCharacteristic);
+			standardService.addCharacteristic(totalAmmoCapacityCharacteristic);
+
+			packAPunchService.setDamage(config.getDefaultPackAPunchGunshotDamage());
+			packAPunchService.setType(WeaponService.GUNSHOT);
+			packAPunchService.setUsageSound(config.getDefaultPackAPunchGunshotUsageSound());
+
+			WeaponServiceCharacteristicEntity accuracyPackAPunchCharacteristic = new WeaponServiceCharacteristicEntity();
+			accuracyPackAPunchCharacteristic.setType(WeaponServiceCharacteristic.ACCURACY);
+			accuracyPackAPunchCharacteristic.setValue(config.getDefaultPackAPunchAccuracy());
+
+			WeaponServiceCharacteristicEntity ammoCostPackAPunchCharacteristic = new WeaponServiceCharacteristicEntity();
+			ammoCostPackAPunchCharacteristic.setType(WeaponServiceCharacteristic.AMMO_COST);
+			ammoCostPackAPunchCharacteristic.setValue(cost);
+
+			WeaponServiceCharacteristicEntity magazineCapacityPackAPunchCharacteristic = new WeaponServiceCharacteristicEntity();
+			magazineCapacityPackAPunchCharacteristic.setType(WeaponServiceCharacteristic.MAGAZINE_CAPACITY);
+			magazineCapacityPackAPunchCharacteristic.setValue(config.getDefaultPackAPunchMagazineCapacity());
+
+			WeaponServiceCharacteristicEntity outOfAmmoSoundPackAPunchCharacteristic = new WeaponServiceCharacteristicEntity();
+			outOfAmmoSoundPackAPunchCharacteristic.setType(WeaponServiceCharacteristic.OUT_OF_AMMO_SOUND);
+			outOfAmmoSoundPackAPunchCharacteristic.setValue(config.getDefaultPackAPunchOutOfAmmoSound());
+
+			WeaponServiceCharacteristicEntity reloadSpeedPackAPunchCharacteristic = new WeaponServiceCharacteristicEntity();
+			reloadSpeedPackAPunchCharacteristic.setType(WeaponServiceCharacteristic.RELOAD_SPEED);
+			reloadSpeedPackAPunchCharacteristic.setValue(config.getDefaultPackAPunchReloadSpeed());
+
+			WeaponServiceCharacteristicEntity projectileTypePackAPunchCharacteristic = new WeaponServiceCharacteristicEntity();
+			projectileTypePackAPunchCharacteristic.setType(WeaponServiceCharacteristic.PROJECTILE_TYPE);
+			projectileTypePackAPunchCharacteristic.setValue(config.getDefaultPackAPunchProjectile());
+
+			WeaponServiceCharacteristicEntity projectilesInCartridgePackAPunchCharacteristic = new WeaponServiceCharacteristicEntity();
+			projectilesInCartridgePackAPunchCharacteristic.setType(WeaponServiceCharacteristic.PROJECTILES_IN_CARTRIDGE);
+			projectilesInCartridgePackAPunchCharacteristic.setValue(config.getDefaultPackAPunchProjectileCount());
+
+			WeaponServiceCharacteristicEntity totalAmmoCapacityPackAPunchCharacteristic = new WeaponServiceCharacteristicEntity();
+			totalAmmoCapacityPackAPunchCharacteristic.setType(WeaponServiceCharacteristic.TOTAL_AMMO_CAPACITY);
+			totalAmmoCapacityPackAPunchCharacteristic.setValue(config.getDefaultPackAPunchTotalAmmoCapacity());
+
+			packAPunchService.addCharacteristic(accuracyPackAPunchCharacteristic);
+			packAPunchService.addCharacteristic(ammoCostPackAPunchCharacteristic);
+			packAPunchService.addCharacteristic(magazineCapacityPackAPunchCharacteristic);
+			packAPunchService.addCharacteristic(outOfAmmoSoundPackAPunchCharacteristic);
+			packAPunchService.addCharacteristic(reloadSpeedPackAPunchCharacteristic);
+			packAPunchService.addCharacteristic(projectileTypePackAPunchCharacteristic);
+			packAPunchService.addCharacteristic(projectilesInCartridgePackAPunchCharacteristic);
+			packAPunchService.addCharacteristic(totalAmmoCapacityPackAPunchCharacteristic);
+
+		} else if (weaponType.equals(WeaponService.MELEE)) {
+
+			if (item == null)
+				item = config.getDefaultMeleeItem();
+
+			standardService.setDamage(config.getDefaultMeleeDamage());
+			standardService.setType(WeaponService.MELEE);
+			standardService.setUsageSound(config.getDefaultMeleeUsageSound());
+
+			packAPunchService.setDamage(config.getDefaultPackAPunchMeleeDamage());
+			packAPunchService.setType(WeaponService.MELEE);
+			packAPunchService.setUsageSound(config.getDefaultPackAPunchMeleeUsageSound());
+		}
+
+		this.weaponColor = config.getDefaultWeaponColor();
+
+		services.add(standardService);
+		services.add(packAPunchService);
+	}
+
+	private Class<? extends Projectile> getClassForType(String type) {
+
+		if (type.equals(Snowball.class.getName()))
+			return Snowball.class;
+
+		if (type.equals(Arrow.class.getName()))
+			return Arrow.class;
+
+		if (type.equals(Egg.class.getName()))
+			return Egg.class;
+
+		return null;
 	}
 	//endregion
 }

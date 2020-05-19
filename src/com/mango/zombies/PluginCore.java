@@ -1,46 +1,39 @@
 package com.mango.zombies;
 
 import com.mango.zombies.entities.*;
-import com.mango.zombies.schema.FileName;
-import com.mango.zombies.services.FilingService;
-import net.minecraft.server.v1_14_R1.Tuple;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.PluginDescriptionFile;
+import com.mango.zombies.services.base.FilingService;
+import com.mango.zombies.services.base.GameplayService;
+import com.mango.zombies.services.base.MessagingService;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
 
 public class PluginCore {
 
-    //region Fields
-    private static Timer autoSaveTimer = new Timer();
+    //region Static Fields
     private static ConfigEntity config;
-    private static File dataFolder;
-    private static File debugFolder;
+
+    private static EnemyConfigEntity enemyConfig;
+
+    private static FilingService filingService;
+
+    private static GameplayService gameplayService;
+
     private static List<EnemyEntity> enemies = new ArrayList<EnemyEntity>();
-    private static File enemiesFolder;
-    private static PluginDescriptionFile descriptionFile;
-    private static File importFolder;
     private static List<MapEntity> maps = new ArrayList<MapEntity>();
-    private static File mapsFolder;
     private static List<PerkEntity> perks = new ArrayList<PerkEntity>();
-    private static File perksFolder;
-    private static List<WeaponClassEntity> weaponsClasses = new ArrayList<WeaponClassEntity>();
-    private static File weaponClassesFolder;
     private static List<WeaponEntity> weapons = new ArrayList<WeaponEntity>();
-    private static File weaponsFolder;
+
+    private static MapConfigEntity mapConfig;
+
+    private static MessagingService messagingService;
+
+    private static PerkConfigEntity perkConfig;
+
+    private static WeaponConfigEntity weaponConfig;
     //endregion
 
-    //region Getters/Setters
-    /**
-     * Gets the auto save timer.
-     */
-    public static Timer getAutoSaveTimer() {
-        return autoSaveTimer;
-    }
-
+    //region Static Getters/Setters
     /**
      * Gets the plugin's configuration.
      */
@@ -56,423 +49,199 @@ public class PluginCore {
     }
 
     /**
-     * Gets the data folder.
+     * Gets the enemy configuration.
      */
-    public static File getDataFolder() {
-        return dataFolder;
+    public static EnemyConfigEntity getEnemyConfig() {
+        return enemyConfig;
     }
 
     /**
-     * Gets the debug folder.
+     * Sets the enemy configuration.
      */
-    public static File getDebugFolder() {
-        return debugFolder;
+    public static void setEnemyConfig(EnemyConfigEntity enemyConfig) {
+        PluginCore.enemyConfig = enemyConfig;
     }
 
     /**
-     * Gets the plugin's description file.
+     * Gets the filing service.
      */
-    public static PluginDescriptionFile getDescriptionFile() {
-        return descriptionFile;
+    public static FilingService getFilingService() {
+        return filingService;
     }
 
     /**
-     * Sets the plugin's description file.
+     * Sets the filing service.
      */
-    public static void setDescriptionFile(PluginDescriptionFile descriptionFile) {
-        PluginCore.descriptionFile = descriptionFile;
+    public static void setFilingService(FilingService filingService) {
+        PluginCore.filingService = filingService;
+    }
+
+    /**
+     * Gets the gameplay service.
+     */
+    public static GameplayService getGameplayService() {
+        return gameplayService;
+    }
+
+    /**
+     * Sets the gameplay service.
+     */
+    public static void setGameplayService(GameplayService gameplayService) {
+        PluginCore.gameplayService = gameplayService;
     }
 
     /**
      * Gets the enemies.
      */
     public static List<EnemyEntity> getEnemies() {
-        return enemies;
-    }
-
-    /**
-     * Gets the enemies folder.
-     */
-    public static File getEnemiesFolder() {
-        return enemiesFolder;
-    }
-
-    /**
-     * Sets the enemies folder.
-     */
-    public static void setEnemiesFolder(File enemiesFolder) {
-        PluginCore.enemiesFolder = enemiesFolder;
-    }
-
-    /**
-     * Gets the import folder.
-     */
-    public static File getImportFolder() {
-        return importFolder;
+        return new ArrayList<EnemyEntity>(enemies);
     }
 
     /**
      * Gets the perks.
      */
     public static List<PerkEntity> getPerks() {
-        return perks;
-    }
-
-    /**
-     * Gets the perks folder.
-     */
-    public static File getPerksFolder() {
-        return perksFolder;
+        return new ArrayList<PerkEntity>(perks);
     }
 
     /**
      * Gets the maps.
      */
     public static List<MapEntity> getMaps() {
-        return maps;
+        return new ArrayList<MapEntity>(maps);
     }
 
     /**
-     * Gets the maps folder.
+     * Gets the messaging service.
      */
-    public static File getMapsFolder() {
-        return mapsFolder;
+    public static MessagingService getMessagingService() {
+        return messagingService;
     }
 
     /**
-     * Gets the weapon classes.
+     * Sets the messaging service.
      */
-    public static List<WeaponClassEntity> getWeaponsClasses() {
-        return weaponsClasses;
+    public static void setMessagingService(MessagingService messagingService) {
+        PluginCore.messagingService = messagingService;
     }
 
     /**
-     * Gets the weapon classes folder.
+     * Gets the perk configuration.
      */
-    public static File getWeaponClassesFolder() {
-        return weaponClassesFolder;
+    public static PerkConfigEntity getPerkConfig() {
+        return perkConfig;
+    }
+
+    /**
+     * Sets the perk configuration.
+     */
+    public static void setPerkConfig(PerkConfigEntity perkConfig) {
+        PluginCore.perkConfig = perkConfig;
     }
 
     /**
      * Gets the weapons.
      */
     public static List<WeaponEntity> getWeapons() {
-        return weapons;
+        return new ArrayList<WeaponEntity>(weapons);
     }
 
     /**
-     * Gets the weapons folder.
+     * Gets the map configuration.
      */
-    public static File getWeaponsFolder() {
-        return weaponsFolder;
+    public static MapConfigEntity getMapConfig() {
+        return mapConfig;
+    }
+
+    /**
+     * Sets the map configuration.
+     */
+    public static void setMapConfig(MapConfigEntity mapConfig) {
+        PluginCore.mapConfig = mapConfig;
+    }
+
+    /**
+     * Gets the weapon configuration.
+     */
+    public static WeaponConfigEntity getWeaponConfig() {
+        return weaponConfig;
+    }
+
+    /**
+     * Sets the weapon configuration.
+     */
+    public static void setWeaponConfig(WeaponConfigEntity weaponConfig) {
+        PluginCore.weaponConfig = weaponConfig;
     }
     //endregion
 
     //region Public Static Methods
     /**
-     * Saves everything.
+     * Adds an enemy.
+     */
+    public static void addEnemy(EnemyEntity enemy) {
+        enemies.add(enemy);
+    }
+
+    /**
+     * Adds a map.
+     */
+    public static void addMap(MapEntity map) {
+        maps.add(map);
+    }
+
+    /**
+     * Adds a perk.
+     */
+    public static void addPerk(PerkEntity perk) {
+        perks.add(perk);
+    }
+
+    /**
+     * Adds a weapon.
+     */
+    public static void addWeapon(WeaponEntity weapon) {
+        weapons.add(weapon);
+    }
+
+    /**
+     * Ran by the auto save timer.
      */
     public static void autoSave() {
 
-        log("Auto save started.");
+        Log.information("Auto save started.");
 
-        saveConfig();
-        saveMaps();
-        savePerks();
-        saveEnemies();
-        saveWeaponClasses();
-        saveWeapons();
+        filingService.saveEverything();
 
-        log("Auto save completed.");
+        Log.information("Auto save completed.");
     }
 
     /**
-     * Enables all available maps.
+     * Removes an enemy.
      */
-    public static void enableMaps() {
-
-        for (MapEntity map : maps) {
-
-            if (!map.isEnabled())
-                continue;
-
-            Tuple<Boolean, String> enabled = map.enableMap();
-
-            if (!enabled.a())
-                log(enabled.b());
-        }
+    public static void removeEnemy(EnemyEntity enemy) {
+        enemies.remove(enemy);
     }
 
     /**
-     * Imports the config file.
+     * Removes a map.
      */
-    public static void importConfig() {
-
-        log("Importing config file...");
-
-        for (File file : dataFolder.listFiles()) {
-
-            if (!file.getName().equals(FileName.CONFIG_FILE))
-                continue;
-
-            setConfig(FilingService.readContents(file.toString(), ConfigEntity.SERIALIZER, ConfigEntity.class));
-
-            break;
-        }
-
-        if (config == null)
-            setConfig(new ConfigEntity());
-
-        if (config.getWorldName() == null || config.getWorldName().isEmpty())
-            config.setWorldName(Bukkit.getServer().getWorlds().get(0).getName());
-
-        log("Config file imported.");
+    public static void removeMap(MapEntity map) {
+        maps.remove(map);
     }
 
     /**
-     * Imports all available enemies.
+     * Removes a perk.
      */
-    public static void importEnemies() {
-
-        log("Importing enemies...");
-
-        for (File file : enemiesFolder.listFiles())
-            enemies.add(FilingService.readContents(file.toString(), EnemyEntity.SERIALIZER, EnemyEntity.class));
-
-        log(String.format(enemies.size() == 1 ? "%d enemy imported." : "%d enemies imported.", enemies.size()));
+    public static void removePerk(PerkEntity perk) {
+        perks.remove(perk);
     }
 
     /**
-     * Imports all available map files.
+     * Removes a weapon.
      */
-    public static void importMaps() {
-
-        log("Importing maps...");
-
-        for (File file : mapsFolder.listFiles())
-            maps.add(FilingService.readContents(file.toString(), MapEntity.SERIALIZER, MapEntity.class));
-
-        log(String.format(maps.size() == 1 ? "%d map imported." : "%d maps imported.", maps.size()));
-    }
-
-    /**
-     * Imports all available perk files.
-     */
-    public static void importPerks() {
-
-        log("Importing perks...");
-
-        for (File file : perksFolder.listFiles())
-            perks.add(FilingService.readContents(file.toString(), PerkEntity.SERIALIZER, PerkEntity.class));
-
-        log(String.format(perks.size() == 1 ? "%d perk imported." : "%d perks imported.", perks.size()));
-    }
-
-    /**
-     * Imports all available weapon class files.
-     */
-    public static void importWeaponClasses() {
-
-        log("Importing weapon classes...");
-
-        for (File file : weaponClassesFolder.listFiles())
-            weaponsClasses.add(FilingService.readContents(file.toString(), WeaponClassEntity.SERIALIZER, WeaponClassEntity.class));
-
-        log(String.format(weaponsClasses.size() == 1 ? "%d weapon class imported." : "%d weapon classes imported.", weaponsClasses.size()));
-    }
-
-    /**
-     * Imports all available weapon files.
-     */
-    public static void importWeapons() {
-
-        log("Importing weapons...");
-
-        for (File file : weaponsFolder.listFiles())
-            weapons.add(FilingService.readContents(file.toString(), WeaponEntity.SERIALIZER, WeaponEntity.class));
-
-        log(String.format(weapons.size() == 1 ? "%d weapon imported." : "%d weapons imported.", weapons.size()));
-    }
-
-    /**
-     * Formats then logs a message to the console.
-     */
-    public static void log(String message) {
-        System.out.println("[Zombies] " + message);
-    }
-
-    /**
-     * Saves the config file.
-     */
-    public static void saveConfig() {
-
-        PluginCore.log("Saving config file...");
-
-        boolean result = FilingService.writeFile(dataFolder, "config", config, ConfigEntity.SERIALIZER);
-
-        PluginCore.log(result ? "Config file saved." : "Failed to save config file.");
-    }
-
-    /**
-     * Saves all available enemies.
-     */
-    public static void saveEnemies() {
-
-        PluginCore.log("Saving enemies...");
-
-        int successes = 0;
-        int failures = 0;
-
-        for (EnemyEntity enemy : enemies) {
-
-            boolean result = FilingService.writeFile(enemiesFolder, enemy.getId(), enemy, EnemyEntity.SERIALIZER);
-
-            if (result)
-                successes++;
-            else
-                failures++;
-        }
-
-        String successMessage = String.format(successes == 1 ? "Saved %d enemy." : "Saved %d enemies.", successes);
-        String failMessage = String.format(failures == 1 ? "Failed to save %d enemy." : "Failed to save %d enemies.", failures);
-
-        PluginCore.log(successMessage + (failures > 0 ? " " + failMessage : ""));
-    }
-
-    /**
-     * Saves all available maps.
-     */
-    public static void saveMaps() {
-
-        PluginCore.log("Saving maps...");
-
-        int successes = 0;
-        int failures = 0;
-
-        for (MapEntity map : maps) {
-
-            boolean result = FilingService.writeFile(mapsFolder, map.getId(), map, MapEntity.SERIALIZER);
-
-            if (result)
-                successes++;
-            else
-                failures++;
-        }
-
-        String successMessage = String.format(successes == 1 ? "Saved %d map." : "Saved %d maps.", successes);
-        String failMessage = String.format(failures == 1 ? "Failed to save %d map." : "Failed to save %d maps.", failures);
-
-        PluginCore.log(successMessage + (failures > 0 ? " " + failMessage : ""));
-    }
-
-    /**
-     * Saves all available perks.
-     */
-    public static void savePerks() {
-
-        PluginCore.log("Saving perks...");
-
-        int successes = 0;
-        int failures = 0;
-
-        for (PerkEntity perk : perks) {
-
-            boolean result = FilingService.writeFile(perksFolder, perk.getId(), perk, PerkEntity.SERIALIZER);
-
-            if (result)
-                successes++;
-            else
-                failures++;
-        }
-
-        String successMessage = String.format(successes == 1 ? "Saved %d perk." : "Saved %d perks.", successes);
-        String failMessage = String.format(failures == 1 ? "Failed to save %d perk." : "Failed to save %d perks.", failures);
-
-        PluginCore.log(successMessage + (failures > 0 ? " " + failMessage : ""));
-    }
-
-    /**
-     * Saves all available weapon classes.
-     */
-    public static void saveWeaponClasses() {
-
-        PluginCore.log("Saving weapon classes...");
-
-        int successes = 0;
-        int failures = 0;
-
-        for (WeaponClassEntity weaponClass : weaponsClasses) {
-
-            boolean result = FilingService.writeFile(weaponClassesFolder, weaponClass.getId(), weaponClass, WeaponClassEntity.SERIALIZER);
-
-            if (result)
-                successes++;
-            else
-                failures++;
-        }
-
-        String successMessage = String.format(successes == 1 ? "Saved %d weapon class." : "Saved %d weapon classes.", successes);
-        String failMessage = String.format(failures == 1 ? "Failed to save %d weapon class." : "Failed to save %d weapon classes.", failures);
-
-        PluginCore.log(successMessage + (failures > 0 ? " " + failMessage : ""));
-    }
-
-    /**
-     * Saves all available weapons.
-     */
-    public static void saveWeapons() {
-
-        PluginCore.log("Saving weapons...");
-
-        int successes = 0;
-        int failures = 0;
-
-        for (WeaponEntity weapon : weapons) {
-
-            boolean result = FilingService.writeFile(weaponsFolder, weapon.getId(), weapon, WeaponEntity.SERIALIZER);
-
-            if (result)
-                successes++;
-            else
-                failures++;
-        }
-
-        String successMessage = String.format(successes == 1 ? "Saved %d weapon." : "Saved %d weapons.", successes);
-        String failMessage = String.format(failures == 1 ? "Failed to save %d weapon." : "Failed to save %d weapons.", failures);
-
-        PluginCore.log(successMessage + (failures > 0 ? " " + failMessage : ""));
-    }
-
-    /**
-     * Creates the folders needed for the plugin.
-     */
-    public static void setupFolders(File pluginRoot) {
-
-        dataFolder = pluginRoot;
-        debugFolder = new File(dataFolder + "/Debug/");
-        enemiesFolder = new File(dataFolder + "/Enemies/");
-        mapsFolder = new File(dataFolder + "/Maps/");
-        importFolder = new File(dataFolder + "/Import/");
-        weaponsFolder = new File(dataFolder + "/Weapons/");
-        weaponClassesFolder = new File(dataFolder + "/Weapon Classes/");
-        perksFolder = new File(dataFolder + "/Perks/");
-
-        createDirectory(dataFolder);
-        createDirectory(debugFolder);
-        createDirectory(enemiesFolder);
-        createDirectory(importFolder);
-        createDirectory(mapsFolder);
-        createDirectory(perksFolder);
-        createDirectory(weaponsFolder);
-        createDirectory(weaponClassesFolder);
-    }
-    //endregion
-
-    //region Private Methods
-    private static void createDirectory(File file) {
-
-        if (!file.exists() && !file.mkdir())
-            System.out.println("[Zombies] Could not create plugin directory: " + file.toString());
+    public static void removeWeapon(WeaponEntity weapon) {
+        weapons.remove(weapon);
     }
     //endregion
 }

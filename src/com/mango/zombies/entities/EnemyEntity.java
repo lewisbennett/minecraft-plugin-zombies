@@ -1,27 +1,29 @@
 package com.mango.zombies.entities;
 
+import com.mango.zombies.PluginCore;
 import com.mango.zombies.serializers.EnemyEntityJsonSerializer;
 import org.bukkit.entity.EntityType;
 
 public class EnemyEntity {
 
     //region Constant Values
-    public static final int DEFAULT_DESPAWN_TIME = 5;
-    public static final int DEFAULT_MAX_HEALTH = -1;
-    public static final int DEFAULT_ROUND_ONE_HEALTH = 5;
-
     public static final EnemyEntityJsonSerializer SERIALIZER = new EnemyEntityJsonSerializer();
 
     public static final String DESPAWN_TIME_JSON_TAG = "despawn_time";
     public static final String ENTITY_TYPE_JSON_TAG = "entity_type";
     public static final String ID_JSON_TAG = "id";
     public static final String MAX_HEALTH_JSON_TAG = "max_health";
-    public static final String ROUND_ONE_HEALTH_JSON_TAG = "round_one_health";
+    public static final String ROUND_MULTIPLIER_JSON_TAG = "round_multiplier";
     //endregion
 
     //region Fields
-    private int despawnTime = DEFAULT_DESPAWN_TIME, maxHealth = DEFAULT_MAX_HEALTH, roundOneHealth = DEFAULT_ROUND_ONE_HEALTH;
+    private double roundMultiplier;
+
+    private int despawnTime;
+    private int maxHealth;
+
     private EntityType entityType;
+
     private String id;
     //endregion
 
@@ -71,6 +73,20 @@ public class EnemyEntity {
     }
 
     /**
+     * Gets the round multiplier.
+     */
+    public double getRoundMultiplier() {
+        return roundMultiplier;
+    }
+
+    /**
+     * Sets the round multiplier.
+     */
+    public void setRoundMultiplier(double roundMultiplier) {
+        this.roundMultiplier = roundMultiplier;
+    }
+
+    /**
      * Gets the maximum health that this enemy can achieve in a game.
      */
     public int getMaxHealth() {
@@ -83,32 +99,23 @@ public class EnemyEntity {
     public void setMaxHealth(int maxHealth) {
         this.maxHealth = maxHealth;
     }
-
-    /**
-     * Gets the round one health.
-     */
-    public int getRoundOneHealth() {
-        return roundOneHealth;
-    }
-
-    /**
-     * Sets the round one health.
-     */
-    public void setRoundOneHealth(int roundOneHealth) {
-        this.roundOneHealth = roundOneHealth;
-    }
     //endregion
 
     //region Constructors
     public EnemyEntity() {
     }
 
-    public EnemyEntity(String id, EntityType entityType, int roundOneHealth) {
+    public EnemyEntity(String id, EntityType entityType) {
         this();
 
         this.id = id;
         this.entityType = entityType;
-        this.roundOneHealth = roundOneHealth;
+
+        EnemyConfigEntity config = PluginCore.getEnemyConfig();
+
+        despawnTime = config.getDefaultDespawnTime();
+        maxHealth = config.getDefaultMaxHealth();
+        roundMultiplier = config.getDefaultRoundMultiplier();
     }
     //endregion
 }

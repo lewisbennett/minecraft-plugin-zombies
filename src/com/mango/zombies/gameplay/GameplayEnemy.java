@@ -4,13 +4,17 @@ import com.mango.zombies.Main;
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.Time;
 import com.mango.zombies.entities.EnemyEntity;
+import com.mango.zombies.gameplay.base.GameplayRegisterable;
 import com.mango.zombies.listeners.ProjectileHitListener;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 
-public class GameplayEnemy {
+import java.util.UUID;
+
+public class GameplayEnemy implements GameplayRegisterable {
 
     //region Fields
     private EnemyEntity enemyEntity;
@@ -55,6 +59,13 @@ public class GameplayEnemy {
     public void setSpawnLocation(Location spawnLocation) {
         this.spawnLocation = spawnLocation;
     }
+
+    /**
+     * Gets the UUID of this gameplay registerable.
+     */
+    public UUID getUUID() {
+        return entity == null ? null : entity.getUniqueId();
+    }
     //endregion
 
     //region Public Methods
@@ -74,7 +85,6 @@ public class GameplayEnemy {
             return;
 
         entity.damage(100);
-        ProjectileHitListener.getGameplayEnemies().remove(this);
     }
 
     /**
@@ -85,7 +95,7 @@ public class GameplayEnemy {
         if (spawnLocation == null || hasBeenSpawned)
             return;
 
-        World world = Main.getInstance().getServer().getWorld(PluginCore.getConfig().getWorldName());
+        World world = spawnLocation.getWorld();
 
         if (world == null)
             return;
@@ -100,7 +110,8 @@ public class GameplayEnemy {
         hasBeenSpawned = true;
 
         this.entity = (LivingEntity)entity;
-        ProjectileHitListener.getGameplayEnemies().add(this);
+
+        PluginCore.getGameplayService().register(this);
 
         Main instance = Main.getInstance();
 

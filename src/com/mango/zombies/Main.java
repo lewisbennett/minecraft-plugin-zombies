@@ -1,8 +1,10 @@
 package com.mango.zombies;
 
 import com.mango.zombies.commands.*;
-import com.mango.zombies.listeners.ProjectileHitListener;
-import com.mango.zombies.listeners.SignChangedListener;
+import com.mango.zombies.listeners.*;
+import com.mango.zombies.services.StockFilingService;
+import com.mango.zombies.services.StockGameplayService;
+import com.mango.zombies.services.StockMessagingService;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -27,42 +29,31 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        PluginCore.setDescriptionFile(getDescription());
-        PluginCore.setupFolders(getDataFolder());
+        instance = this;
 
-        PluginCore.importConfig();
-        PluginCore.importMaps();
-        PluginCore.importEnemies();
-        PluginCore.importPerks();
-        PluginCore.importWeaponClasses();
-        PluginCore.importWeapons();
-
-        PluginCore.enableMaps();
+        registerServices();
 
         registerCommands();
+
         registerEvents();
+
+        PluginCore.getFilingService().setupFolders(getDataFolder());
+
+        PluginCore.getFilingService().importEverything();
 
         int delay = Time.fromMinutes(PluginCore.getConfig().getAutoSaveTimerInterval()).totalMilliseconds();
 
-        PluginCore.getAutoSaveTimer().scheduleAtFixedRate(new TimerTask() {
+        PluginCore.getFilingService().getAutoSaveTimer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 PluginCore.autoSave();
             }
         }, delay, delay);
-
-        instance = this;
     }
 
     @Override
     public void onDisable() {
-
-        PluginCore.saveConfig();
-        PluginCore.saveMaps();
-        PluginCore.saveEnemies();
-        PluginCore.savePerks();
-        PluginCore.saveWeaponClasses();
-        PluginCore.saveWeapons();
+        PluginCore.getFilingService().saveEverything();
     }
     //endregion
 
@@ -76,7 +67,6 @@ public class Main extends JavaPlugin {
         this.getCommand("mapinfo").setExecutor(new MapInfoCommandExecutor());
         this.getCommand("createmap").setExecutor(new CreateMapCommandExecutor());
         this.getCommand("createenemy").setExecutor(new CreateEnemyCommandExecutor());
-        this.getCommand("createweaponclass").setExecutor(new CreateWeaponClassCommandExecutor());
         this.getCommand("createweapon").setExecutor(new CreateWeaponCommandExecutor());
         this.getCommand("createperk").setExecutor(new CreatePerkCommandExecutor());
         this.getCommand("getweapon").setExecutor(new GetWeaponCommandExecutor());
@@ -90,8 +80,24 @@ public class Main extends JavaPlugin {
      */
     public void registerEvents() {
 
+        Bukkit.getPluginManager().registerEvents(new BlockBreakListener(), this);
+        Bukkit.getPluginManager().registerEvents(new EntityDamageByEntityListener(), this);
+        Bukkit.getPluginManager().registerEvents(new InventoryPickupItemListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerEggThrowListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerInteractListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerPickupArrowListener(), this);
         Bukkit.getPluginManager().registerEvents(new ProjectileHitListener(), this);
         Bukkit.getPluginManager().registerEvents(new SignChangedListener(), this);
+    }
+
+    /**
+     * Registers all plugin services.
+     */
+    public void registerServices() {
+
+        PluginCore.setFilingService(new StockFilingService());
+        PluginCore.setGameplayService(new StockGameplayService());
+        PluginCore.setMessagingService(new StockMessagingService());
     }
     //endregion
 }

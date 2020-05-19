@@ -3,23 +3,21 @@ package com.mango.zombies.gameplay;
 import com.mango.zombies.Main;
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.Time;
-import com.mango.zombies.entities.WeaponClassEntity;
 import com.mango.zombies.entities.WeaponEntity;
 import com.mango.zombies.entities.WeaponServiceCharacteristicEntity;
 import com.mango.zombies.entities.WeaponServiceEntity;
+import com.mango.zombies.gameplay.base.EntityDamageByEntityEventRegisterable;
+import com.mango.zombies.gameplay.base.GameplayRegisterable;
+import com.mango.zombies.gameplay.base.PlayerInteractEventRegisterable;
 import com.mango.zombies.helper.HiddenStringUtils;
-import com.mango.zombies.listeners.ProjectileHitListener;
-import com.mango.zombies.schema.WeaponCharacteristic;
+import com.mango.zombies.schema.ProjectileConfigComponent;
+import com.mango.zombies.schema.WeaponServiceCharacteristic;
 import com.mango.zombies.schema.WeaponService;
-import net.minecraft.server.v1_14_R1.BiomeMushroomIslandShore;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
-import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Snowball;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -27,91 +25,54 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
 
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-public class GameplayWeapon implements Listener {
+public class GameplayWeapon implements GameplayRegisterable, PlayerInteractEventRegisterable, EntityDamageByEntityEventRegisterable {
 
-    //region Fields
-    private int ammoInMagazine = WeaponClassEntity.DEFAULT_MAGAZINE_SIZE, availableAmmo = WeaponClassEntity.DEFAULT_TOTAL_AMMO_CAPACITY;
-    private int projectileCount = WeaponClassEntity.DEFAULT_PROJECTILE_COUNT, packAPunchedProjectileCount = WeaponClassEntity.DEFAULT_PACK_A_PUNCHED_PROJECTILE_COUNT;
-    private int reloadSpeed = WeaponClassEntity.DEFAULT_RELOAD_SPEED, packAPunchedReloadSpeed = WeaponClassEntity.DEFAULT_PACK_A_PUNCHED_RELOAD_SPEED;
+    //region Private Methods
+    private boolean isPackAPunched;
+    private boolean isReloading;
 
-    private int defaultAmmoInMagazine = WeaponClassEntity.DEFAULT_MAGAZINE_SIZE, defaultAvailableAmmo = WeaponClassEntity.DEFAULT_TOTAL_AMMO_CAPACITY;
-    private int defaultPackAPunchedAmmoInMagazine = WeaponClassEntity.DEFAULT_PACK_A_PUNCHED_MAGAZINE_SIZE, defaultPackAPunchedAvailableAmmo = WeaponClassEntity.DEFAULT_PACK_A_PUNCHED_TOTAL_AMMO_CAPACITY;
-
-    private Sound gunshotSound = WeaponClassEntity.DEFAULT_GUNSHOT_USAGE_SOUND, packAPunchedGunshotSound = WeaponClassEntity.DEFAULT_GUNSHOT_USAGE_SOUND;
-    private Sound meleeSound = WeaponClassEntity.DEFAULT_MELEE_USAGE_SOUND, packAPunchedMeleeSound = WeaponClassEntity.DEFAULT_MELEE_USAGE_SOUND;
-    private Sound outOfAmmoSound = WeaponClassEntity.DEFAULT_OUT_OF_AMMO_SOUND, packAPunchedOutOfAmmoSound = WeaponClassEntity.DEFAULT_OUT_OF_AMMO_SOUND;
-
-    private WeaponServiceEntity gunshotService, packAPunchedGunshotService, meleeService, packAPunchedMeleeService;
-    private boolean isPackAPunched, isReloading;
+    private int availableAmmo;
+    private int currentAmmo;
 
     private Player player;
-    private WeaponEntity weapon;
+
+    private WeaponEntity weaponEntity;
+
     private UUID uuid;
     //endregion
 
     //region Getters/Setters
     /**
-     * Gets the default amount of ammo in a magazine for the weapon.
+     * Gets whether this weapon is Pack-A-Punched.
      */
-    public int getDefaultAmmoInMagazine() {
-        return isPackAPunched ? defaultPackAPunchedAmmoInMagazine : defaultAmmoInMagazine;
+    public boolean isPackAPunched() {
+        return isPackAPunched;
     }
 
     /**
-     * Gets the default total ammmo amount for the weapon.
+     * Gets the UUID of this gameplay registerable.
      */
-    public int getDefaultAvailableAmmo() {
-        return isPackAPunched ? defaultAvailableAmmo : defaultPackAPunchedAvailableAmmo;
+    public UUID getUUID() {
+        return uuid;
     }
 
     /**
-     * Gets the sound emitted on gunshot.
+     * Gets the weapon entity.
      */
-    public Sound getGunshotSound() {
-        return isPackAPunched ? packAPunchedGunshotSound : gunshotSound;
-    }
-
-    /**
-     * Gets the sound emitted on melee.
-     */
-    public Sound getMeleeSound() {
-        return isPackAPunched ? packAPunchedMeleeSound : meleeSound;
-    }
-
-    /**
-     * Gets the sound emitted when the player is out of ammo.
-     */
-    public Sound getOutOfAmmoSound() {
-        return isPackAPunched ? packAPunchedOutOfAmmoSound : outOfAmmoSound;
-    }
-
-    /**
-     * Gets the projectile count.
-     */
-    public int getProjectileCount() {
-        return isPackAPunched ? packAPunchedProjectileCount : projectileCount;
-    }
-
-    /**
-     * Gets the speed at which the weapon reloads in ticks.
-     */
-    public int getReloadSpeed() {
-        return isPackAPunched ? packAPunchedReloadSpeed : reloadSpeed;
-    }
-
-    /**
-     * Gets the weapon.
-     */
-    public WeaponEntity getWeapon() {
-        return weapon;
+    public WeaponEntity getWeaponEntity() {
+        return weaponEntity;
     }
     //endregion
 
     //region Event Handlers
-    @EventHandler
+    /**
+     * Called when an entity is damaged by another entity.
+     * @param event The event.
+     */
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
 
         if (!(event.getDamager() instanceof Player) || !(event.getEntity() instanceof LivingEntity))
@@ -120,30 +81,23 @@ public class GameplayWeapon implements Listener {
         player = (Player)event.getDamager();
         LivingEntity livingEntity = (LivingEntity)event.getEntity();
 
-        if (fetchItemStack() == null)
-            return;
+        WeaponServiceEntity meleeService = weaponEntity.getService(WeaponService.MELEE, isPackAPunched);
 
         if (meleeService == null) {
             event.setCancelled(true);
             return;
         }
 
-        GameplayEnemy enemy = null;
+        GameplayRegisterable gameplayEnemyRegisterable = PluginCore.getGameplayService().findRegisterableByUUID(livingEntity.getUniqueId());
 
-        for (GameplayEnemy queryEnemy : ProjectileHitListener.getGameplayEnemies()) {
-
-            if (queryEnemy.getEntity().getUniqueId().equals(livingEntity.getUniqueId())) {
-                enemy = queryEnemy;
-                break;
-            }
-        }
-
-        if (enemy == null)
+        if (!(gameplayEnemyRegisterable instanceof GameplayEnemy))
             return;
 
-        boolean isWithinRangeX = isWithinRange(player.getLocation().getX(), livingEntity.getLocation().getX(), 3);
-        boolean isWithinRangeY = isWithinRange(player.getLocation().getY(), livingEntity.getLocation().getY(), 3);
-        boolean isWithinRangeZ = isWithinRange(player.getLocation().getZ(), livingEntity.getLocation().getZ(), 3);
+        GameplayEnemy gameplayEnemy = (GameplayEnemy)gameplayEnemyRegisterable;
+
+        boolean isWithinRangeX = isWithinRange(player.getLocation().getX(), livingEntity.getLocation().getX());
+        boolean isWithinRangeY = isWithinRange(player.getLocation().getY(), livingEntity.getLocation().getY());
+        boolean isWithinRangeZ = isWithinRange(player.getLocation().getZ(), livingEntity.getLocation().getZ());
 
         if (!isWithinRangeX || !isWithinRangeY || !isWithinRangeZ) {
             event.setCancelled(true);
@@ -151,27 +105,24 @@ public class GameplayWeapon implements Listener {
         }
 
         livingEntity.setHealth(20);
-        enemy.damage(isPackAPunched ? packAPunchedMeleeService.getDamage() : meleeService.getDamage());
+        gameplayEnemy.damage(meleeService.getDamage());
     }
 
-    @EventHandler
+    /**
+     * Called when a player interacts with this weapon.
+     * @param event The event caused by the interaction.
+     */
     public void onPlayerInteract(PlayerInteractEvent event) {
 
         player = event.getPlayer();
-        ItemStack itemStack = fetchItemStack();
-
-        if (itemStack == null)
-            return;
 
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            shoot(event.getPlayer());
+            shoot(player);
             return;
         }
 
-        if (canMelee()) {
-            melee(event.getPlayer());
+        if (melee(player))
             return;
-        }
 
         reload(event.getPlayer());
         event.setCancelled(true);
@@ -180,167 +131,166 @@ public class GameplayWeapon implements Listener {
 
     //region Public Methods
     /**
-     * Gets whether the weapon can be used to melee.
-     */
-    public boolean canMelee() {
-        return meleeService != null;
-    }
-
-    /**
-     * Gets whether the weapon can be Pack-A-Punched.
+     * Gets whether this weapon can be Pack-A-Punched.
      */
     public boolean canPackAPunch() {
-
-        if (isPackAPunched)
-            return false;
-
-        if (gunshotService != null && packAPunchedGunshotService != null)
-            return true;
-
-        return meleeService != null && packAPunchedMeleeService != null;
+        return !isPackAPunched && (weaponEntity.getService(WeaponService.GUNSHOT, true) != null || weaponEntity.getService(WeaponService.MELEE, true) != null);
     }
 
     /**
-     * Gets whether the weapon can be shot.
+     * Gets this weapon as a usable item stack.
      */
-    public boolean canShoot() {
+    public ItemStack createItemStack() {
 
-        if (gunshotService == null || isReloading)
-            return false;
+        ItemStack itemStack = new ItemStack(weaponEntity.getItem(), 1);
 
-        return ammoInMagazine > 0;
+        ItemMeta itemMeta = itemStack.getItemMeta();
+
+        List<String> lore = new ArrayList<String>();
+        lore.add(HiddenStringUtils.encodeString(uuid.toString()));
+
+        itemMeta.setLore(lore);
+
+        itemMeta.setDisplayName(weaponEntity.getWeaponColor() + weaponEntity.getName());
+
+        itemStack.setItemMeta(itemMeta);
+
+        return itemStack;
     }
 
     /**
      * Melees the weapon.
+     * @param player The player meleeing the weapon.
      */
-    public void melee(Player player) {
-        playMeleeSound(player);
+    public boolean melee(Player player) {
+
+        this.player = player;
+
+        WeaponServiceEntity meleeService = weaponEntity.getService(WeaponService.MELEE, isPackAPunched);
+
+        if (meleeService == null)
+            return false;
+
+        playSound(player, meleeService.getUsageSound(), 1);
+
+        return true;
     }
 
     /**
-     * Plays the gunshot sound for the current weapon state.
+     * Reloads the weapon.
+     * @param player The player reloading the weapon.
      */
-    public void playGunshotSound(Player player) {
-        playSound(player, getGunshotSound(), 4);
-    }
+    public boolean reload(Player player) {
 
-    /**
-     * Plays the melee sound for the current weapon state.
-     */
-    public void playMeleeSound(Player player) {
-        playSound(player, getMeleeSound(), 1);
-    }
+        this.player = player;
 
-    /**
-     * Plays the out of ammo sound for the current weapon state.
-     */
-    public void playOutOfAmmoSound(Player player) {
-        playSound(player, getOutOfAmmoSound(), 1);
-    }
+        WeaponServiceEntity gunshotService = weaponEntity.getService(WeaponService.GUNSHOT, isPackAPunched);
 
-    /**
-     * Reloads this weapon.
-     */
-    public void reload(Player player) {
+        if (gunshotService == null)
+            return false;
 
-        if (gunshotService == null || isReloading || ammoInMagazine == getDefaultAmmoInMagazine())
-            return;
+        if (isReloading || currentAmmo == weaponEntity.getMagazineCapacity(gunshotService))
+            return false;
+
+        playSound(player, weaponEntity.getOutOfAmmoSound(gunshotService), 1);
 
         if (availableAmmo < 1) {
-
-            if (ammoInMagazine < 1) {
-                setWeaponDisplay(getReloadingNoAmmoStatus());
-                return;
-            }
-
-            return;
+            setWeaponDisplay(currentAmmo > 0 ? getAmmoStatus() : getNoAmmoStatus());
+            return false;
         }
 
         isReloading = true;
 
-        remindOfNoAmmo(player);
+        setWeaponDisplay(getReloadingStatus());
 
         Main instance = Main.getInstance();
 
-        instance.getServer().getScheduler().scheduleSyncDelayedTask(instance, this::reload_runnable, Time.fromSeconds(getReloadSpeed()).totalTicks());
+        instance.getServer().getScheduler().scheduleSyncDelayedTask(instance, this::reload_runnable, Time.fromSeconds(weaponEntity.getReloadSpeed(gunshotService)).totalTicks());
+
+        return true;
     }
 
     /**
-     * Shoots the weapon, if a gunshot service is available.
+     * Shoots the weapon.
+     * @param player The player who shot the weapon.
      */
-    public void shoot(Player player) {
+    public boolean shoot(Player player) {
+
+        this.player = player;
+
+        WeaponServiceEntity gunshotService = weaponEntity.getService(WeaponService.GUNSHOT, isPackAPunched);
 
         if (gunshotService == null)
-            return;
+            return false;
 
         if (isReloading) {
-            playOutOfAmmoSound(player);
-            return;
+
+            WeaponServiceCharacteristicEntity outOfAmmoCharacteristic = weaponEntity.getCharacteristic(gunshotService, WeaponServiceCharacteristic.OUT_OF_AMMO_SOUND);
+
+            if (outOfAmmoCharacteristic != null)
+                playSound(player, (Sound)outOfAmmoCharacteristic.getValue(), 1);
+
+            return false;
         }
 
-        if (!canShoot()) {
-            remindOfNoAmmo(player);
-            return;
+        if (currentAmmo < 1) {
+            reload(player);
+            return false;
         }
 
-        playGunshotSound(player);
+        playSound(player, gunshotService.getUsageSound(), 4);
 
-        double accuracy;
-        int damage;
-        int projectiles = getProjectileCount();
+        int damage = gunshotService.getDamage();
 
-        if (isPackAPunched && packAPunchedGunshotService != null) {
+        double accuracy = weaponEntity.getAccuracy(gunshotService);
+        int projectiles = weaponEntity.getProjectileCount(gunshotService);
 
-            accuracy = packAPunchedGunshotService.getAccuracy();
-            damage = packAPunchedGunshotService.getDamage();
-
-        } else {
-
-            accuracy = gunshotService.getAccuracy();
-            damage = gunshotService.getDamage();
-
-        }
-
-        // The accuracy setting is actually an inaccuracy setting so
-        // it needs to be inverted before we use it on a projectile.
+        // The accuracy setting is actually an inaccuracy setting so it needs to be inverted before we use it on a projectile.
         accuracy = 1 - (accuracy / 100.0);
 
         for (int i = 0; i < projectiles; i++) {
 
-            Snowball snowball = player.launchProjectile(Snowball.class);
+            GameplayProjectile gameplayProjectile = new GameplayProjectile();
+            gameplayProjectile.getConfiguration().put(ProjectileConfigComponent.DAMAGE, damage);
+
+            PluginCore.getGameplayService().register(gameplayProjectile);
+
+            Projectile projectile = player.launchProjectile(weaponEntity.getProjectileType(gunshotService));
 
             Vector vector = player.getLocation().getDirection().multiply(2.5);
             vector.add(new Vector(Math.random() * accuracy - accuracy, Math.random() * accuracy - accuracy, Math.random() * accuracy - accuracy));
 
-            snowball.setVelocity(vector);
-            snowball.setGravity(false);
+            projectile.setVelocity(vector);
+            projectile.setGravity(false);
 
-            snowball.setCustomName("zombies:bullet:" + damage);
+            projectile.setCustomName(HiddenStringUtils.encodeString(gameplayProjectile.getUUID().toString()));
         }
 
-        ammoInMagazine--;
+        currentAmmo--;
         setWeaponDisplay(getAmmoStatus());
 
-        if (ammoInMagazine < 1)
+        if (currentAmmo < 1)
             reload(player);
+
+        return true;
+
     }
     //endregion
 
     //region Runnables
     private void reload_runnable() {
 
-        int defaultAmmoInMagazine = getDefaultAmmoInMagazine();
+        int defaultAmmoInMagazine = weaponEntity.getMagazineCapacity(isPackAPunched);
 
         if (availableAmmo > defaultAmmoInMagazine) {
 
-            availableAmmo -= defaultAmmoInMagazine - ammoInMagazine;
-            ammoInMagazine = defaultAmmoInMagazine;
+            availableAmmo -= defaultAmmoInMagazine - currentAmmo;
+            currentAmmo = defaultAmmoInMagazine;
 
         } else {
 
-            while (ammoInMagazine < defaultAmmoInMagazine && availableAmmo > 0) {
-                ammoInMagazine++;
+            while (currentAmmo < defaultAmmoInMagazine && availableAmmo > 0) {
+                currentAmmo++;
                 availableAmmo--;
             }
         }
@@ -352,136 +302,15 @@ public class GameplayWeapon implements Listener {
     //endregion
 
     //region Constructors
-    public GameplayWeapon(Player player, WeaponEntity weapon, UUID uuid) {
+    public GameplayWeapon(WeaponEntity weaponEntity) {
 
-        this.player = player;
-        this.weapon = weapon;
-        this.uuid = uuid;
+        this.weaponEntity = weaponEntity;
 
-        findServices();
-
-        breakdownGunshotService();
-        breakdownPackAPunchedGunshotService();
-
-        if (gunshotService != null) {
-            setWeaponDisplay(getAmmoStatus());
-            return;
-        }
-
-        setWeaponDisplay();
+        uuid = UUID.randomUUID();
     }
     //endregion
 
     //region Private Methods
-    private void breakdownGunshotService() {
-
-        if (gunshotService == null)
-            return;
-
-        for (WeaponServiceCharacteristicEntity characteristic : gunshotService.getCharacteristics()) {
-
-            if (characteristic.getType().equals(WeaponCharacteristic.PROJECTILES_IN_CARTRIDGE)) {
-                projectileCount = (Integer)characteristic.getValue();
-                continue;
-            }
-
-            if (characteristic.getType().equals(WeaponCharacteristic.RELOAD_SPEED)) {
-                reloadSpeed = (Integer)characteristic.getValue();
-                continue;
-            }
-
-            if (characteristic.getType().equals(WeaponCharacteristic.MAGAZINE_SIZE)) {
-                ammoInMagazine = (Integer)characteristic.getValue();
-                defaultAmmoInMagazine = (Integer)characteristic.getValue();
-                continue;
-            }
-
-            if (characteristic.getType().equals(WeaponCharacteristic.OUT_OF_AMMO_SOUND)) {
-                outOfAmmoSound = Sound.valueOf((String)characteristic.getValue());
-                continue;
-            }
-
-            if (characteristic.getType().equals(WeaponCharacteristic.TOTAL_AMMO_CAPACITY)) {
-                availableAmmo = (Integer)characteristic.getValue();
-                defaultAvailableAmmo = (Integer)characteristic.getValue();
-            }
-        }
-    }
-
-    private void breakdownPackAPunchedGunshotService() {
-
-        if (packAPunchedGunshotService == null)
-            return;
-
-        for (WeaponServiceCharacteristicEntity characteristic : packAPunchedGunshotService.getCharacteristics()) {
-
-            if (characteristic.getType().equals(WeaponCharacteristic.PROJECTILES_IN_CARTRIDGE)) {
-                packAPunchedProjectileCount = (Integer)characteristic.getValue();
-                continue;
-            }
-
-            if (characteristic.getType().equals(WeaponCharacteristic.RELOAD_SPEED)) {
-                packAPunchedReloadSpeed = (Integer)characteristic.getValue();
-                continue;
-            }
-
-            if (characteristic.getType().equals(WeaponCharacteristic.MAGAZINE_SIZE)) {
-                defaultPackAPunchedAmmoInMagazine = (Integer)characteristic.getValue();
-                continue;
-            }
-
-            if (characteristic.getType().equals(WeaponCharacteristic.OUT_OF_AMMO_SOUND)) {
-                packAPunchedOutOfAmmoSound = Sound.valueOf((String)characteristic.getValue());
-                continue;
-            }
-
-            if (characteristic.getType().equals(WeaponCharacteristic.TOTAL_AMMO_CAPACITY))
-                defaultPackAPunchedAvailableAmmo = (Integer)characteristic.getValue();
-        }
-    }
-
-    private UUID extractUuidFromItemStack(ItemStack itemStack) {
-
-        if (itemStack == null
-                || itemStack.getItemMeta() == null
-                || itemStack.getItemMeta().getLore() == null
-                || itemStack.getItemMeta().getLore().size() < 1
-                || itemStack.getItemMeta().getLore().get(0) == null)
-            return null;
-
-        try{
-            return UUID.fromString(HiddenStringUtils.extractHiddenString(itemStack.getItemMeta().getLore().get(0)));
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    private void findServices() {
-
-        for (WeaponServiceEntity service : weapon.getServices()) {
-
-            if (service.getType().equals(WeaponService.GUNSHOT)) {
-
-                if (service.doesRequirePackAPunch())
-                    packAPunchedGunshotService = service;
-                else
-                    gunshotService = service;
-            }
-
-            if (service.getType().equals(WeaponService.MELEE)) {
-
-                if (service.doesRequirePackAPunch())
-                    packAPunchedMeleeService = service;
-                else
-                    meleeService = service;
-            }
-        }
-    }
-
-    private String getAmmoStatus() {
-        return PluginCore.getConfig().getAmmoIndicatorColor().toString() + ammoInMagazine + "/" + availableAmmo;
-    }
-
     private ItemStack fetchItemStack() {
 
         if (player == null)
@@ -491,45 +320,34 @@ public class GameplayWeapon implements Listener {
 
             ItemStack itemStack = player.getInventory().getItem(i);
 
-            if (itemStack != null && extractUuidFromItemStack(itemStack).equals(uuid))
+            if (itemStack != null && HiddenStringUtils.extractUuidFromItemStack(itemStack).equals(uuid))
                 return itemStack;
         }
 
         return null;
     }
 
-    private String getReloadingNoAmmoStatus() {
-
-        if (isReloading)
-            return PluginCore.getConfig().getReloadingIndicatorColor() + "Reloading";
-
-        return PluginCore.getConfig().getOutOfAmmoIndicatorColor() + "No ammo";
+    private String getAmmoStatus() {
+        return PluginCore.getWeaponConfig().getAmmoIndicatorColor().toString() + currentAmmo + "/" + availableAmmo;
     }
 
-    private boolean isWithinRange(double positionOne, double positionTwo, double max) {
-        return Math.max(positionOne, positionTwo) - Math.min(positionOne, positionTwo) < max;
+    private String getNoAmmoStatus() {
+        return PluginCore.getWeaponConfig().getReloadingIndicatorColor() + "Reloading";
+    }
+
+    private String getReloadingStatus() {
+        return PluginCore.getWeaponConfig().getOutOfAmmoIndicatorColor() + "No ammo";
+    }
+
+    private boolean isWithinRange(double positionOne, double positionTwo) {
+        return Math.max(positionOne, positionTwo) - Math.min(positionOne, positionTwo) < (double)3;
     }
 
     private void playSound(Player player, Sound sound, float volume) {
-
-        World world = Main.getInstance().getServer().getWorld(PluginCore.getConfig().getWorldName());
-
-        if (world == null) {
-            player.playSound(player.getLocation(), sound, volume, 1);
-            return;
-        }
-
-        world.playSound(player.getLocation(), sound, volume, 1);
+        player.getWorld().playSound(player.getLocation(), sound, volume, 1);
     }
 
-    private void remindOfNoAmmo(Player player) {
-
-        setWeaponDisplay(getReloadingNoAmmoStatus());
-
-        playOutOfAmmoSound(player);
-    }
-
-    private void setWeaponDisplay() {
+    private void setWeaponDisplay(String status) {
 
         ItemStack itemStack = fetchItemStack();
 
@@ -541,23 +359,12 @@ public class GameplayWeapon implements Listener {
         if (itemMeta == null)
             return;
 
-        itemMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.valueOf(weapon.getWeaponClass().getColor()) + weapon.getName());
-        itemStack.setItemMeta(itemMeta);
-    }
+        String title = ChatColor.RESET + "" + weaponEntity.getWeaponColor() + weaponEntity.getName();
 
-    private void setWeaponDisplay(String status) {
+        if (status != null && !status.isEmpty())
+            title += ": " + ChatColor.RESET + "" + status;
 
-        ItemStack itemStack = fetchItemStack();;
-
-        if (itemStack == null)
-            return;
-
-        ItemMeta itemMeta = itemStack.getItemMeta();
-
-        if (itemMeta == null)
-            return;
-
-        itemMeta.setDisplayName(ChatColor.RESET + "" + ChatColor.valueOf(weapon.getWeaponClass().getColor()) + weapon.getName() + ": " + ChatColor.RESET + "" + status);
+        itemMeta.setDisplayName(title);
         itemStack.setItemMeta(itemMeta);
     }
     //endregion

@@ -16,18 +16,14 @@ commands:
     createmap:
       description: Creates a new map.
       usage: /<command> [ID] [name]
-        
-    createweaponclass:
-      description: Creates a new weapon class.
-      usage: /<command> [ID] [default cost] [weapon type] [can Pack-A-Punch yes/no] [name]
-        
+
     createweapon:
       description: Creates a new weapon.
       usage: /<command> [ID] [weapon class ID] [name]
 
     createenemy:
       description: Creates a new enemy.
-      usage: /<command> [ID] [entity type] [round one health]
+      usage: /<command> [ID] [entity type]
 
     createperk:
       description: Creates a new perk.

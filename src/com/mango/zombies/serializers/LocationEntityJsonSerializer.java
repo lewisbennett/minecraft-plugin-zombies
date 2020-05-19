@@ -15,9 +15,18 @@ public class LocationEntityJsonSerializer implements JsonSerializer<LocationEnti
 
         LocationEntity location = new LocationEntity();
 
-        location.setX(jsonObject.get(LocationEntity.X_JSON_TAG).getAsInt());
-        location.setY(jsonObject.get(LocationEntity.Y_JSON_TAG).getAsInt());
-        location.setZ(jsonObject.get(LocationEntity.Z_JSON_TAG).getAsInt());
+        JsonElement xJsonElement = jsonObject.get(LocationEntity.X_JSON_TAG);
+        JsonElement yJsonElement = jsonObject.get(LocationEntity.Y_JSON_TAG);
+        JsonElement zJsonElement = jsonObject.get(LocationEntity.Z_JSON_TAG);
+
+        if (xJsonElement != null)
+            location.setX(xJsonElement.getAsInt());
+
+        if (yJsonElement != null)
+            location.setY(yJsonElement.getAsInt());
+
+        if (zJsonElement != null)
+            location.setZ(zJsonElement.getAsInt());
 
         return location;
     }

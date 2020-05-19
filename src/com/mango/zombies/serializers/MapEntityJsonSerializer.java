@@ -16,31 +16,72 @@ public class MapEntityJsonSerializer implements JsonSerializer<MapEntity>, JsonD
 
         MapEntity map = new MapEntity();
 
-        map.setBottom(LocationEntity.SERIALIZER.deserialize(jsonObject.get(MapEntity.BOTTOM_JSON_TAG), LocationEntity.class, jsonDeserializationContext));
-        map.setDeleteKey(jsonObject.get(MapEntity.DELETE_KEY_JSON_TAG).getAsString());
-        map.setEnabled(jsonObject.get(MapEntity.ENABLED_JSON_TAG).getAsBoolean());
-        map.setId(jsonObject.get(MapEntity.ID_JSON_TAG).getAsString());
-        map.setName(jsonObject.get(MapEntity.NAME_JSON_TAG).getAsString());
-        map.setOriginPoint(LocationEntity.SERIALIZER.deserialize(jsonObject.get(MapEntity.ORIGIN_POINT_JSON_TAG), LocationEntity.class, jsonDeserializationContext));
-        map.setTop(LocationEntity.SERIALIZER.deserialize(jsonObject.get(MapEntity.TOP_JSON_TAG), LocationEntity.class, jsonDeserializationContext));
+        JsonElement bottomJsonElement = jsonObject.get(MapEntity.BOTTOM_JSON_TAG);
+        JsonElement deleteKeyJsonElement = jsonObject.get(MapEntity.DELETE_KEY_JSON_TAG);
+        JsonElement enemyBlacklistJsonElement = jsonObject.get(MapEntity.ENEMY_BLACKLIST_JSON_TAG);
+        JsonElement enemySpawnsJsonElement = jsonObject.get(MapEntity.ENEMY_SPAWNS_JSON_TAG);
+        JsonElement enemyWhitelistJsonElement = jsonObject.get(MapEntity.ENEMY_WHITELIST_JSON_TAG);
+        JsonElement idJsonElement = jsonObject.get(MapEntity.ID_JSON_TAG);
+        JsonElement nameJsonElement = jsonObject.get(MapEntity.NAME_JSON_TAG);
+        JsonElement originPointJsonElement = jsonObject.get(MapEntity.ORIGIN_POINT_JSON_TAG);
+        JsonElement playerSpawnsJsonElement = jsonObject.get(MapEntity.PLAYER_SPAWNS_JSON_TAG);
+        JsonElement topJsonElement = jsonObject.get(MapEntity.TOP_JSON_TAG);
+        JsonElement weaponBlacklistJsonElement = jsonObject.get(MapEntity.WEAPON_BLACKLIST_JSON_TAG);
+        JsonElement weaponWhitelistJsonElement = jsonObject.get(MapEntity.WEAPON_WHITELIST_JSON_TAG);
 
-        for (JsonElement j : jsonObject.get(MapEntity.ENEMY_WHITELIST_JSON_TAG).getAsJsonArray())
-            map.getEnemyWhitelist().add(j.getAsString());
+        if (bottomJsonElement != null)
+            map.setBottom(LocationEntity.SERIALIZER.deserialize(bottomJsonElement, LocationEntity.class, jsonDeserializationContext));
 
-        for (JsonElement j : jsonObject.get(MapEntity.ENEMY_BLACKLIST_JSON_TAG).getAsJsonArray())
-            map.getEnemyBlacklist().add(j.getAsString());
+        if (deleteKeyJsonElement != null)
+            map.setDeleteKey(deleteKeyJsonElement.getAsString());
 
-        for (JsonElement j : jsonObject.get(MapEntity.WEAPON_WHITELIST_JSON_TAG).getAsJsonArray())
-            map.getWeaponWhitelist().add(j.getAsString());
+        if (enemyBlacklistJsonElement != null) {
 
-        for (JsonElement j : jsonObject.get(MapEntity.WEAPON_BLACKLIST_JSON_TAG).getAsJsonArray())
-            map.getWeaponBlacklist().add(j.getAsString());
+            for (JsonElement j : enemyBlacklistJsonElement.getAsJsonArray())
+                map.addEnemyBlacklistEntry(j.getAsString());
+        }
 
-        for (JsonElement j : jsonObject.get(MapEntity.PLAYER_SPAWNS_JSON_TAG).getAsJsonArray())
-            map.getPlayerSpawns().add(LocationEntity.SERIALIZER.deserialize(j, LocationEntity.class, jsonDeserializationContext));
+        if (enemySpawnsJsonElement != null) {
 
-        for (JsonElement j : jsonObject.get(MapEntity.ENEMY_SPAWNS_JSON_TAG).getAsJsonArray())
-            map.getEnemySpawns().add(LocationEntity.SERIALIZER.deserialize(j, LocationEntity.class, jsonDeserializationContext));
+            for (JsonElement j : enemySpawnsJsonElement.getAsJsonArray())
+                map.addEnemySpawnLocation(LocationEntity.SERIALIZER.deserialize(j, LocationEntity.class, jsonDeserializationContext));
+        }
+
+        if (enemyWhitelistJsonElement != null) {
+
+            for (JsonElement j : enemyWhitelistJsonElement.getAsJsonArray())
+                map.addEnemyWhitelistEntry(j.getAsString());
+        }
+
+        if (idJsonElement != null)
+            map.setId(idJsonElement.getAsString());
+
+        if (nameJsonElement != null)
+            map.setName(nameJsonElement.getAsString());
+
+        if (originPointJsonElement != null)
+            map.setOriginPoint(LocationEntity.SERIALIZER.deserialize(originPointJsonElement, LocationEntity.class, jsonDeserializationContext));
+
+        if (playerSpawnsJsonElement != null) {
+
+            for (JsonElement j : playerSpawnsJsonElement.getAsJsonArray())
+                map.addPlayerSpawnLocation(LocationEntity.SERIALIZER.deserialize(j, LocationEntity.class, jsonDeserializationContext));
+        }
+
+        if (topJsonElement != null)
+            map.setTop(LocationEntity.SERIALIZER.deserialize(topJsonElement, LocationEntity.class, jsonDeserializationContext));
+
+        if (weaponBlacklistJsonElement != null) {
+
+            for (JsonElement j : weaponBlacklistJsonElement.getAsJsonArray())
+                map.addWeaponBlacklistEntry(j.getAsString());
+        }
+
+        if (weaponWhitelistJsonElement != null) {
+
+            for (JsonElement j : weaponWhitelistJsonElement.getAsJsonArray())
+                map.addEnemyWhitelistEntry(j.getAsString());
+        }
 
         return map;
     }
@@ -53,7 +94,6 @@ public class MapEntityJsonSerializer implements JsonSerializer<MapEntity>, JsonD
         jsonObject.add(MapEntity.ID_JSON_TAG, new JsonPrimitive(mapEntity.getId()));
         jsonObject.add(MapEntity.NAME_JSON_TAG, new JsonPrimitive(mapEntity.getName()));
         jsonObject.add(MapEntity.DELETE_KEY_JSON_TAG, new JsonPrimitive(mapEntity.getDeleteKey()));
-        jsonObject.add(MapEntity.ENABLED_JSON_TAG, new JsonPrimitive(mapEntity.isEnabled()));
         jsonObject.add(MapEntity.TOP_JSON_TAG, LocationEntity.SERIALIZER.serialize(mapEntity.getTop(), LocationEntity.class, jsonSerializationContext));
         jsonObject.add(MapEntity.BOTTOM_JSON_TAG, LocationEntity.SERIALIZER.serialize(mapEntity.getBottom(), LocationEntity.class, jsonSerializationContext));
         jsonObject.add(MapEntity.ORIGIN_POINT_JSON_TAG, LocationEntity.SERIALIZER.serialize(mapEntity.getOriginPoint(), LocationEntity.class, jsonSerializationContext));

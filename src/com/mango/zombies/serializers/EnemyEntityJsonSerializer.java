@@ -15,11 +15,27 @@ public class EnemyEntityJsonSerializer implements JsonSerializer<EnemyEntity>, J
         JsonObject jsonObject = jsonElement.getAsJsonObject();
 
         EnemyEntity enemy = new EnemyEntity();
-        enemy.setId(jsonObject.get(EnemyEntity.ID_JSON_TAG).getAsString());
-        enemy.setDespawnTime(jsonObject.get(EnemyEntity.DESPAWN_TIME_JSON_TAG).getAsInt());
-        enemy.setEntityType(EntityType.valueOf(jsonObject.get(EnemyEntity.ENTITY_TYPE_JSON_TAG).getAsString()));
-        enemy.setMaxHealth(jsonObject.get(EnemyEntity.MAX_HEALTH_JSON_TAG).getAsInt());
-        enemy.setRoundOneHealth(jsonObject.get(EnemyEntity.ROUND_ONE_HEALTH_JSON_TAG).getAsInt());
+
+        JsonElement despawnTimeJsonElement = jsonObject.get(EnemyEntity.DESPAWN_TIME_JSON_TAG);
+        JsonElement entityTypeJsonElement = jsonObject.get(EnemyEntity.ENTITY_TYPE_JSON_TAG);
+        JsonElement idJsonElement = jsonObject.get(EnemyEntity.ID_JSON_TAG);
+        JsonElement maxHealthJsonElement = jsonObject.get(EnemyEntity.MAX_HEALTH_JSON_TAG);
+        JsonElement roundMultiplierJsonElement = jsonObject.get(EnemyEntity.ROUND_MULTIPLIER_JSON_TAG);
+
+        if (despawnTimeJsonElement != null)
+            enemy.setDespawnTime(despawnTimeJsonElement.getAsInt());
+
+        if (entityTypeJsonElement != null)
+            enemy.setEntityType(EntityType.valueOf(entityTypeJsonElement.getAsString()));
+
+        if (idJsonElement != null)
+            enemy.setId(idJsonElement.getAsString());
+
+        if (maxHealthJsonElement != null)
+            enemy.setMaxHealth(maxHealthJsonElement.getAsInt());
+
+        if (roundMultiplierJsonElement != null)
+            enemy.setRoundMultiplier(roundMultiplierJsonElement.getAsDouble());
 
         return enemy;
     }
@@ -31,8 +47,8 @@ public class EnemyEntityJsonSerializer implements JsonSerializer<EnemyEntity>, J
 
         jsonObject.add(EnemyEntity.ID_JSON_TAG, new JsonPrimitive(enemyEntity.getId()));
         jsonObject.add(EnemyEntity.ENTITY_TYPE_JSON_TAG, new JsonPrimitive(enemyEntity.getEntityType().name()));
-        jsonObject.add(EnemyEntity.ROUND_ONE_HEALTH_JSON_TAG, new JsonPrimitive(enemyEntity.getRoundOneHealth()));
         jsonObject.add(EnemyEntity.MAX_HEALTH_JSON_TAG, new JsonPrimitive(enemyEntity.getMaxHealth()));
+        jsonObject.add(EnemyEntity.ROUND_MULTIPLIER_JSON_TAG, new JsonPrimitive(enemyEntity.getRoundMultiplier()));
         jsonObject.add(EnemyEntity.DESPAWN_TIME_JSON_TAG, new JsonPrimitive(enemyEntity.getDespawnTime()));
 
         return jsonObject;

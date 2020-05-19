@@ -3,58 +3,78 @@ package com.mango.zombies.gameplay;
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.entities.LocationEntity;
 import com.mango.zombies.entities.MapEntity;
+import com.mango.zombies.gameplay.base.BlockBreakEventRegisterable;
+import com.mango.zombies.gameplay.base.GameplayRegisterable;
+import com.mango.zombies.gameplay.base.PlayerInteractEventRegisterable;
 import com.mango.zombies.helper.HiddenStringUtils;
 import com.mango.zombies.schema.Positionable;
-import com.mango.zombies.services.MessagingService;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import com.mango.zombies.services.StockMessagingService;
+import com.mango.zombies.services.base.MessagingService;
+import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-public class PositionTool implements Listener {
+public class PositionTool implements GameplayRegisterable, BlockBreakEventRegisterable, PlayerInteractEventRegisterable {
 
     //region Fields
-    private LocationEntity bottom, top;
-    private ItemStack itemStack;
+    private LocationEntity bottom;
+    private LocationEntity top;
+
     private MapEntity map;
+
     private String positionable;
+
     private UUID uuid;
     //endregion
 
+    //region Getters/Setters
+    /**
+     * Gets the UUID of this gameplay registerable.
+     */
+    public UUID getUUID() {
+        return uuid;
+    }
+    //endregion
+
     //region Event Handlers
-    @EventHandler
+    /**
+     * Called when a block breaks.
+     * @param event The event caused by the break.
+     */
     public void onBlockBreak(BlockBreakEvent event) {
-
-        UUID uuid = HiddenStringUtils.extractUuidFromItemStack(event.getPlayer().getInventory().getItemInMainHand());
-
-        if (uuid != null && uuid.equals(this.uuid))
-            event.setCancelled(true);
+        event.setCancelled(true);
     }
 
-    @EventHandler
+    /**
+     * Called when a player interacts with this weapon.
+     * @param event The event caused by the interaction.
+     */
     public void onPlayerInteract(PlayerInteractEvent event) {
 
-        UUID uuid = HiddenStringUtils.extractUuidFromItemStack(event.getItem());
+        Block clickedBlock = event.getClickedBlock();
+        ItemStack itemStack = event.getItem();
 
-        if (uuid == null || !uuid.equals(this.uuid))
+        if (clickedBlock == null || itemStack == null)
             return;
-
-        itemStack = event.getItem();
 
         if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
 
-            top = new LocationEntity(event.getClickedBlock().getLocation());
-            MessagingService.showSuccess(event.getPlayer(), "Top position set to: " + top.toString() + ".");
+            top = new LocationEntity(clickedBlock.getLocation());
+            PluginCore.getMessagingService().success(event.getPlayer(), "Top position set to: " + top.toString() + ".");
         }
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 
-            bottom = new LocationEntity(event.getClickedBlock().getLocation());
-            MessagingService.showSuccess(event.getPlayer(), "Bottom position set to: " + bottom.toString() + ".");
+            bottom = new LocationEntity(clickedBlock.getLocation());
+            PluginCore.getMessagingService().success(event.getPlayer(), "Bottom position set to: " + bottom.toString() + ".");
         }
 
         if (top == null || bottom == null)
@@ -66,7 +86,7 @@ public class PositionTool implements Listener {
 
             // Save door.
 
-            MessagingService.showSuccess(event.getPlayer(), "Door added successfully.");
+            PluginCore.getMessagingService().success(event.getPlayer(), "Door added successfully.");
 
             return;
         }
@@ -76,36 +96,41 @@ public class PositionTool implements Listener {
             map.setTop(top);
             map.setBottom(bottom);
 
-            MessagingService.showSuccess(event.getPlayer(), "Top and bottom positions for " + map.getId() + " set.");
+            PluginCore.getMessagingService().success(event.getPlayer(), "Top and bottom positions for " + map.getId() + " set.");
         }
     }
     //endregion
 
-    //region Constructors
-    public PositionTool(ItemStack itemStack, String mapId, String positionable, UUID uuid) {
+    //region Public Methods
+    /**
+     * Gets this position tool as a usable item stack.
+     */
+    public ItemStack createItemStack() {
 
-        MapEntity map = null;
+        ItemStack itemStack = new ItemStack(PluginCore.getConfig().getPositionToolItem(), 1);
 
-        for (MapEntity queryMap : PluginCore.getMaps()) {
+        ItemMeta itemMeta = itemStack.getItemMeta();
 
-            if (queryMap.getId().equals(mapId)) {
-                map = queryMap;
-                break;
-            }
-        }
+        List<String> lore = new ArrayList<String>();
+        lore.add(HiddenStringUtils.encodeString(uuid.toString()));
 
-        this.itemStack = itemStack;
-        this.map = map;
-        this.positionable = positionable;
-        this.uuid = uuid;
+        itemMeta.setLore(lore);
+
+        itemMeta.setDisplayName(ChatColor.AQUA + "Position Tool: " + ChatColor.RESET + "" + ChatColor.GREEN + map.getId() + " (" + positionable + ")");
+
+        itemStack.setItemMeta(itemMeta);
+
+        return itemStack;
     }
+    //endregion
 
-    public PositionTool(ItemStack itemStack, MapEntity map, String positionable, UUID uuid) {
+    //region Constructors
+    public PositionTool(MapEntity map, String positionable) {
 
-        this.itemStack = itemStack;
         this.map = map;
         this.positionable = positionable;
-        this.uuid = uuid;
+
+        uuid = UUID.randomUUID();
     }
     //endregion
 }

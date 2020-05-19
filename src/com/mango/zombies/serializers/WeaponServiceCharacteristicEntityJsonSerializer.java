@@ -2,6 +2,7 @@ package com.mango.zombies.serializers;
 
 import com.google.gson.*;
 import com.mango.zombies.entities.WeaponServiceCharacteristicEntity;
+import org.bukkit.Sound;
 
 import java.lang.reflect.Type;
 
@@ -12,25 +13,28 @@ public class WeaponServiceCharacteristicEntityJsonSerializer implements JsonSeri
     public WeaponServiceCharacteristicEntity deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
 
         JsonObject jsonObject = jsonElement.getAsJsonObject();
+
         WeaponServiceCharacteristicEntity characteristic = new WeaponServiceCharacteristicEntity();
         
-        JsonElement typeJson = jsonObject.get(WeaponServiceCharacteristicEntity.TYPE_JSON_TAG);
-        JsonElement valueJson = jsonObject.get(WeaponServiceCharacteristicEntity.VALUE_JSON_TAG);
+        JsonElement typeJsonElement = jsonObject.get(WeaponServiceCharacteristicEntity.TYPE_JSON_TAG);
+        JsonElement valueJsonElement = jsonObject.get(WeaponServiceCharacteristicEntity.VALUE_JSON_TAG);
         
-        if (typeJson != null)
-            characteristic.setType(typeJson.getAsString());
+        if (typeJsonElement != null)
+            characteristic.setType(typeJsonElement.getAsString());
         
-        if (valueJson != null) {
+        if (valueJsonElement != null) {
 
             Object o = null;
-            JsonPrimitive valuePrimitive = valueJson.getAsJsonPrimitive();
-            
+            JsonPrimitive valuePrimitive = valueJsonElement.getAsJsonPrimitive();
+
             if (valuePrimitive.isBoolean())
-                o = valueJson.getAsBoolean();
+                o = valueJsonElement.getAsBoolean();
+
             else if (valuePrimitive.isNumber())
-                o = valueJson.getAsInt();
+                o = valueJsonElement.getAsInt();
+
             else if (valuePrimitive.isString())
-                o = valueJson.getAsString();
+                o = valueJsonElement.getAsString();
 
             characteristic.setValue(o);
         }
@@ -47,8 +51,16 @@ public class WeaponServiceCharacteristicEntityJsonSerializer implements JsonSeri
 
         if (weaponServiceCharacteristicEntity.getValue() instanceof Boolean)
             valueJson = new JsonPrimitive((Boolean)weaponServiceCharacteristicEntity.getValue());
+
         else if (weaponServiceCharacteristicEntity.getValue() instanceof Integer)
             valueJson = new JsonPrimitive((Integer)weaponServiceCharacteristicEntity.getValue());
+
+        else if (weaponServiceCharacteristicEntity.getValue() instanceof  Double)
+            valueJson = new JsonPrimitive((Double)weaponServiceCharacteristicEntity.getValue());
+
+        else if (weaponServiceCharacteristicEntity.getValue() instanceof Sound)
+            valueJson = new JsonPrimitive(((Sound)weaponServiceCharacteristicEntity.getValue()).name());
+
         else
             valueJson = new JsonPrimitive((String)weaponServiceCharacteristicEntity.getValue());
 

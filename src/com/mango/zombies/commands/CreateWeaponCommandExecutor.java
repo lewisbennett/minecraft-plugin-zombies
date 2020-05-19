@@ -1,74 +1,88 @@
 package com.mango.zombies.commands;
 
 import com.mango.zombies.PluginCore;
-import com.mango.zombies.base.BaseCommandExecutor;
-import com.mango.zombies.entities.WeaponClassEntity;
+import com.mango.zombies.commands.base.BaseCommandExecutor;
 import com.mango.zombies.entities.WeaponEntity;
-import com.mango.zombies.services.MessagingService;
+import com.mango.zombies.schema.WeaponService;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 
 public class CreateWeaponCommandExecutor extends BaseCommandExecutor {
 
-	public static final String CORRECT_USAGE_ERROR = "Correct usage: /createweapon [ID] [weapon class ID] [name]";
+	//region Constant Values
+	public static final String CORRECT_USAGE_ERROR = "Correct usage: /createweapon [ID] [weapon type] [cost] [name]";
 	public static final String WEAPON_ID_ALREADY_EXISTS_ERROR = "Weapon not created. %s already exists.";
-	public static final String WEAPON_CLASS_DOES_NOT_EXIST_ERROR = "Weapon not created. %s is not a valid weapon class.";
-	
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public static final String INVALID_COST_ERROR = "Weapon not created. %s is not a valid cost.";
+	public static final String INVALID_WEAPON_TYPE_ERROR = "Weapon not created. Weapon type must be one of the following: %s";
+	//endregion
 
-		if (args.length < 3) {
-			MessagingService.showError(sender, CORRECT_USAGE_ERROR);
-			return true;
-		}
-		
-		if (!isValidWeaponId(args[0])) {
-			MessagingService.showError(sender, String.format(WEAPON_ID_ALREADY_EXISTS_ERROR, args[0]));
-			return true;
-		}
-		
-		if (!isValidWeaponClassId(args[1])) {
-			MessagingService.showError(sender, String.format(WEAPON_CLASS_DOES_NOT_EXIST_ERROR, args[1]));
-			return true;
-		}
+	//region Event Handlers
+	@Override
+	public String executeCommand(CommandSender sender, Command command, String label, String[] args) {
+
+		if (args.length < 3)
+			throw new CommandException(CORRECT_USAGE_ERROR);
+
+		if (!isValidWeaponId(args[0]))
+			throw new CommandException(String.format(WEAPON_ID_ALREADY_EXISTS_ERROR, args[0]));
+
+		if (!isValidWeaponType(args[1]))
+			throw new CommandException(String.format(INVALID_WEAPON_TYPE_ERROR, String.join(", ", WeaponService.toArray())));
+
+		int weaponCost = parseWeaponCost(args[2]);
+
+		if (weaponCost < 1)
+			throw new CommandException(String.format(INVALID_COST_ERROR, args[2]));
 
 		StringBuilder name = new StringBuilder();
 
-		for (int i = 2; i < args.length; i++) {
+		for (int i = 3; i < args.length; i++) {
 
-			if (i > 2)
+			if (i > 3)
 				name.append(" ");
 
 			name.append(args[i]);
 		}
 
-		WeaponEntity weapon = new WeaponEntity(args[0], name.toString(), args[1]);
-		PluginCore.getWeapons().add(weapon);
-		MessagingService.showSuccess(sender, "Successfully created weapon: " + ChatColor.BOLD + weapon.getName());
-		
-		return true;
+		WeaponEntity weapon = new WeaponEntity(args[0], args[1], name.toString(), weaponCost);
+		PluginCore.addWeapon(weapon);
+
+		return "Successfully created weapon: " + ChatColor.BOLD + weapon.getName();
 	}
-	
+	//endregion
+
+	//region Private Methods
 	private boolean isValidWeaponId(String weaponId) {
 
 		for (WeaponEntity weapon : PluginCore.getWeapons()) {
 
-			if (weapon.getId().equalsIgnoreCase(weaponId))
+			if (weapon.getId().equals(weaponId))
 				return false;
 		}
 		
 		return true;
 	}
-	
-	private boolean isValidWeaponClassId(String weaponClassId) {
 
-		for (WeaponClassEntity weaponClass : PluginCore.getWeaponsClasses()) {
+	private boolean isValidWeaponType(String weaponType) {
 
-			if (weaponClass.getId().equalsIgnoreCase(weaponClassId))
+		for (String queryType : WeaponService.toArray()) {
+
+			if (weaponType.equals(queryType))
 				return true;
 		}
-		
+
 		return false;
 	}
+
+	private int parseWeaponCost(String rawWeaponCost) {
+
+		try {
+			return Integer.parseInt(rawWeaponCost);
+		} catch (Exception ignored) {
+			return -1;
+		}
+	}
+	//endregion
 }

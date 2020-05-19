@@ -1,11 +1,11 @@
 package com.mango.zombies.commands;
 
 import com.mango.zombies.PluginCore;
-import com.mango.zombies.base.BaseCommandExecutor;
+import com.mango.zombies.commands.base.BaseCommandExecutor;
 import com.mango.zombies.entities.MapEntity;
-import com.mango.zombies.services.MessagingService;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 
 public class MapInfoCommandExecutor extends BaseCommandExecutor {
@@ -17,13 +17,11 @@ public class MapInfoCommandExecutor extends BaseCommandExecutor {
 
 	//region Event Handlers
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public String executeCommand(CommandSender sender, Command command, String label, String[] args) {
 
-		if (args.length != 1) {
-			MessagingService.showError(sender, CORRECT_USAGE_ERROR);
-			return true;
-		}
-		
+		if (args.length != 1)
+			throw new CommandException(CORRECT_USAGE_ERROR);
+
 		MapEntity map = null;
 		
 		for (MapEntity queryMap : PluginCore.getMaps()) {
@@ -33,11 +31,9 @@ public class MapInfoCommandExecutor extends BaseCommandExecutor {
 				break;
 			}
 		}
-		
-		if (map == null) {
-			MessagingService.showError(sender, String.format(MAP_DOES_NOT_EXIST_ERROR, args[0]));
-			return true;
-		}
+
+		if (map == null)
+			throw new CommandException(String.format(MAP_DOES_NOT_EXIST_ERROR, args[0]));
 		
 		sender.sendMessage(new String[] {
 			ChatColor.GREEN + "" + "<==-- " + map.getName() + " --==>",
@@ -50,7 +46,7 @@ public class MapInfoCommandExecutor extends BaseCommandExecutor {
 			ChatColor.YELLOW + "Delete key: " + ChatColor.RESET + (sender.isOp() ? map.getDeleteKey() : "RESTRICTED")
 		});
 		
-		return true;
+		return null;
 	}
 	//endregion
 }

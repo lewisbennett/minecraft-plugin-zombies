@@ -4,9 +4,9 @@ import com.mango.zombies.PluginCore;
 import com.mango.zombies.entities.*;
 import com.mango.zombies.schema.MapItem;
 import com.mango.zombies.schema.Sign;
-import com.mango.zombies.schema.WeaponCharacteristic;
+import com.mango.zombies.schema.WeaponServiceCharacteristic;
 import com.mango.zombies.schema.WeaponService;
-import com.mango.zombies.services.MessagingService;
+import com.mango.zombies.services.StockMessagingService;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,6 +14,7 @@ import org.bukkit.event.block.SignChangeEvent;
 
 public class SignChangedListener implements Listener {
 
+	//region Constant Values
 	public static final String PERK_DOES_NOT_EXIST_ERROR = "\"%s\" is not a valid perk.";
 	public static final String PERK_DOES_NOT_EXIST_ERROR_GENERIC = "Invalid perk.";
 	public static final String WEAPON_DOES_NOT_EXIST_ERROR = "\"%s\" is not a valid weapon.";
@@ -22,7 +23,9 @@ public class SignChangedListener implements Listener {
 	public static final String MAP_DOES_NOT_EXIST_ERROR_GENERIC = "Invalid map.";
 	public static final String TYPE_DOES_NOT_EXIST_ERROR = "\"%s\" is not a valid sign type.";
 	public static final String TYPE_DOES_NOT_EXIST_ERROR_GENERIC = "Invalid sign type.";
+	//endregion
 
+	//region Event Handlers
 	@EventHandler
 	public void onSignChange(SignChangeEvent event) {
 
@@ -45,7 +48,7 @@ public class SignChangedListener implements Listener {
 
 			case Sign.MYSTERY_BOX:
 				lineOne = MapItem.MYSTERY_BOX;
-				lineTwo = "Cost: " + (paramter.isEmpty() ? ConfigEntity.DEFAULT_DEFAULT_MYSTERY_BOX_COST : Integer.parseInt(lines[3]));
+				lineTwo = "Cost: " + (paramter.isEmpty() ? MapConfigEntity.DEFAULT_DEFAULT_MYSTERY_BOX_COST : Integer.parseInt(lines[3]));
 				break;
 				
 			case Sign.PERK:
@@ -112,7 +115,7 @@ public class SignChangedListener implements Listener {
 
 				for (WeaponServiceCharacteristicEntity characteristic : gunshotService.getCharacteristics()) {
 
-					if (characteristic.getType().equals(WeaponCharacteristic.AMMO_COST)) {
+					if (characteristic.getType().equals(WeaponServiceCharacteristic.AMMO_COST)) {
 						normalAmmoCost = (Integer)characteristic.getValue();
 						break;
 					}
@@ -122,7 +125,7 @@ public class SignChangedListener implements Listener {
 
 					for (WeaponServiceCharacteristicEntity characteristic : packAPunchedGunshotService.getCharacteristics()) {
 
-						if (characteristic.getType().equals(WeaponCharacteristic.AMMO_COST)) {
+						if (characteristic.getType().equals(WeaponServiceCharacteristic.AMMO_COST)) {
 							packAPunchedAmmoCost = (Integer)characteristic.getValue();
 							break;
 						}
@@ -150,11 +153,11 @@ public class SignChangedListener implements Listener {
 				
 			default:
 				error = lines[1] == null || lines[1].isEmpty() ? TYPE_DOES_NOT_EXIST_ERROR_GENERIC : String.format(TYPE_DOES_NOT_EXIST_ERROR, lines[1]);
-				return;
+				break;
 		}
 
 		if (error != null) {
-			MessagingService.showError(event.getPlayer(), "Sign not created. " + error);
+			PluginCore.getMessagingService().error(event.getPlayer(), "Sign not created. " + error);
 			return;
 		}
 		
@@ -169,7 +172,7 @@ public class SignChangedListener implements Listener {
 		}
 		
 		if (map == null) {
-			MessagingService.showError(event.getPlayer(), mapId.isEmpty() ? MAP_DOES_NOT_EXIST_ERROR_GENERIC : String.format(MAP_DOES_NOT_EXIST_ERROR, mapId));
+			PluginCore.getMessagingService().error(event.getPlayer(), mapId.isEmpty() ? MAP_DOES_NOT_EXIST_ERROR_GENERIC : String.format(MAP_DOES_NOT_EXIST_ERROR, mapId));
 			return;
 		}
 		
@@ -178,4 +181,5 @@ public class SignChangedListener implements Listener {
 		event.setLine(2, ChatColor.BLACK + lineTwo);
 		event.setLine(3, ChatColor.BLACK + lineThree);
 	}
+	//endregion
 }
