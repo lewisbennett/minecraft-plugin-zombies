@@ -12,9 +12,9 @@ public class PerkConfigEntity {
 
     public static final PerkConfigEntityJsonSerializer SERIALIZER = new PerkConfigEntityJsonSerializer();
 
-    public static final String DEFAULT_DOES_REQUIRE_POWER_JSON_TAG = "default_does_require_power";
+    public static final String DEFAULT_DOES_REQUIRE_POWER_JSON_TAG = "defaultDoesRequirePower";
 
-    public static final String DEFAULT_MATERIAL_JSON_TAG = "default_material";
+    public static final String DEFAULT_MATERIAL_JSON_TAG = "defaultMaterial";
     //endregion
 
     //region Fields

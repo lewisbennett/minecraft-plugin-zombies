@@ -10,8 +10,8 @@ public class MapConfigEntity {
 
     public static final MapConfigEntityJsonSerializer SERIALIZER = new MapConfigEntityJsonSerializer();
 
-    public static final String DEFAULT_MYSTERY_BOX_COST_JSON_TAG = "default_mystery_box_cost";
-    public static final String DEFAULT_PACK_A_PUNCH_COST_JSON_TAG = "default_pack_a_punch_cost";
+    public static final String DEFAULT_MYSTERY_BOX_COST_JSON_TAG = "defaultMysteryBoxCost";
+    public static final String DEFAULT_PACK_A_PUNCH_COST_JSON_TAG = "defaulPackAPunchCost";
     //endregion
 
     //region Fields

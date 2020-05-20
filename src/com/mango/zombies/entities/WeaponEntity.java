@@ -22,9 +22,9 @@ public class WeaponEntity {
 	public static final String ID_JSON_TAG = "id";
 	public static final String ITEM_JSON_TAG = "item";
 	public static final String NAME_JSON_TAG = "name";
-	public static final String PACK_A_PUNCH_NAME_JSON_TAG = "pack_a_punch_name";
+	public static final String PACK_A_PUNCH_NAME_JSON_TAG = "packAPunchName";
 	public static final String SERVICES_JSON_TAG = "services";
-	public static final String WEAPON_COLOR_JSON_TAG = "weapon_color";
+	public static final String WEAPON_COLOR_JSON_TAG = "weaponColor";
 
 	public static final WeaponEntityJsonSerializer SERIALIZER = new WeaponEntityJsonSerializer();
 	//endregion
@@ -532,13 +532,13 @@ public class WeaponEntity {
 
 	private Class<? extends Projectile> getClassForType(String type) {
 
-		if (type.equals(Snowball.class.getName()))
+		if (type.equals(Material.SNOWBALL.name()))
 			return Snowball.class;
 
-		if (type.equals(Arrow.class.getName()))
+		if (type.equals(Material.ARROW.name()))
 			return Arrow.class;
 
-		if (type.equals(Egg.class.getName()))
+		if (type.equals(Material.EGG.name()))
 			return Egg.class;
 
 		return null;

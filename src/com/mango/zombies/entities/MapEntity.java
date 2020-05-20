@@ -13,17 +13,17 @@ public class MapEntity {
 	public static final MapEntityJsonSerializer SERIALIZER = new MapEntityJsonSerializer();
 
 	public static final String BOTTOM_JSON_TAG = "bottom";
-	public static final String DELETE_KEY_JSON_TAG = "delete_key";
-	public static final String ENEMY_BLACKLIST_JSON_TAG = "enemy_blacklist";
-	public static final String ENEMY_SPAWNS_JSON_TAG = "enemy_spawns";
-	public static final String ENEMY_WHITELIST_JSON_TAG = "enemy_whitelist";
+	public static final String DELETE_KEY_JSON_TAG = "deleteKey";
+	public static final String ENEMY_BLACKLIST_JSON_TAG = "enemyBlacklist";
+	public static final String ENEMY_SPAWNS_JSON_TAG = "enemySpawns";
+	public static final String ENEMY_WHITELIST_JSON_TAG = "enemyWhitelist";
 	public static final String ID_JSON_TAG = "id";
 	public static final String NAME_JSON_TAG = "name";
-	public static final String ORIGIN_POINT_JSON_TAG = "origin_point";
-	public static final String PLAYER_SPAWNS_JSON_TAG = "player_spawns";
+	public static final String ORIGIN_POINT_JSON_TAG = "originPoint";
+	public static final String PLAYER_SPAWNS_JSON_TAG = "playerSpawns";
 	public static final String TOP_JSON_TAG = "top";
-	public static final String WEAPON_BLACKLIST_JSON_TAG = "weapon_blacklist";
-	public static final String WEAPON_WHITELIST_JSON_TAG = "weapon_whitelist";
+	public static final String WEAPON_BLACKLIST_JSON_TAG = "weaponBlacklist";
+	public static final String WEAPON_WHITELIST_JSON_TAG = "weaponWhitelist";
 	//endregion
 
 	//region Fields

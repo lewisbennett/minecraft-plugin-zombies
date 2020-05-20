@@ -11,9 +11,9 @@ public class WeaponServiceEntity {
 	//region Constant Values
 	public static final String CHARACTERISTICS_JSON_TAG = "characteristics";
 	public static final String DAMAGE_JSON_TAG = "damage";
-	public static final String DOES_REQUIRE_PACK_A_PUNCH_JSON_TAG = "does_require_pack_a_punch";
+	public static final String DOES_REQUIRE_PACK_A_PUNCH_JSON_TAG = "doesRequirePackAPunch";
 	public static final String TYPE_JSON_TAG = "type";
-	public static final String USAGE_SOUND_JSON_TAG = "usage_sound";
+	public static final String USAGE_SOUND_JSON_TAG = "usageSound";
 
 	public static final WeaponServiceEntityJsonSerializer SERIALIZER = new WeaponServiceEntityJsonSerializer();
 	//endregion

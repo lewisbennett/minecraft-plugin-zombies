@@ -12,10 +12,10 @@ public class EnemyConfigEntity {
     public static final int DEFAULT_DEFAULT_DESPAWN_TIME = 5;
     public static final int DEFAULT_DEFAULT_MAX_HEALTH = -1;
 
-    public static final String DEFAULT_ROUND_MULTIPLIER_JSON_TAG = "default_round_multiplier";
+    public static final String DEFAULT_ROUND_MULTIPLIER_JSON_TAG = "defaultRoundMultiplier";
 
-    public static final String DEFAULT_DESPAWN_TIME_JSON_TAG = "default_despawn_time";
-    public static final String DEFAULT_MAX_HEALTH_JSON_TAG = "default_max_health";
+    public static final String DEFAULT_DESPAWN_TIME_JSON_TAG = "defaultDespawnTime";
+    public static final String DEFAULT_MAX_HEALTH_JSON_TAG = "defaultMaxHealth";
     //endregion
 
     //region Fields

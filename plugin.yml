@@ -3,6 +3,7 @@ version: 0.1.0
 main: com.mango.zombies.Main
 description: Zombies plugin to replicate the Call of Duty Zombies experience.
 author: Useless_Mango
+api-version: 1.13
 
 commands:
     info:

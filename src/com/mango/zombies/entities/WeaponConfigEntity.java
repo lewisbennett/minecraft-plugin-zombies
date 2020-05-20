@@ -41,43 +41,43 @@ public class WeaponConfigEntity {
     public static final Sound DEFAULT_DEFAULT_OUT_OF_AMMO_SOUND = Sound.BLOCK_DISPENSER_FAIL;
     public static final Sound DEFAULT_DEFAULT_PACK_A_PUNCH_OUT_OF_AMMO_SOUND = Sound.BLOCK_DISPENSER_FAIL;
 
-    public static final String DEFAULT_DEFAULT_PROJECTILE = Snowball.class.getName();
-    public static final String DEFAULT_DEFAULT_PACK_A_PUNCH_PROJECTILE = Snowball.class.getName();
+    public static final String DEFAULT_DEFAULT_PROJECTILE = Material.SNOWBALL.name();
+    public static final String DEFAULT_DEFAULT_PACK_A_PUNCH_PROJECTILE = Material.SNOWBALL.name();
 
-    public static final String ENABLE_EGG_PROJECTILE_HATCHING_JSON_TAG = "enable_egg_projectile_hatching";
+    public static final String ENABLE_EGG_PROJECTILE_HATCHING_JSON_TAG = "enableEggProjectileHatching";
 
-    public static final String AMMO_INDICATOR_COLOR_JSON_TAG = "ammo_indicator_color";
-    public static final String OUT_OF_AMMO_INDICATOR_COLOR_JSON_TAG = "out_of_ammo_indicator_color";
-    public static final String RELOADING_INDICATOR_COLOR_JSON_TAG = "reloading_indicator_color";
-    public static final String DEFAULT_WEAPON_COLOR_JSON_TAG = "default_weapon_color";
+    public static final String AMMO_INDICATOR_COLOR_JSON_TAG = "ammoIndicatorColor";
+    public static final String OUT_OF_AMMO_INDICATOR_COLOR_JSON_TAG = "outOfAmmoIndicatorColor";
+    public static final String RELOADING_INDICATOR_COLOR_JSON_TAG = "reloadingIndicatorColor";
+    public static final String DEFAULT_WEAPON_COLOR_JSON_TAG = "defaultWeaponColor";
 
-    public static final String DEFAULT_ACCURACY_JSON_TAG = "default_accuracy";
-    public static final String DEFAULT_PACK_A_PUNCH_ACCURACY_JSON_TAG = "default_pack_a_punch_accuracy";
-    public static final String DEFAULT_GUNSHOT_DAMAGE_JSON_TAG = "default_gunshot_damage";
-    public static final String DEFAULT_PACK_A_PUNCH_GUNSHOT_DAMAGE_JSON_TAG = "default_pack_a_punch_gunshot_damage";
-    public static final String DEFAULT_MAGAZINE_CAPACITY_JSON_TAG = "default_magazine_capacity";
-    public static final String DEFAULT_PACK_A_PUNCH_MAGAZINE_CAPACITY_JSON_TAG = "default_pack_a_punch_magazine_capacity";
-    public static final String DEFAULT_MELEE_DAMAGE_JSON_TAG = "default_melee_damage";
-    public static final String DEFAULT_PACK_A_PUNCH_MELEE_DAMAGE_JSON_TAG = "default_pack_a_punch_melee_damage";
-    public static final String DEFAULT_PROJECTILE_COUNT_JSON_TAG = "default_projectile_count";
-    public static final String DEFAULT_PACK_A_PUNCH_PROJECTILE_COUNT_JSON_TAG = "default_pack_a_punch_projectile_count";
-    public static final String DEFAULT_RELOAD_SPEED_JSON_TAG = "default_reload_speed";
-    public static final String DEFAULT_PACK_A_PUNCH_RELOAD_SPEED_JSON_TAG = "default_pack_a_punch_reload_speed";
-    public static final String DEFAULT_TOTAL_AMMO_CAPACITY_JSON_TAG = "default_total_ammo_capacity";
-    public static final String DEFAULT_PACK_A_PUNCH_TOTAL_AMMO_CAPACITY_JSON_TAG = "default_pack_a_punch_total_ammo_capacity";
+    public static final String DEFAULT_ACCURACY_JSON_TAG = "defaultAccuracy";
+    public static final String DEFAULT_PACK_A_PUNCH_ACCURACY_JSON_TAG = "defaultPackAPunchAccuracy";
+    public static final String DEFAULT_GUNSHOT_DAMAGE_JSON_TAG = "defaultGunshotDamage";
+    public static final String DEFAULT_PACK_A_PUNCH_GUNSHOT_DAMAGE_JSON_TAG = "defaultPackAPunchGunshotDamage";
+    public static final String DEFAULT_MAGAZINE_CAPACITY_JSON_TAG = "defaultMagazineCapacity";
+    public static final String DEFAULT_PACK_A_PUNCH_MAGAZINE_CAPACITY_JSON_TAG = "defaultPackAPunchMagazineCapacity";
+    public static final String DEFAULT_MELEE_DAMAGE_JSON_TAG = "defaultMeleeDamage";
+    public static final String DEFAULT_PACK_A_PUNCH_MELEE_DAMAGE_JSON_TAG = "defaultPackAPunchMeleeDamage";
+    public static final String DEFAULT_PROJECTILE_COUNT_JSON_TAG = "defaultProjectileCount";
+    public static final String DEFAULT_PACK_A_PUNCH_PROJECTILE_COUNT_JSON_TAG = "defaultPackAPunchProjectileCount";
+    public static final String DEFAULT_RELOAD_SPEED_JSON_TAG = "defaultReloadSpeed";
+    public static final String DEFAULT_PACK_A_PUNCH_RELOAD_SPEED_JSON_TAG = "defaultPackAPunchReloadSpeed";
+    public static final String DEFAULT_TOTAL_AMMO_CAPACITY_JSON_TAG = "defaultTotalAmmoCapacity";
+    public static final String DEFAULT_PACK_A_PUNCH_TOTAL_AMMO_CAPACITY_JSON_TAG = "defaultPackAPunchTotalAmmoCapacity";
 
-    public static final String DEFAULT_GUNSHOT_ITEM_JSON_TAG = "default_gunshot_item";
-    public static final String DEFAULT_MELEE_ITEM_JSON_TAG = "default_melee_item";
+    public static final String DEFAULT_GUNSHOT_ITEM_JSON_TAG = "defaultGunshotItem";
+    public static final String DEFAULT_MELEE_ITEM_JSON_TAG = "defaultMeleeItem";
 
-    public static final String DEFAULT_GUNSHOT_USAGE_SOUND_JSON_TAG = "default_gunshot_usage_sound";
-    public static final String DEFAULT_PACK_A_PUNCH_GUNSHOT_USAGE_SOUND_JSON_TAG = "default_pack_a_punch_gunshot_usage_sound";
-    public static final String DEFAULT_MELEE_USAGE_SOUND_JSON_TAG = "default_melee_usage_sound";
-    public static final String DEFAULT_PACK_A_PUNCH_MELEE_USAGE_SOUND_JSON_TAG = "default_pack_a_punch_melee_usage_sound";
-    public static final String DEFAULT_OUT_OF_AMMO_SOUND_JSON_TAG = "default_out_of_ammo_sound";
-    public static final String DEFAULT_PACK_A_PUNCH_OUT_OF_AMMO_SOUND_JSON_TAG = "default_pack_a_punch_out_of_ammo_sound";
+    public static final String DEFAULT_GUNSHOT_USAGE_SOUND_JSON_TAG = "defaultGunshotUsageSound";
+    public static final String DEFAULT_PACK_A_PUNCH_GUNSHOT_USAGE_SOUND_JSON_TAG = "defaultPackAPunchGunshotUsageSound";
+    public static final String DEFAULT_MELEE_USAGE_SOUND_JSON_TAG = "defaultMeleeSound";
+    public static final String DEFAULT_PACK_A_PUNCH_MELEE_USAGE_SOUND_JSON_TAG = "defaultPackAPunchMeleeUsageSound";
+    public static final String DEFAULT_OUT_OF_AMMO_SOUND_JSON_TAG = "defaultOutOfAmmoSound";
+    public static final String DEFAULT_PACK_A_PUNCH_OUT_OF_AMMO_SOUND_JSON_TAG = "defaultPackAPunchOutOfAmmoSound";
 
-    public static final String DEFAULT_PROJECTILE_JSON_TAG = "default_projectile";
-    public static final String DEFAULT_PACK_A_PUNCH_PROJECTILE_JSON_TAG = "default_pack_a_punch_projectile";
+    public static final String DEFAULT_PROJECTILE_JSON_TAG = "defaultProjectile";
+    public static final String DEFAULT_PACK_A_PUNCH_PROJECTILE_JSON_TAG = "defaultPackAPunchProjectile";
 
     public static final WeaponConfigEntityJsonSerializer SERIALIZER = new WeaponConfigEntityJsonSerializer();
     //endregion

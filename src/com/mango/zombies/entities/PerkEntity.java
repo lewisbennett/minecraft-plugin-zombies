@@ -10,7 +10,7 @@ public class PerkEntity {
 	public static final PerkEntityJsonSerializer SERIALIZER = new PerkEntityJsonSerializer();
 
 	public static final String COST_JSON_TAG = "cost";
-	public static final String DOES_REQUIRE_POWER_JSON_TAG = "does_require_power";
+	public static final String DOES_REQUIRE_POWER_JSON_TAG = "doesRequirePower";
 	public static final String ID_JSON_TAG = "id";
 	public static final String ITEM_JSON_TAG = "item";
 	public static final String NAME_JSON_TAG = "name";

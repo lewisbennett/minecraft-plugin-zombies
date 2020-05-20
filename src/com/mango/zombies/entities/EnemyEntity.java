@@ -9,11 +9,11 @@ public class EnemyEntity {
     //region Constant Values
     public static final EnemyEntityJsonSerializer SERIALIZER = new EnemyEntityJsonSerializer();
 
-    public static final String DESPAWN_TIME_JSON_TAG = "despawn_time";
-    public static final String ENTITY_TYPE_JSON_TAG = "entity_type";
+    public static final String DESPAWN_TIME_JSON_TAG = "despawnTime";
+    public static final String ENTITY_TYPE_JSON_TAG = "entityType";
     public static final String ID_JSON_TAG = "id";
-    public static final String MAX_HEALTH_JSON_TAG = "max_health";
-    public static final String ROUND_MULTIPLIER_JSON_TAG = "round_multiplier";
+    public static final String MAX_HEALTH_JSON_TAG = "maxHealth";
+    public static final String ROUND_MULTIPLIER_JSON_TAG = "roundMultiplier";
     //endregion
 
     //region Fields
