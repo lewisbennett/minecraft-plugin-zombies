@@ -7,15 +7,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="29650a7b-3f89-4df9-bc36-b5aa3b568d39" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/com/mango/zombies/listeners/EntityDeathListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/commands/CreateWeaponCommandExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/commands/CreateWeaponCommandExecutor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/commands/DeleteMapCommandExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/commands/DeleteMapCommandExecutor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/entities/WeaponConfigEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/entities/WeaponConfigEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/GameplayWeapon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/GameplayWeapon.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/commands/CreateWeaponCommandExecutor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/commands/CreateWeaponCommandExecutor.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/commands/DeleteMapCommandExecutor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/commands/DeleteMapCommandExecutor.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/entities/WeaponConfigEntity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/entities/WeaponConfigEntity.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/gameplay/GameplayWeapon.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/gameplay/GameplayWeapon.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/Main.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
