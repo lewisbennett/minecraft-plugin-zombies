@@ -1,7 +1,9 @@
 package com.mango.zombies.entities;
 
+import com.mango.zombies.PluginCore;
 import com.mango.zombies.serializers.MapEntityJsonSerializer;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,8 @@ public class MapEntity {
 	public static final String NAME_JSON_TAG = "name";
 	public static final String ORIGIN_POINT_JSON_TAG = "originPoint";
 	public static final String PLAYER_SPAWNS_JSON_TAG = "playerSpawns";
+	public static final String ROUND_END_SOUND_JSON_TAG = "roundEndSound";
+	public static final String ROUND_START_SOUND_JSON_TAG = "roundStartSound";
 	public static final String TOP_JSON_TAG = "top";
 	public static final String WEAPON_BLACKLIST_JSON_TAG = "weaponBlacklist";
 	public static final String WEAPON_WHITELIST_JSON_TAG = "weaponWhitelist";
@@ -37,6 +41,9 @@ public class MapEntity {
 	private LocationEntity bottom = new LocationEntity();
 	private LocationEntity top = new LocationEntity();
 	private LocationEntity originPoint;
+
+	private Sound roundEndSound;
+	private Sound roundStartSound;
 
 	private String deleteKey;
 	private String id;
@@ -147,6 +154,34 @@ public class MapEntity {
 	 */
 	public List<LocationEntity> getPlayerSpawns() {
 		return new ArrayList<LocationEntity>(playerSpawns);
+	}
+
+	/**
+	 * Gets the round end sound.
+	 */
+	public Sound getRoundEndSound() {
+		return roundEndSound;
+	}
+
+	/**
+	 * Sets the round end sound.
+	 */
+	public void setRoundEndSound(Sound roundEndSound) {
+		this.roundEndSound = roundEndSound;
+	}
+
+	/**
+	 * Gets the round start sound.
+	 */
+	public Sound getRoundStartSound() {
+		return roundStartSound;
+	}
+
+	/**
+	 * Sets the round start sound.
+	 */
+	public void setRoundStartSound(Sound roundStartSound) {
+		this.roundStartSound = roundStartSound;
 	}
 
 	/**
@@ -286,6 +321,11 @@ public class MapEntity {
 		this.name = name;
 		originPoint = new LocationEntity(origin);
 		deleteKey = Integer.toString(100000 + new Random().nextInt(999999)).substring(0, 6);
+
+		MapConfigEntity config = PluginCore.getMapConfig();
+
+		roundEndSound = config.getDefaultRoundEndSound();
+		roundStartSound = config.getDefaultRoundStartSound();
 	}
 	//endregion
 }

@@ -3,6 +3,7 @@ package com.mango.zombies.serializers;
 import com.google.gson.*;
 import com.mango.zombies.entities.LocationEntity;
 import com.mango.zombies.entities.MapEntity;
+import org.bukkit.Sound;
 
 import java.lang.reflect.Type;
 
@@ -25,6 +26,8 @@ public class MapEntityJsonSerializer implements JsonSerializer<MapEntity>, JsonD
         JsonElement nameJsonElement = jsonObject.get(MapEntity.NAME_JSON_TAG);
         JsonElement originPointJsonElement = jsonObject.get(MapEntity.ORIGIN_POINT_JSON_TAG);
         JsonElement playerSpawnsJsonElement = jsonObject.get(MapEntity.PLAYER_SPAWNS_JSON_TAG);
+        JsonElement roundEndSoundJsonElement = jsonObject.get(MapEntity.ROUND_END_SOUND_JSON_TAG);
+        JsonElement roundStartSoundJsonElement = jsonObject.get(MapEntity.ROUND_START_SOUND_JSON_TAG);
         JsonElement topJsonElement = jsonObject.get(MapEntity.TOP_JSON_TAG);
         JsonElement weaponBlacklistJsonElement = jsonObject.get(MapEntity.WEAPON_BLACKLIST_JSON_TAG);
         JsonElement weaponWhitelistJsonElement = jsonObject.get(MapEntity.WEAPON_WHITELIST_JSON_TAG);
@@ -68,6 +71,12 @@ public class MapEntityJsonSerializer implements JsonSerializer<MapEntity>, JsonD
                 map.addPlayerSpawnLocation(LocationEntity.SERIALIZER.deserialize(j, LocationEntity.class, jsonDeserializationContext));
         }
 
+        if (roundEndSoundJsonElement != null)
+            map.setRoundEndSound(Sound.valueOf(roundEndSoundJsonElement.getAsString()));
+
+        if (roundStartSoundJsonElement != null)
+            map.setRoundStartSound(Sound.valueOf(roundStartSoundJsonElement.getAsString()));
+
         if (topJsonElement != null)
             map.setTop(LocationEntity.SERIALIZER.deserialize(topJsonElement, LocationEntity.class, jsonDeserializationContext));
 
@@ -93,6 +102,8 @@ public class MapEntityJsonSerializer implements JsonSerializer<MapEntity>, JsonD
 
         jsonObject.add(MapEntity.ID_JSON_TAG, new JsonPrimitive(mapEntity.getId()));
         jsonObject.add(MapEntity.NAME_JSON_TAG, new JsonPrimitive(mapEntity.getName()));
+        jsonObject.add(MapEntity.ROUND_START_SOUND_JSON_TAG, new JsonPrimitive(mapEntity.getRoundStartSound().name()));
+        jsonObject.add(MapEntity.ROUND_END_SOUND_JSON_TAG, new JsonPrimitive(mapEntity.getRoundEndSound().name()));
         jsonObject.add(MapEntity.DELETE_KEY_JSON_TAG, new JsonPrimitive(mapEntity.getDeleteKey()));
         jsonObject.add(MapEntity.TOP_JSON_TAG, LocationEntity.SERIALIZER.serialize(mapEntity.getTop(), LocationEntity.class, jsonSerializationContext));
         jsonObject.add(MapEntity.BOTTOM_JSON_TAG, LocationEntity.SERIALIZER.serialize(mapEntity.getBottom(), LocationEntity.class, jsonSerializationContext));
