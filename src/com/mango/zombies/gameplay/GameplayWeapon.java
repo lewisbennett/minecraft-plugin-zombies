@@ -4,7 +4,6 @@ import com.mango.zombies.Main;
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.Time;
 import com.mango.zombies.entities.WeaponEntity;
-import com.mango.zombies.entities.WeaponServiceCharacteristicEntity;
 import com.mango.zombies.entities.WeaponServiceEntity;
 import com.mango.zombies.gameplay.base.EntityDamageByEntityEventRegisterable;
 import com.mango.zombies.gameplay.base.GameplayRegisterable;

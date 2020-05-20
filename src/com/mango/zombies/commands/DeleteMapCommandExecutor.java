@@ -43,7 +43,7 @@ public class DeleteMapCommandExecutor extends BaseCommandExecutor {
             throw new CommandException(DELETE_KEY_INCORRECT_ERROR);
 
         PluginCore.getFilingService().deleteFile(PluginCore.getFilingService().getMapsFolder(), map.getId());
-        PluginCore.getMaps().remove(map);
+        PluginCore.removeMap(map);
 
         return map.getId() + " deleted successfully.";
     }

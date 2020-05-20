@@ -4,7 +4,6 @@ import com.mango.zombies.serializers.WeaponConfigEntityJsonSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Snowball;
 
 public class WeaponConfigEntity {
 

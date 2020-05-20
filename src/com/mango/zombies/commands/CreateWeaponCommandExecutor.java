@@ -5,9 +5,11 @@ import com.mango.zombies.commands.base.BaseCommandExecutor;
 import com.mango.zombies.entities.WeaponEntity;
 import com.mango.zombies.schema.WeaponService;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class CreateWeaponCommandExecutor extends BaseCommandExecutor {
 
@@ -36,6 +38,17 @@ public class CreateWeaponCommandExecutor extends BaseCommandExecutor {
 		if (weaponCost < 1)
 			throw new CommandException(String.format(INVALID_COST_ERROR, args[2]));
 
+		Material material = null;
+
+		if (sender instanceof Player) {
+
+			Player player = (Player)sender;
+			Material mainHandItemMaterial = player.getInventory().getItemInMainHand().getType();
+
+			if (!mainHandItemMaterial.isBlock() && !mainHandItemMaterial.isAir() && !mainHandItemMaterial.isEdible())
+				material = mainHandItemMaterial;
+		}
+
 		StringBuilder name = new StringBuilder();
 
 		for (int i = 3; i < args.length; i++) {
@@ -46,7 +59,7 @@ public class CreateWeaponCommandExecutor extends BaseCommandExecutor {
 			name.append(args[i]);
 		}
 
-		WeaponEntity weapon = new WeaponEntity(args[0], args[1], name.toString(), weaponCost);
+		WeaponEntity weapon = new WeaponEntity(args[0], args[1], name.toString(), weaponCost, material);
 		PluginCore.addWeapon(weapon);
 
 		return "Successfully created weapon: " + ChatColor.BOLD + weapon.getName();
