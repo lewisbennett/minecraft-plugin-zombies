@@ -1,9 +1,9 @@
 package com.mango.zombies.entities;
 
+import com.google.gson.annotations.Expose;
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.schema.WeaponService;
 import com.mango.zombies.schema.WeaponServiceCharacteristic;
-import com.mango.zombies.serializers.WeaponEntityJsonSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -17,30 +17,18 @@ import java.util.List;
 
 public class WeaponEntity {
 
-	//region Constant Values
-	public static final String COST_JSON_TAG = "cost";
-	public static final String ID_JSON_TAG = "id";
-	public static final String ITEM_JSON_TAG = "item";
-	public static final String NAME_JSON_TAG = "name";
-	public static final String PACK_A_PUNCH_NAME_JSON_TAG = "packAPunchName";
-	public static final String SERVICES_JSON_TAG = "services";
-	public static final String WEAPON_COLOR_JSON_TAG = "weaponColor";
-
-	public static final WeaponEntityJsonSerializer SERIALIZER = new WeaponEntityJsonSerializer();
-	//endregion
-
 	//region Fields
-	private ChatColor weaponColor;
+	@Expose private ChatColor weaponColor;
 
-	private int cost;
+	@Expose private int cost;
 
-	private List<WeaponServiceEntity> services = new ArrayList<WeaponServiceEntity>();
+	@Expose private List<WeaponServiceEntity> services = new ArrayList<WeaponServiceEntity>();
 
-	private Material item;
+	@Expose private Material item;
 
-	private String id;
-	private String name;
-	private String packAPunchName;
+	@Expose private String id;
+	@Expose private String name;
+	@Expose private String packAPunchName;
 	//endregion
 
 	//region Getters/Setters

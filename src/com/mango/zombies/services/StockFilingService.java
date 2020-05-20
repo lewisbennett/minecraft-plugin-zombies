@@ -1,8 +1,6 @@
 package com.mango.zombies.services;
 
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonSerializer;
 import com.mango.zombies.Log;
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.entities.*;
@@ -113,10 +111,9 @@ public class StockFilingService implements FilingService {
 	/**
 	 * Reads the contents of a file as deserializes it to an object.
 	 * @param filePath The path to the file to read.
-	 * @param deserializer The deserlializer for the object.
 	 * @param entity The class of the object.
 	 */
-	public <TReq> TReq readContents(String filePath, JsonDeserializer<TReq> deserializer, Class<TReq> entity) {
+	public <TReq> TReq readContents(String filePath, Class<TReq> entity) {
 
 		try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
 
@@ -126,7 +123,10 @@ public class StockFilingService implements FilingService {
 			while ((currentLine = reader.readLine()) != null)
 				contentBuilder.append(currentLine).append("\n");
 
-			return new GsonBuilder().registerTypeAdapter(entity, deserializer).create().fromJson(contentBuilder.toString(), entity);
+			return new GsonBuilder()
+					.excludeFieldsWithoutExposeAnnotation()
+					.create()
+					.fromJson(contentBuilder.toString(), entity);
 
 		} catch (Exception e) {
 
@@ -192,15 +192,18 @@ public class StockFilingService implements FilingService {
 	 * @param directory The directory for where the file should be created.
 	 * @param name The name of the file, not including extension.
 	 * @param contents The contents of the file to be written.
-	 * @param serializer The serializer for the contents object.
 	 */
-	public <TReq> boolean writeFile(File directory, String name, TReq contents, JsonSerializer<TReq> serializer) {
+	public boolean writeFile(File directory, String name, Object contents) {
 
 		String filePath = directory + "/" + name + ".json";
 
 		try (FileWriter writer = new FileWriter(filePath)) {
 
-			new GsonBuilder().registerTypeAdapter(contents.getClass(), serializer).setPrettyPrinting().create().toJson(contents, writer);
+			new GsonBuilder()
+					.excludeFieldsWithoutExposeAnnotation()
+					.setPrettyPrinting()
+					.create()
+					.toJson(contents, writer);
 
 			return true;
 
@@ -263,23 +266,23 @@ public class StockFilingService implements FilingService {
 			switch (file.getName()) {
 
 				case FileName.CONFIG_FILE + ".json":
-					PluginCore.setConfig(readContents(file.toString(), ConfigEntity.SERIALIZER, ConfigEntity.class));
+					PluginCore.setConfig(readContents(file.toString(), ConfigEntity.class));
 					continue;
 
 				case FileName.ENEMY_CONFIG_FILE + ".json":
-					PluginCore.setEnemyConfig(readContents(file.toString(), EnemyConfigEntity.SERIALIZER, EnemyConfigEntity.class));
+					PluginCore.setEnemyConfig(readContents(file.toString(), EnemyConfigEntity.class));
 					continue;
 
 				case FileName.MAP_CONFIG_FILE + ".json":
-					PluginCore.setMapConfig(readContents(file.toString(), MapConfigEntity.SERIALIZER, MapConfigEntity.class));
+					PluginCore.setMapConfig(readContents(file.toString(), MapConfigEntity.class));
 					continue;
 
 				case FileName.PERK_CONFIG_FILE + ".json":
-					PluginCore.setPerkConfig(readContents(file.toString(), PerkConfigEntity.SERIALIZER, PerkConfigEntity.class));
+					PluginCore.setPerkConfig(readContents(file.toString(), PerkConfigEntity.class));
 					continue;
 
 				case FileName.WEAPON_CONFIG_FILE + ".json":
-					PluginCore.setWeaponConfig(readContents(file.toString(), WeaponConfigEntity.SERIALIZER, WeaponConfigEntity.class));
+					PluginCore.setWeaponConfig(readContents(file.toString(), WeaponConfigEntity.class));
 			}
 		}
 
@@ -306,7 +309,7 @@ public class StockFilingService implements FilingService {
 		Log.information("Importing enemies...");
 
 		for (File file : enemiesFolder.listFiles())
-			PluginCore.addEnemy(readContents(file.toString(), EnemyEntity.SERIALIZER, EnemyEntity.class));
+			PluginCore.addEnemy(readContents(file.toString(), EnemyEntity.class));
 
 		int enemyCount = PluginCore.getEnemies().size();
 
@@ -318,7 +321,7 @@ public class StockFilingService implements FilingService {
 		Log.information("Importing maps...");
 
 		for (File file : mapsFolder.listFiles())
-			PluginCore.addMap(readContents(file.toString(), MapEntity.SERIALIZER, MapEntity.class));
+			PluginCore.addMap(readContents(file.toString(), MapEntity.class));
 
 		int mapCount = PluginCore.getMaps().size();
 
@@ -330,7 +333,7 @@ public class StockFilingService implements FilingService {
 		Log.information("Importing perks...");
 
 		for (File file : perksFolder.listFiles())
-			PluginCore.addPerk(readContents(file.toString(), PerkEntity.SERIALIZER, PerkEntity.class));
+			PluginCore.addPerk(readContents(file.toString(), PerkEntity.class));
 
 		int perkCount = PluginCore.getPerks().size();
 
@@ -342,7 +345,7 @@ public class StockFilingService implements FilingService {
 		Log.information("Importing weapons...");
 
 		for (File file : weaponsFolder.listFiles())
-			PluginCore.addWeapon(readContents(file.toString(), WeaponEntity.SERIALIZER, WeaponEntity.class));
+			PluginCore.addWeapon(readContents(file.toString(), WeaponEntity.class));
 
 		int weaponCount = PluginCore.getWeapons().size();
 
@@ -353,7 +356,7 @@ public class StockFilingService implements FilingService {
 
 		Log.information("Saving configuration file...");
 
-		boolean result = writeFile(rootFolder, FileName.CONFIG_FILE, PluginCore.getConfig(), ConfigEntity.SERIALIZER);
+		boolean result = writeFile(rootFolder, FileName.CONFIG_FILE, PluginCore.getConfig());
 
 		Log.information(result ? "Configuration file saved." : "Failed to save configuration file.");
 	}
@@ -367,7 +370,7 @@ public class StockFilingService implements FilingService {
 
 		for (EnemyEntity enemy : PluginCore.getEnemies()) {
 
-			boolean result = writeFile(enemiesFolder, enemy.getId(), enemy, EnemyEntity.SERIALIZER);
+			boolean result = writeFile(enemiesFolder, enemy.getId(), enemy);
 
 			if (result)
 				successes++;
@@ -385,7 +388,7 @@ public class StockFilingService implements FilingService {
 
 		Log.information("Saving enemy configuration file...");
 
-		boolean result = writeFile(rootFolder, FileName.ENEMY_CONFIG_FILE, PluginCore.getEnemyConfig(), EnemyConfigEntity.SERIALIZER);
+		boolean result = writeFile(rootFolder, FileName.ENEMY_CONFIG_FILE, PluginCore.getEnemyConfig());
 
 		Log.information(result ? "Enemy configuration file saved." : "Failed to save enemy configuration file.");
 	}
@@ -394,7 +397,7 @@ public class StockFilingService implements FilingService {
 
 		Log.information("Saving map configuration file...");
 
-		boolean result = writeFile(rootFolder, FileName.MAP_CONFIG_FILE, PluginCore.getMapConfig(), MapConfigEntity.SERIALIZER);
+		boolean result = writeFile(rootFolder, FileName.MAP_CONFIG_FILE, PluginCore.getMapConfig());
 
 		Log.information(result ? "Map configuration file saved." : "Failed to save map configuration file.");
 	}
@@ -408,7 +411,7 @@ public class StockFilingService implements FilingService {
 
 		for (MapEntity map : PluginCore.getMaps()) {
 
-			boolean result = writeFile(mapsFolder, map.getId(), map, MapEntity.SERIALIZER);
+			boolean result = writeFile(mapsFolder, map.getId(), map);
 
 			if (result)
 				successes++;
@@ -426,7 +429,7 @@ public class StockFilingService implements FilingService {
 
 		Log.information("Saving perk configuration file...");
 
-		boolean result = writeFile(rootFolder, FileName.PERK_CONFIG_FILE, PluginCore.getPerkConfig(), PerkConfigEntity.SERIALIZER);
+		boolean result = writeFile(rootFolder, FileName.PERK_CONFIG_FILE, PluginCore.getPerkConfig());
 
 		Log.information(result ? "Perk configuration file saved." : "Failed to save perk configuration file.");
 	}
@@ -440,7 +443,7 @@ public class StockFilingService implements FilingService {
 
 		for (PerkEntity perk : PluginCore.getPerks()) {
 
-			boolean result = writeFile(perksFolder, perk.getId(), perk, PerkEntity.SERIALIZER);
+			boolean result = writeFile(perksFolder, perk.getId(), perk);
 
 			if (result)
 				successes++;
@@ -458,7 +461,7 @@ public class StockFilingService implements FilingService {
 
 		Log.information("Saving weapon configuration file...");
 
-		boolean result = writeFile(rootFolder, FileName.WEAPON_CONFIG_FILE, PluginCore.getWeaponConfig(), WeaponConfigEntity.SERIALIZER);
+		boolean result = writeFile(rootFolder, FileName.WEAPON_CONFIG_FILE, PluginCore.getWeaponConfig());
 
 		Log.information(result ? "Weapon configuration file saved." : "Failed to save weapon configuration file.");
 	}
@@ -472,7 +475,7 @@ public class StockFilingService implements FilingService {
 
 		for (WeaponEntity weapon : PluginCore.getWeapons()) {
 
-			boolean result = writeFile(weaponsFolder, weapon.getId(), weapon, WeaponEntity.SERIALIZER);
+			boolean result = writeFile(weaponsFolder, weapon.getId(), weapon);
 
 			if (result)
 				successes++;

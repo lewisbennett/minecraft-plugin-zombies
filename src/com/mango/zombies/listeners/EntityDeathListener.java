@@ -1,14 +1,11 @@
 package com.mango.zombies.listeners;
 
-import com.mango.zombies.Log;
 import com.mango.zombies.PluginCore;
-import com.mango.zombies.entities.EnemyEntity;
 import com.mango.zombies.gameplay.GameplayEnemy;
 import com.mango.zombies.gameplay.base.GameplayRegisterable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityDropItemEvent;
 
 public class EntityDeathListener implements Listener {
 

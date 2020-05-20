@@ -1,8 +1,5 @@
 package com.mango.zombies.services.base;
 
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonSerializer;
-
 import java.io.File;
 import java.util.Timer;
 
@@ -66,10 +63,9 @@ public interface FilingService {
     /**
      * Reads the contents of a file as deserializes it to an object.
      * @param filePath The path to the file to read.
-     * @param deserializer The deserlializer for the object.
      * @param entity The class of the object.
      */
-    <TReq> TReq readContents(String filePath, JsonDeserializer<TReq> deserializer, Class<TReq> entity);
+    <TReq> TReq readContents(String filePath, Class<TReq> entity);
 
     /**
      * Saves all plugin data.
@@ -87,9 +83,8 @@ public interface FilingService {
      * @param directory The directory for where the file should be created.
      * @param name The name of the file, not including extension.
      * @param contents The contents of the file to be written.
-     * @param serializer The serializer for the contents object.
      */
-    <TReq> boolean writeFile(File directory, String name, TReq contents, JsonSerializer<TReq> serializer);
+    <TReq> boolean writeFile(File directory, String name, TReq contents);
 
     /**
      * Writes a stack trace file.

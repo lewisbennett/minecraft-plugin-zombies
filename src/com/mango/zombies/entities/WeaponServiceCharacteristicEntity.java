@@ -1,20 +1,13 @@
 package com.mango.zombies.entities;
 
-import com.mango.zombies.serializers.WeaponServiceCharacteristicEntityJsonSerializer;
+import com.google.gson.annotations.Expose;
 
 public class WeaponServiceCharacteristicEntity {
 
-	//region Constant Values
-	public static final String TYPE_JSON_TAG = "type";
-	public static final String VALUE_JSON_TAG = "value";
-
-	public static final WeaponServiceCharacteristicEntityJsonSerializer SERIALIZER = new WeaponServiceCharacteristicEntityJsonSerializer();
-	//endregion
-
 	//region Fields
-	private Object value;
+	@Expose private Object value;
 
-	private String type;
+	@Expose private String type;
 	//endregion
 
 	//region Getters/Setters

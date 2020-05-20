@@ -1,6 +1,6 @@
 package com.mango.zombies.entities;
 
-import com.mango.zombies.serializers.PerkConfigEntityJsonSerializer;
+import com.google.gson.annotations.Expose;
 import org.bukkit.Material;
 
 public class PerkConfigEntity {
@@ -9,18 +9,12 @@ public class PerkConfigEntity {
     public static final boolean DEFAULT_DEFAULT_DOES_REQUIRE_POWER = true;
 
     public static final Material DEFAULT_DEFAULT_MATERIAL = Material.DIAMOND;
-
-    public static final PerkConfigEntityJsonSerializer SERIALIZER = new PerkConfigEntityJsonSerializer();
-
-    public static final String DEFAULT_DOES_REQUIRE_POWER_JSON_TAG = "defaultDoesRequirePower";
-
-    public static final String DEFAULT_MATERIAL_JSON_TAG = "defaultMaterial";
     //endregion
 
     //region Fields
-    private boolean defaultDoesRequirePower = DEFAULT_DEFAULT_DOES_REQUIRE_POWER;
+    @Expose private boolean defaultDoesRequirePower = DEFAULT_DEFAULT_DOES_REQUIRE_POWER;
 
-    private Material defaultMaterial = DEFAULT_DEFAULT_MATERIAL;
+    @Expose private Material defaultMaterial = DEFAULT_DEFAULT_MATERIAL;
     //endregion
 
     //region Getters/Setters

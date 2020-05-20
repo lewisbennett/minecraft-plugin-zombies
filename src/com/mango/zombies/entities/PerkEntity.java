@@ -1,30 +1,20 @@
 package com.mango.zombies.entities;
 
+import com.google.gson.annotations.Expose;
 import com.mango.zombies.PluginCore;
-import com.mango.zombies.serializers.PerkEntityJsonSerializer;
 import org.bukkit.Material;
 
 public class PerkEntity {
 
-	//region Constant Values
-	public static final PerkEntityJsonSerializer SERIALIZER = new PerkEntityJsonSerializer();
-
-	public static final String COST_JSON_TAG = "cost";
-	public static final String DOES_REQUIRE_POWER_JSON_TAG = "doesRequirePower";
-	public static final String ID_JSON_TAG = "id";
-	public static final String ITEM_JSON_TAG = "item";
-	public static final String NAME_JSON_TAG = "name";
-	//endregion
-
 	//region Fields
-	private boolean doesRequirePower;
+	@Expose private boolean doesRequirePower;
 
-	private int  cost;
+	@Expose private int cost;
 
-	private Material item;
+	@Expose private Material item;
 
-	private String id;
-	private String name;
+	@Expose private String id;
+	@Expose private String name;
 	//endregion
 
 	//region Getters/Setters

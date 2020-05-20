@@ -8,14 +8,33 @@
   <component name="ChangeListManager">
     <list default="true" id="29650a7b-3f89-4df9-bc36-b5aa3b568d39" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/entities/ConfigEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/entities/ConfigEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/entities/EnemyConfigEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/entities/EnemyConfigEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/entities/EnemyEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/entities/EnemyEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/entities/LocationEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/entities/LocationEntity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/entities/MapConfigEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/entities/MapConfigEntity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/entities/MapEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/entities/MapEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/serializers/MapConfigEntityJsonSerializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/serializers/MapConfigEntityJsonSerializer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/serializers/MapEntityJsonSerializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/serializers/MapEntityJsonSerializer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/entities/MapConfigEntity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/entities/MapConfigEntity.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/entities/MapEntity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/entities/MapEntity.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/serializers/MapConfigEntityJsonSerializer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/serializers/MapConfigEntityJsonSerializer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/serializers/MapEntityJsonSerializer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/serializers/MapEntityJsonSerializer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/entities/PerkConfigEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/entities/PerkConfigEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/entities/PerkEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/entities/PerkEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/entities/WeaponConfigEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/entities/WeaponConfigEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/entities/WeaponEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/entities/WeaponEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/entities/WeaponServiceCharacteristicEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/entities/WeaponServiceCharacteristicEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/entities/WeaponServiceEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/entities/WeaponServiceEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/listeners/EntityDeathListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/listeners/EntityDeathListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/serializers/ConfigEntityJsonSerializer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/serializers/EnemyConfigEntityJsonSerializer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/serializers/EnemyEntityJsonSerializer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/serializers/LocationEntityJsonSerializer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/serializers/MapConfigEntityJsonSerializer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/serializers/MapEntityJsonSerializer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/serializers/PerkConfigEntityJsonSerializer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/serializers/PerkEntityJsonSerializer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/serializers/WeaponConfigEntityJsonSerializer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/serializers/WeaponEntityJsonSerializer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/serializers/WeaponServiceCharacteristicEntityJsonSerializer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/serializers/WeaponServiceEntityJsonSerializer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/services/StockFilingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/services/StockFilingService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/services/base/FilingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/services/base/FilingService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

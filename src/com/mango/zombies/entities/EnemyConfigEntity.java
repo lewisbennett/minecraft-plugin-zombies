@@ -1,28 +1,22 @@
 package com.mango.zombies.entities;
 
-import com.mango.zombies.serializers.EnemyConfigEntityJsonSerializer;
+import com.google.gson.annotations.Expose;
 
 public class EnemyConfigEntity {
 
     //region Constant Values
     public static final double DEFAULT_DEFAULT_ROUND_MULTIPLIER = 1;
 
-    public static final EnemyConfigEntityJsonSerializer SERIALIZER = new EnemyConfigEntityJsonSerializer();
-
     public static final int DEFAULT_DEFAULT_DESPAWN_TIME = 5;
     public static final int DEFAULT_DEFAULT_MAX_HEALTH = -1;
-
-    public static final String DEFAULT_ROUND_MULTIPLIER_JSON_TAG = "defaultRoundMultiplier";
-
-    public static final String DEFAULT_DESPAWN_TIME_JSON_TAG = "defaultDespawnTime";
-    public static final String DEFAULT_MAX_HEALTH_JSON_TAG = "defaultMaxHealth";
     //endregion
 
     //region Fields
+    @Expose
     private double defaultRoundMultiplier = DEFAULT_DEFAULT_ROUND_MULTIPLIER;
 
-    private int defaultDespawnTime = DEFAULT_DEFAULT_DESPAWN_TIME;
-    private int defaultMaxHealth = DEFAULT_DEFAULT_MAX_HEALTH;
+    @Expose private int defaultDespawnTime = DEFAULT_DEFAULT_DESPAWN_TIME;
+    @Expose private int defaultMaxHealth = DEFAULT_DEFAULT_MAX_HEALTH;
     //endregion
 
     //region Getters/Setters

@@ -1,6 +1,6 @@
 package com.mango.zombies.entities;
 
-import com.mango.zombies.serializers.MapConfigEntityJsonSerializer;
+import com.google.gson.annotations.Expose;
 import org.bukkit.Sound;
 
 public class MapConfigEntity {
@@ -9,23 +9,16 @@ public class MapConfigEntity {
     public static final int DEFAULT_DEFAULT_MYSTERY_BOX_COST = 950;
     public static final int DEFAULT_DEFAULT_PACK_A_PUNCH_COST = 5000;
 
-    public static final MapConfigEntityJsonSerializer SERIALIZER = new MapConfigEntityJsonSerializer();
-
     public static final Sound DEFAULT_DEFAULT_ROUND_END_SOUND = Sound.AMBIENT_CAVE;
     public static final Sound DEFAULT_DEFAULT_ROUND_START_SOUND = Sound.AMBIENT_CAVE;
-
-    public static final String DEFAULT_MYSTERY_BOX_COST_JSON_TAG = "defaultMysteryBoxCost";
-    public static final String DEFAULT_PACK_A_PUNCH_COST_JSON_TAG = "defaulPackAPunchCost";
-    public static final String DEFAULT_ROUND_END_SOUND_JSON_TAG = "defaultRoundEndSound";
-    public static final String DEFAULT_ROUND_START_SOUND_JSON_TAG = "defaultRoundStartSound";
     //endregion
 
     //region Fields
-    private int defaultMysteryBoxCost = DEFAULT_DEFAULT_MYSTERY_BOX_COST;
-    private int defaultPackAPunchCost = DEFAULT_DEFAULT_PACK_A_PUNCH_COST;
+    @Expose private int defaultMysteryBoxCost = DEFAULT_DEFAULT_MYSTERY_BOX_COST;
+    @Expose private int defaultPackAPunchCost = DEFAULT_DEFAULT_PACK_A_PUNCH_COST;
 
-    private Sound defaultRoundEndSound = DEFAULT_DEFAULT_ROUND_END_SOUND;
-    private Sound defaultRoundStartSound = DEFAULT_DEFAULT_ROUND_START_SOUND;
+    @Expose private Sound defaultRoundEndSound = DEFAULT_DEFAULT_ROUND_END_SOUND;
+    @Expose private Sound defaultRoundStartSound = DEFAULT_DEFAULT_ROUND_START_SOUND;
     //endregion
 
     //region Getters/Setters

@@ -1,7 +1,7 @@
 package com.mango.zombies.entities;
 
+import com.google.gson.annotations.Expose;
 import com.mango.zombies.PluginCore;
-import com.mango.zombies.serializers.MapEntityJsonSerializer;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 
@@ -11,43 +11,24 @@ import java.util.Random;
 
 public class MapEntity {
 
-	//region Constant Values
-	public static final MapEntityJsonSerializer SERIALIZER = new MapEntityJsonSerializer();
-
-	public static final String BOTTOM_JSON_TAG = "bottom";
-	public static final String DELETE_KEY_JSON_TAG = "deleteKey";
-	public static final String ENEMY_BLACKLIST_JSON_TAG = "enemyBlacklist";
-	public static final String ENEMY_SPAWNS_JSON_TAG = "enemySpawns";
-	public static final String ENEMY_WHITELIST_JSON_TAG = "enemyWhitelist";
-	public static final String ID_JSON_TAG = "id";
-	public static final String NAME_JSON_TAG = "name";
-	public static final String ORIGIN_POINT_JSON_TAG = "originPoint";
-	public static final String PLAYER_SPAWNS_JSON_TAG = "playerSpawns";
-	public static final String ROUND_END_SOUND_JSON_TAG = "roundEndSound";
-	public static final String ROUND_START_SOUND_JSON_TAG = "roundStartSound";
-	public static final String TOP_JSON_TAG = "top";
-	public static final String WEAPON_BLACKLIST_JSON_TAG = "weaponBlacklist";
-	public static final String WEAPON_WHITELIST_JSON_TAG = "weaponWhitelist";
-	//endregion
-
 	//region Fields
-	private List<String> enemyBlacklist = new ArrayList<String>();
-	private List<String> enemyWhitelist = new ArrayList<String>();
-	private List<LocationEntity> enemySpawns = new ArrayList<LocationEntity>();
-	private List<LocationEntity> playerSpawns = new ArrayList<LocationEntity>();
-	private List<String> weaponBlacklist = new ArrayList<String>();
-	private List<String> weaponWhitelist = new ArrayList<String>();
+	@Expose private List<String> enemyBlacklist = new ArrayList<String>();
+	@Expose private List<String> enemyWhitelist = new ArrayList<String>();
+	@Expose private List<LocationEntity> enemySpawns = new ArrayList<LocationEntity>();
+	@Expose private List<LocationEntity> playerSpawns = new ArrayList<LocationEntity>();
+	@Expose private List<String> weaponBlacklist = new ArrayList<String>();
+	@Expose private List<String> weaponWhitelist = new ArrayList<String>();
 
-	private LocationEntity bottom = new LocationEntity();
-	private LocationEntity top = new LocationEntity();
-	private LocationEntity originPoint;
+	@Expose private LocationEntity bottom = new LocationEntity();
+	@Expose private LocationEntity top = new LocationEntity();
+	@Expose private LocationEntity originPoint;
 
-	private Sound roundEndSound;
-	private Sound roundStartSound;
+	@Expose private Sound roundEndSound;
+	@Expose private Sound roundStartSound;
 
-	private String deleteKey;
-	private String id;
-	private String name;
+	@Expose private String deleteKey;
+	@Expose private String id;
+	@Expose private String name;
 	//endregion
 
 	//region Getters/Setters

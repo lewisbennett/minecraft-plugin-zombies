@@ -1,30 +1,20 @@
 package com.mango.zombies.entities;
 
+import com.google.gson.annotations.Expose;
 import com.mango.zombies.PluginCore;
-import com.mango.zombies.serializers.EnemyEntityJsonSerializer;
 import org.bukkit.entity.EntityType;
 
 public class EnemyEntity {
 
-    //region Constant Values
-    public static final EnemyEntityJsonSerializer SERIALIZER = new EnemyEntityJsonSerializer();
-
-    public static final String DESPAWN_TIME_JSON_TAG = "despawnTime";
-    public static final String ENTITY_TYPE_JSON_TAG = "entityType";
-    public static final String ID_JSON_TAG = "id";
-    public static final String MAX_HEALTH_JSON_TAG = "maxHealth";
-    public static final String ROUND_MULTIPLIER_JSON_TAG = "roundMultiplier";
-    //endregion
-
     //region Fields
-    private double roundMultiplier;
+    @Expose private double roundMultiplier;
 
-    private int despawnTime;
-    private int maxHealth;
+    @Expose private int despawnTime;
+    @Expose private int maxHealth;
 
-    private EntityType entityType;
+    @Expose private EntityType entityType;
 
-    private String id;
+    @Expose private String id;
     //endregion
 
     //region Getters/Setters

@@ -1,22 +1,14 @@
 package com.mango.zombies.entities;
 
-import com.mango.zombies.serializers.LocationEntityJsonSerializer;
+import com.google.gson.annotations.Expose;
 import org.bukkit.Location;
 
 public class LocationEntity {
 
-    //region Constant Values
-    public static final LocationEntityJsonSerializer SERIALIZER = new LocationEntityJsonSerializer();
-
-    public static final String X_JSON_TAG = "x";
-    public static final String Y_JSON_TAG = "y";
-    public static final String Z_JSON_TAG = "z";
-    //endregion
-
     //region Fields
-    private int x;
-    private int y;
-    private int z;
+    @Expose private int x;
+    @Expose private int y;
+    @Expose private int z;
     //endregion
 
     //region Getters/Setters

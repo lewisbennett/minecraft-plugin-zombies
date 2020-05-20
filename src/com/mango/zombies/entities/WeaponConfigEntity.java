@@ -1,6 +1,6 @@
 package com.mango.zombies.entities;
 
-import com.mango.zombies.serializers.WeaponConfigEntityJsonSerializer;
+import com.google.gson.annotations.Expose;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -42,80 +42,43 @@ public class WeaponConfigEntity {
 
     public static final String DEFAULT_DEFAULT_PROJECTILE = Material.SNOWBALL.name();
     public static final String DEFAULT_DEFAULT_PACK_A_PUNCH_PROJECTILE = Material.SNOWBALL.name();
-
-    public static final String ENABLE_EGG_PROJECTILE_HATCHING_JSON_TAG = "enableEggProjectileHatching";
-
-    public static final String AMMO_INDICATOR_COLOR_JSON_TAG = "ammoIndicatorColor";
-    public static final String OUT_OF_AMMO_INDICATOR_COLOR_JSON_TAG = "outOfAmmoIndicatorColor";
-    public static final String RELOADING_INDICATOR_COLOR_JSON_TAG = "reloadingIndicatorColor";
-    public static final String DEFAULT_WEAPON_COLOR_JSON_TAG = "defaultWeaponColor";
-
-    public static final String DEFAULT_ACCURACY_JSON_TAG = "defaultAccuracy";
-    public static final String DEFAULT_PACK_A_PUNCH_ACCURACY_JSON_TAG = "defaultPackAPunchAccuracy";
-    public static final String DEFAULT_GUNSHOT_DAMAGE_JSON_TAG = "defaultGunshotDamage";
-    public static final String DEFAULT_PACK_A_PUNCH_GUNSHOT_DAMAGE_JSON_TAG = "defaultPackAPunchGunshotDamage";
-    public static final String DEFAULT_MAGAZINE_CAPACITY_JSON_TAG = "defaultMagazineCapacity";
-    public static final String DEFAULT_PACK_A_PUNCH_MAGAZINE_CAPACITY_JSON_TAG = "defaultPackAPunchMagazineCapacity";
-    public static final String DEFAULT_MELEE_DAMAGE_JSON_TAG = "defaultMeleeDamage";
-    public static final String DEFAULT_PACK_A_PUNCH_MELEE_DAMAGE_JSON_TAG = "defaultPackAPunchMeleeDamage";
-    public static final String DEFAULT_PROJECTILE_COUNT_JSON_TAG = "defaultProjectileCount";
-    public static final String DEFAULT_PACK_A_PUNCH_PROJECTILE_COUNT_JSON_TAG = "defaultPackAPunchProjectileCount";
-    public static final String DEFAULT_RELOAD_SPEED_JSON_TAG = "defaultReloadSpeed";
-    public static final String DEFAULT_PACK_A_PUNCH_RELOAD_SPEED_JSON_TAG = "defaultPackAPunchReloadSpeed";
-    public static final String DEFAULT_TOTAL_AMMO_CAPACITY_JSON_TAG = "defaultTotalAmmoCapacity";
-    public static final String DEFAULT_PACK_A_PUNCH_TOTAL_AMMO_CAPACITY_JSON_TAG = "defaultPackAPunchTotalAmmoCapacity";
-
-    public static final String DEFAULT_GUNSHOT_ITEM_JSON_TAG = "defaultGunshotItem";
-    public static final String DEFAULT_MELEE_ITEM_JSON_TAG = "defaultMeleeItem";
-
-    public static final String DEFAULT_GUNSHOT_USAGE_SOUND_JSON_TAG = "defaultGunshotUsageSound";
-    public static final String DEFAULT_PACK_A_PUNCH_GUNSHOT_USAGE_SOUND_JSON_TAG = "defaultPackAPunchGunshotUsageSound";
-    public static final String DEFAULT_MELEE_USAGE_SOUND_JSON_TAG = "defaultMeleeSound";
-    public static final String DEFAULT_PACK_A_PUNCH_MELEE_USAGE_SOUND_JSON_TAG = "defaultPackAPunchMeleeUsageSound";
-    public static final String DEFAULT_OUT_OF_AMMO_SOUND_JSON_TAG = "defaultOutOfAmmoSound";
-    public static final String DEFAULT_PACK_A_PUNCH_OUT_OF_AMMO_SOUND_JSON_TAG = "defaultPackAPunchOutOfAmmoSound";
-
-    public static final String DEFAULT_PROJECTILE_JSON_TAG = "defaultProjectile";
-    public static final String DEFAULT_PACK_A_PUNCH_PROJECTILE_JSON_TAG = "defaultPackAPunchProjectile";
-
-    public static final WeaponConfigEntityJsonSerializer SERIALIZER = new WeaponConfigEntityJsonSerializer();
     //endregion
 
     //region Fields
-    private boolean enableEggProjectileHatching = DEFAULT_ENABLE_EGG_PROJECTILE_HATCHING;
+    @Expose private boolean enableEggProjectileHatching = DEFAULT_ENABLE_EGG_PROJECTILE_HATCHING;
 
-    private ChatColor ammoIndicatorColor = DEFAULT_AMMO_INDICATOR_COLOR;
-    private ChatColor outOfAmmoIndicatorColor = DEFAULT_OUT_OF_AMMO_INDICATOR_COLOR;
-    private ChatColor reloadingIndicatorColor = DEFAULT_RELOADING_INDICATOR_COLOR;
-    private ChatColor defaultWeaponColor = DEFAULT_DEFAULT_WEAPON_COLOR;
+    @Expose private ChatColor ammoIndicatorColor = DEFAULT_AMMO_INDICATOR_COLOR;
+    @Expose private ChatColor outOfAmmoIndicatorColor = DEFAULT_OUT_OF_AMMO_INDICATOR_COLOR;
+    @Expose private ChatColor reloadingIndicatorColor = DEFAULT_RELOADING_INDICATOR_COLOR;
+    @Expose private ChatColor defaultWeaponColor = DEFAULT_DEFAULT_WEAPON_COLOR;
 
-    private int defaultAccuracy = DEFAULT_DEFAULT_ACCURACY;
-    private int defaultPackAPunchAccuracy = DEFAULT_DEFAULT_PACK_A_PUNCH_ACCURACY;
-    private int defaultGunshotDamage = DEFAULT_DEFAULT_GUNSHOT_DAMAGE;
-    private int defaultPackAPunchGunshotDamage = DEFAULT_DEFAULT_PACK_A_PUNCH_GUNSHOT_DAMAGE;
-    private int defaultMagazineCapacity = DEFAULT_DEFAULT_MAGAZINE_CAPACITY;
-    private int defaultPackAPunchMagazineCapacity = DEFAULT_DEFAULT_PACK_A_PUNCH_MAGAZINE_CAPACITY;
-    private int defaultMeleeDamage = DEFAULT_DEFAULT_MELEE_DAMAGE;
-    private int defaultPackAPunchMeleeDamage = DEFAULT_DEFAULT_PACK_A_PUNCH_MELEE_DAMAGE;
-    private int defaultProjectileCount = DEFAULT_DEFAULT_PROJECTILE_COUNT;
-    private int defaultPackAPunchProjectileCount = DEFAULT_DEFAULT_PACK_A_PUNCH_PROJECTILE_COUNT;
-    private int defaultReloadSpeed = DEFAULT_DEFAULT_RELOAD_SPEED;
-    private int defaultPackAPunchReloadSpeed = DEFAULT_DEFAULT_PACK_A_PUNCH_RELOAD_SPEED;
-    private int defaultTotalAmmoCapacity = DEFAULT_DEFAULT_TOTAL_AMMO_CAPACITY;
-    private int defaultPackAPunchTotalAmmoCapacity = DEFAULT_DEFAULT_PACK_A_PUNCH_TOTAL_AMMO_CAPACITY;
+    @Expose private int defaultAccuracy = DEFAULT_DEFAULT_ACCURACY;
+    @Expose private int defaultPackAPunchAccuracy = DEFAULT_DEFAULT_PACK_A_PUNCH_ACCURACY;
+    @Expose private int defaultGunshotDamage = DEFAULT_DEFAULT_GUNSHOT_DAMAGE;
+    @Expose private int defaultPackAPunchGunshotDamage = DEFAULT_DEFAULT_PACK_A_PUNCH_GUNSHOT_DAMAGE;
+    @Expose private int defaultMagazineCapacity = DEFAULT_DEFAULT_MAGAZINE_CAPACITY;
+    @Expose private int defaultPackAPunchMagazineCapacity = DEFAULT_DEFAULT_PACK_A_PUNCH_MAGAZINE_CAPACITY;
+    @Expose private int defaultMeleeDamage = DEFAULT_DEFAULT_MELEE_DAMAGE;
+    @Expose private int defaultPackAPunchMeleeDamage = DEFAULT_DEFAULT_PACK_A_PUNCH_MELEE_DAMAGE;
+    @Expose private int defaultProjectileCount = DEFAULT_DEFAULT_PROJECTILE_COUNT;
+    @Expose private int defaultPackAPunchProjectileCount = DEFAULT_DEFAULT_PACK_A_PUNCH_PROJECTILE_COUNT;
+    @Expose private int defaultReloadSpeed = DEFAULT_DEFAULT_RELOAD_SPEED;
+    @Expose private int defaultPackAPunchReloadSpeed = DEFAULT_DEFAULT_PACK_A_PUNCH_RELOAD_SPEED;
+    @Expose private int defaultTotalAmmoCapacity = DEFAULT_DEFAULT_TOTAL_AMMO_CAPACITY;
+    @Expose private int defaultPackAPunchTotalAmmoCapacity = DEFAULT_DEFAULT_PACK_A_PUNCH_TOTAL_AMMO_CAPACITY;
 
-    private Material defaultGunshotItem = DEFAULT_DEFAULT_GUNSHOT_ITEM;
-    private Material defaultMeleeItem = DEFAULT_DEFAULT_MELEE_ITEM;
+    @Expose private Material defaultGunshotItem = DEFAULT_DEFAULT_GUNSHOT_ITEM;
+    @Expose private Material defaultMeleeItem = DEFAULT_DEFAULT_MELEE_ITEM;
 
-    private Sound defaultGunshotUsageSound = DEFAULT_DEFAULT_GUNSHOT_USAGE_SOUND;
-    private Sound defaultPackAPunchGunshotUsageSound = DEFAULT_DEFAULT_PACK_A_PUNCH_GUNSHOT_USAGE_SOUND;
-    private Sound defaultMeleeUsageSound = DEFAULT_DEFAULT_MELEE_USAGE_SOUND;
-    private Sound defaultPackAPunchMeleeUsageSound = DEFAULT_DEFAULT_PACK_A_PUNCH_MELEE_USAGE_SOUND;
-    private Sound defaultOutOfAmmoSound = DEFAULT_DEFAULT_OUT_OF_AMMO_SOUND;
-    private Sound defaultPackAPunchOutOfAmmoSound = DEFAULT_DEFAULT_PACK_A_PUNCH_OUT_OF_AMMO_SOUND;
+    @Expose private Sound defaultGunshotUsageSound = DEFAULT_DEFAULT_GUNSHOT_USAGE_SOUND;
+    @Expose private Sound defaultPackAPunchGunshotUsageSound = DEFAULT_DEFAULT_PACK_A_PUNCH_GUNSHOT_USAGE_SOUND;
+    @Expose private Sound defaultMeleeUsageSound = DEFAULT_DEFAULT_MELEE_USAGE_SOUND;
+    @Expose private Sound defaultPackAPunchMeleeUsageSound = DEFAULT_DEFAULT_PACK_A_PUNCH_MELEE_USAGE_SOUND;
+    @Expose private Sound defaultOutOfAmmoSound = DEFAULT_DEFAULT_OUT_OF_AMMO_SOUND;
+    @Expose private Sound defaultPackAPunchOutOfAmmoSound = DEFAULT_DEFAULT_PACK_A_PUNCH_OUT_OF_AMMO_SOUND;
 
-    private String defaultProjectile = DEFAULT_DEFAULT_PROJECTILE;
-    private String defaultPackAPunchProjectile = DEFAULT_DEFAULT_PACK_A_PUNCH_PROJECTILE;
+    @Expose private String defaultProjectile = DEFAULT_DEFAULT_PROJECTILE;
+    @Expose private String defaultPackAPunchProjectile = DEFAULT_DEFAULT_PACK_A_PUNCH_PROJECTILE;
     //endregion
 
     //region Getters/Setters

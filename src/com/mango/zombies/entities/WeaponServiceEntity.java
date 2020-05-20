@@ -1,6 +1,6 @@
 package com.mango.zombies.entities;
 
-import com.mango.zombies.serializers.WeaponServiceEntityJsonSerializer;
+import com.google.gson.annotations.Expose;
 import org.bukkit.Sound;
 
 import java.util.ArrayList;
@@ -8,26 +8,16 @@ import java.util.List;
 
 public class WeaponServiceEntity {
 
-	//region Constant Values
-	public static final String CHARACTERISTICS_JSON_TAG = "characteristics";
-	public static final String DAMAGE_JSON_TAG = "damage";
-	public static final String DOES_REQUIRE_PACK_A_PUNCH_JSON_TAG = "doesRequirePackAPunch";
-	public static final String TYPE_JSON_TAG = "type";
-	public static final String USAGE_SOUND_JSON_TAG = "usageSound";
-
-	public static final WeaponServiceEntityJsonSerializer SERIALIZER = new WeaponServiceEntityJsonSerializer();
-	//endregion
-
 	//region Fields
-	private boolean doesRequirePackAPunch;
+	@Expose private boolean doesRequirePackAPunch;
 
-	private int damage;
+	@Expose private int damage;
 
-	private List<WeaponServiceCharacteristicEntity> characteristics = new ArrayList<WeaponServiceCharacteristicEntity>();
+	@Expose private List<WeaponServiceCharacteristicEntity> characteristics = new ArrayList<WeaponServiceCharacteristicEntity>();
 
-	private Sound usageSound;
+	@Expose private Sound usageSound;
 
-	private String type;
+	@Expose private String type;
 	//endregion
 
 	//region Getters/Setters
