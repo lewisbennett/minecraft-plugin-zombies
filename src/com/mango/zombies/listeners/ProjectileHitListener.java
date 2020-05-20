@@ -1,19 +1,12 @@
 package com.mango.zombies.listeners;
 
 import com.mango.zombies.PluginCore;
-import com.mango.zombies.gameplay.GameplayEnemy;
-import com.mango.zombies.gameplay.GameplayProjectile;
-import com.mango.zombies.gameplay.base.BlockBreakEventRegisterable;
 import com.mango.zombies.gameplay.base.GameplayRegisterable;
 import com.mango.zombies.gameplay.base.ProjectileHitEventRegisterable;
-import com.mango.zombies.helper.HiddenStringUtils;
-import com.mango.zombies.schema.ProjectileConfigComponent;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileHitEvent;
 
-import java.util.AbstractMap;
 import java.util.UUID;
 
 public class ProjectileHitListener implements Listener {
@@ -28,10 +21,15 @@ public class ProjectileHitListener implements Listener {
     //region Private Methods
     private void handOffToRegisterables(ProjectileHitEvent event) {
 
+        String projectileCustomName = event.getEntity().getCustomName();
+
+        if (projectileCustomName == null || projectileCustomName.isEmpty())
+            return;
+
         UUID registerableUuid = null;
 
         try {
-            registerableUuid = UUID.fromString(HiddenStringUtils.extractHiddenString(event.getEntity().getCustomName()));
+            registerableUuid = UUID.fromString(projectileCustomName);
         } catch (Exception ignored) { }
 
         if (registerableUuid == null)

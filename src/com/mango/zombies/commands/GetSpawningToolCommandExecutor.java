@@ -2,7 +2,6 @@ package com.mango.zombies.commands;
 
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.commands.base.BaseCommandExecutor;
-import com.mango.zombies.commands.base.PlayerOnlyCommandExecutor;
 import com.mango.zombies.entities.EnemyEntity;
 import com.mango.zombies.gameplay.SpawningTool;
 import org.bukkit.Bukkit;
@@ -31,7 +30,7 @@ public class GetSpawningToolCommandExecutor extends BaseCommandExecutor {
 
             player = (Player)commandSender;
 
-            if (args.length != 1)
+            if (args.length != 2)
                 throw new CommandException(CORRECT_USAGE_ERROR_PLAYER);
 
         } else {
@@ -71,7 +70,7 @@ public class GetSpawningToolCommandExecutor extends BaseCommandExecutor {
 
         PluginCore.getGameplayService().register(spawningTool);
 
-        player.getInventory().addItem(spawningTool.createItemStack());
+        spawningTool.giveItemStack(player);
 
         return "With the Spawning Tool, right click to spawn the specified enemy.";
     }

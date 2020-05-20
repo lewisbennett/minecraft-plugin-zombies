@@ -8,6 +8,7 @@ import com.mango.zombies.gameplay.base.PlayerInteractEventRegisterable;
 import com.mango.zombies.helper.HiddenStringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -66,9 +67,10 @@ public class SpawningTool implements GameplayRegisterable, PlayerInteractEventRe
 
     //region Public Methods
     /**
-     * Gets this spawning tool as a usable item stack.
+     * Gives a player this weapon as a usable item.
+     * @param player The player to give the weapon to.
      */
-    public ItemStack createItemStack() {
+    public void giveItemStack(Player player) {
 
         ItemStack itemStack = new ItemStack(PluginCore.getConfig().getSpawningToolItem(), 1);
 
@@ -83,7 +85,7 @@ public class SpawningTool implements GameplayRegisterable, PlayerInteractEventRe
 
         itemStack.setItemMeta(itemMeta);
 
-        return itemStack;
+        player.getInventory().addItem(itemStack);
     }
     //endregion
 

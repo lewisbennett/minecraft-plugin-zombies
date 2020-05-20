@@ -2,7 +2,6 @@ package com.mango.zombies.serializers;
 
 import com.google.gson.*;
 import com.mango.zombies.entities.ConfigEntity;
-import com.mango.zombies.entities.WeaponConfigEntity;
 import org.bukkit.Material;
 
 import java.lang.reflect.Type;

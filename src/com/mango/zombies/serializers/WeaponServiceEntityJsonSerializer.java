@@ -26,7 +26,7 @@ public class WeaponServiceEntityJsonSerializer implements JsonSerializer<WeaponS
         if (characteristicsJsonElement != null) {
 
             for (JsonElement jsonCharacteristic : characteristicsJsonElement.getAsJsonArray())
-                service.getCharacteristics().add(WeaponServiceCharacteristicEntity.SERIALIZER.deserialize(jsonCharacteristic, WeaponServiceCharacteristicEntity.class, jsonDeserializationContext));
+                service.addCharacteristic(WeaponServiceCharacteristicEntity.SERIALIZER.deserialize(jsonCharacteristic, WeaponServiceCharacteristicEntity.class, jsonDeserializationContext));
         }
 
         if (damageJsonElement != null)

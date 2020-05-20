@@ -2,6 +2,7 @@ package com.mango.zombies.serializers;
 
 import com.google.gson.*;
 import com.mango.zombies.entities.WeaponServiceCharacteristicEntity;
+import com.mango.zombies.schema.WeaponServiceCharacteristic;
 import org.bukkit.Sound;
 
 import java.lang.reflect.Type;
@@ -24,19 +25,26 @@ public class WeaponServiceCharacteristicEntityJsonSerializer implements JsonSeri
         
         if (valueJsonElement != null) {
 
-            Object o = null;
-            JsonPrimitive valuePrimitive = valueJsonElement.getAsJsonPrimitive();
+            switch (characteristic.getType()) {
 
-            if (valuePrimitive.isBoolean())
-                o = valueJsonElement.getAsBoolean();
+                case WeaponServiceCharacteristic.ACCURACY:
+                case WeaponServiceCharacteristic.AMMO_COST:
+                case WeaponServiceCharacteristic.MAGAZINE_CAPACITY:
+                case WeaponServiceCharacteristic.RELOAD_SPEED:
+                case WeaponServiceCharacteristic.PROJECTILES_IN_CARTRIDGE:
+                case WeaponServiceCharacteristic.SPLASH_DAMAGE:
+                case WeaponServiceCharacteristic.SPLASH_DAMAGE_RANGE:
+                case WeaponServiceCharacteristic.TOTAL_AMMO_CAPACITY:
+                    characteristic.setValue(valueJsonElement.getAsInt());
+                    break;
 
-            else if (valuePrimitive.isNumber())
-                o = valueJsonElement.getAsInt();
+                case WeaponServiceCharacteristic.OUT_OF_AMMO_SOUND:
+                    characteristic.setValue(Sound.valueOf(valueJsonElement.getAsString()));
+                    break;
 
-            else if (valuePrimitive.isString())
-                o = valueJsonElement.getAsString();
-
-            characteristic.setValue(o);
+                case WeaponServiceCharacteristic.PROJECTILE_TYPE:
+                    characteristic.setValue(valueJsonElement.getAsString());
+            }
         }
 
         return characteristic;

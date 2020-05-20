@@ -1,7 +1,6 @@
 package com.mango.zombies.listeners;
 
 import com.mango.zombies.PluginCore;
-import com.mango.zombies.helper.HiddenStringUtils;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerPickupArrowEvent;
@@ -14,10 +13,15 @@ public class PlayerPickupArrowListener implements Listener {
     @EventHandler
     public void onPlayerPickupArrow(PlayerPickupArrowEvent event) {
 
+        String arrowCustomName = event.getArrow().getCustomName();
+
+        if (arrowCustomName == null || arrowCustomName.isEmpty())
+            return;
+
         UUID projectileConfigUuid = null;
 
         try {
-            projectileConfigUuid = UUID.fromString(HiddenStringUtils.extractHiddenString(event.getArrow().getCustomName()));
+            projectileConfigUuid = UUID.fromString(arrowCustomName);
         } catch (Exception ignored) { }
 
         if (projectileConfigUuid != null && PluginCore.getGameplayService().findRegisterableByUUID(projectileConfigUuid) != null)

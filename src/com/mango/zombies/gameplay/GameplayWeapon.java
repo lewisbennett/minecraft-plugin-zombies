@@ -11,7 +11,6 @@ import com.mango.zombies.gameplay.base.GameplayRegisterable;
 import com.mango.zombies.gameplay.base.PlayerInteractEventRegisterable;
 import com.mango.zombies.helper.HiddenStringUtils;
 import com.mango.zombies.schema.ProjectileConfigComponent;
-import com.mango.zombies.schema.WeaponServiceCharacteristic;
 import com.mango.zombies.schema.WeaponService;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -32,6 +31,7 @@ import java.util.UUID;
 public class GameplayWeapon implements GameplayRegisterable, PlayerInteractEventRegisterable, EntityDamageByEntityEventRegisterable {
 
     //region Private Methods
+    private boolean hasSetInitialMagazineCount;
     private boolean isPackAPunched;
     private boolean isReloading;
 
@@ -138,9 +138,12 @@ public class GameplayWeapon implements GameplayRegisterable, PlayerInteractEvent
     }
 
     /**
-     * Gets this weapon as a usable item stack.
+     * Gives a player this weapon as a usable item.
+     * @param player The player to give the weapon to.
      */
-    public ItemStack createItemStack() {
+    public void giveItemStack(Player player) {
+
+        this.player = player;
 
         ItemStack itemStack = new ItemStack(weaponEntity.getItem(), 1);
 
@@ -150,12 +153,11 @@ public class GameplayWeapon implements GameplayRegisterable, PlayerInteractEvent
         lore.add(HiddenStringUtils.encodeString(uuid.toString()));
 
         itemMeta.setLore(lore);
-
-        itemMeta.setDisplayName(weaponEntity.getWeaponColor() + weaponEntity.getName());
-
         itemStack.setItemMeta(itemMeta);
 
-        return itemStack;
+        setWeaponDisplay(itemStack, weaponEntity.getService(WeaponService.GUNSHOT, isPackAPunched) == null ? null : getAmmoStatus());
+
+        player.getInventory().addItem(itemStack);
     }
 
     /**
@@ -195,19 +197,44 @@ public class GameplayWeapon implements GameplayRegisterable, PlayerInteractEvent
         playSound(player, weaponEntity.getOutOfAmmoSound(gunshotService), 1);
 
         if (availableAmmo < 1) {
-            setWeaponDisplay(currentAmmo > 0 ? getAmmoStatus() : getNoAmmoStatus());
+            setWeaponDisplay(fetchItemStack(), currentAmmo > 0 ? getAmmoStatus() : getNoAmmoStatus());
             return false;
         }
 
         isReloading = true;
 
-        setWeaponDisplay(getReloadingStatus());
+        setWeaponDisplay(fetchItemStack(), getReloadingStatus());
 
         Main instance = Main.getInstance();
 
         instance.getServer().getScheduler().scheduleSyncDelayedTask(instance, this::reload_runnable, Time.fromSeconds(weaponEntity.getReloadSpeed(gunshotService)).totalTicks());
 
         return true;
+    }
+
+    /**
+     * Sets the starting magazine count for the weapon. Can only be called once.
+     * @param magazineCount The number of magazines that the weapon should start off with.
+     */
+    public void setInitialMagazineCount(int magazineCount) {
+
+        if (hasSetInitialMagazineCount || magazineCount < 1)
+            return;
+
+        hasSetInitialMagazineCount = true;
+
+        WeaponServiceEntity gunshotService = weaponEntity.getService(WeaponService.GUNSHOT, isPackAPunched);
+
+        if (gunshotService == null)
+            return;
+
+        int magazineCapacity = weaponEntity.getMagazineCapacity(gunshotService);
+        int totalAmmoCapacity = weaponEntity.getTotalAmmoCapacity(gunshotService);
+
+        int availableAmmo = (magazineCount - 1) * magazineCapacity;
+
+        this.currentAmmo = magazineCapacity;
+        this.availableAmmo = Math.min(availableAmmo, totalAmmoCapacity);
     }
 
     /**
@@ -224,12 +251,7 @@ public class GameplayWeapon implements GameplayRegisterable, PlayerInteractEvent
             return false;
 
         if (isReloading) {
-
-            WeaponServiceCharacteristicEntity outOfAmmoCharacteristic = weaponEntity.getCharacteristic(gunshotService, WeaponServiceCharacteristic.OUT_OF_AMMO_SOUND);
-
-            if (outOfAmmoCharacteristic != null)
-                playSound(player, (Sound)outOfAmmoCharacteristic.getValue(), 1);
-
+            playSound(player, weaponEntity.getOutOfAmmoSound(gunshotService), 1);
             return false;
         }
 
@@ -263,11 +285,11 @@ public class GameplayWeapon implements GameplayRegisterable, PlayerInteractEvent
             projectile.setVelocity(vector);
             projectile.setGravity(false);
 
-            projectile.setCustomName(HiddenStringUtils.encodeString(gameplayProjectile.getUUID().toString()));
+            projectile.setCustomName(gameplayProjectile.getUUID().toString());
         }
 
         currentAmmo--;
-        setWeaponDisplay(getAmmoStatus());
+        setWeaponDisplay(fetchItemStack(), getAmmoStatus());
 
         if (currentAmmo < 1)
             reload(player);
@@ -297,7 +319,7 @@ public class GameplayWeapon implements GameplayRegisterable, PlayerInteractEvent
 
         isReloading = false;
 
-        setWeaponDisplay(getAmmoStatus());
+        setWeaponDisplay(fetchItemStack(), getAmmoStatus());
     }
     //endregion
 
@@ -332,11 +354,11 @@ public class GameplayWeapon implements GameplayRegisterable, PlayerInteractEvent
     }
 
     private String getNoAmmoStatus() {
-        return PluginCore.getWeaponConfig().getReloadingIndicatorColor() + "Reloading";
+        return PluginCore.getWeaponConfig().getOutOfAmmoIndicatorColor() + "No ammo";
     }
 
     private String getReloadingStatus() {
-        return PluginCore.getWeaponConfig().getOutOfAmmoIndicatorColor() + "No ammo";
+        return PluginCore.getWeaponConfig().getReloadingIndicatorColor() + "Reloading";
     }
 
     private boolean isWithinRange(double positionOne, double positionTwo) {
@@ -347,9 +369,7 @@ public class GameplayWeapon implements GameplayRegisterable, PlayerInteractEvent
         player.getWorld().playSound(player.getLocation(), sound, volume, 1);
     }
 
-    private void setWeaponDisplay(String status) {
-
-        ItemStack itemStack = fetchItemStack();
+    private void setWeaponDisplay(ItemStack itemStack, String status) {
 
         if (itemStack == null)
             return;

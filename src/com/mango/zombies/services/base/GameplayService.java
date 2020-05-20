@@ -1,8 +1,6 @@
 package com.mango.zombies.services.base;
 
 import com.mango.zombies.gameplay.base.GameplayRegisterable;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.UUID;

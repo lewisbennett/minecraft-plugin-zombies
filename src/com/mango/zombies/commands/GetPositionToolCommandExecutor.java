@@ -2,20 +2,14 @@ package com.mango.zombies.commands;
 
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.commands.base.BaseCommandExecutor;
-import com.mango.zombies.commands.base.PlayerOnlyCommandExecutor;
 import com.mango.zombies.entities.MapEntity;
 import com.mango.zombies.gameplay.PositionTool;
-import com.mango.zombies.gameplay.SpawningTool;
 import com.mango.zombies.schema.Positionable;
-import com.mango.zombies.services.StockGameplayService;
-import com.mango.zombies.services.StockMessagingService;
-import net.minecraft.server.v1_14_R1.Tuple;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 public class GetPositionToolCommandExecutor extends BaseCommandExecutor {
 
@@ -71,7 +65,7 @@ public class GetPositionToolCommandExecutor extends BaseCommandExecutor {
 
         PluginCore.getGameplayService().register(positionTool);
 
-        player.getInventory().addItem(positionTool.createItemStack());
+        positionTool.giveItemStack(player);
 
         return "With the Position Tool, left click to set the top point and right click to set the bottom point. Changes will be applied once both points have been selected.";
     }

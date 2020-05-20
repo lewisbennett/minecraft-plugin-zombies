@@ -356,6 +356,31 @@ public class WeaponEntity {
 
 		return standardService;
 	}
+
+	/**
+	 * Gets the total ammo capacity from a gunshot service, if available, or default.
+	 * @param isPackAPunched Whether to look for a Pack-A-Punch service.
+	 */
+	public int getTotalAmmoCapacity(boolean isPackAPunched) {
+		return getTotalAmmoCapacity(getService(WeaponService.GUNSHOT, isPackAPunched));
+	}
+
+	/**
+	 * Gets the total ammo capacity from a gunshot service, if available, or default.
+	 * @param service The service to look for the total ammo capacity in.
+	 */
+	public int getTotalAmmoCapacity(WeaponServiceEntity service) {
+
+		if (service == null || !service.getType().equals(WeaponService.GUNSHOT))
+			throw new IllegalArgumentException("Gunshot service required.");
+
+		WeaponServiceCharacteristicEntity reloadSpeedCharacteristic = getCharacteristic(service, WeaponServiceCharacteristic.TOTAL_AMMO_CAPACITY);
+
+		if (reloadSpeedCharacteristic == null || !(reloadSpeedCharacteristic.getValue() instanceof Integer))
+			return service.doesRequirePackAPunch() ? PluginCore.getWeaponConfig().getDefaultPackAPunchTotalAmmoCapacity() : PluginCore.getWeaponConfig().getDefaultTotalAmmoCapacity();
+
+		return (int)reloadSpeedCharacteristic.getValue();
+	}
 	//endregion
 
 	//region Constructors

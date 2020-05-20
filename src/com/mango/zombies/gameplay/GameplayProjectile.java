@@ -5,10 +5,8 @@ import com.mango.zombies.gameplay.base.GameplayRegisterable;
 import com.mango.zombies.gameplay.base.ProjectileHitEventRegisterable;
 import com.mango.zombies.schema.ProjectileConfigComponent;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.ProjectileHitEvent;
 
-import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.UUID;
 

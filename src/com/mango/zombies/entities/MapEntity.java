@@ -3,7 +3,6 @@ package com.mango.zombies.entities;
 import com.mango.zombies.serializers.MapEntityJsonSerializer;
 import org.bukkit.Location;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;

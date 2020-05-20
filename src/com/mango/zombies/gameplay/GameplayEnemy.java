@@ -5,11 +5,9 @@ import com.mango.zombies.PluginCore;
 import com.mango.zombies.Time;
 import com.mango.zombies.entities.EnemyEntity;
 import com.mango.zombies.gameplay.base.GameplayRegisterable;
-import com.mango.zombies.listeners.ProjectileHitListener;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 
 import java.util.UUID;

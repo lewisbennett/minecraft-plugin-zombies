@@ -8,10 +8,9 @@ import com.mango.zombies.gameplay.base.GameplayRegisterable;
 import com.mango.zombies.gameplay.base.PlayerInteractEventRegisterable;
 import com.mango.zombies.helper.HiddenStringUtils;
 import com.mango.zombies.schema.Positionable;
-import com.mango.zombies.services.StockMessagingService;
-import com.mango.zombies.services.base.MessagingService;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -103,9 +102,10 @@ public class PositionTool implements GameplayRegisterable, BlockBreakEventRegist
 
     //region Public Methods
     /**
-     * Gets this position tool as a usable item stack.
+     * Gives a player this weapon as a usable item.
+     * @param player The player to give the weapon to.
      */
-    public ItemStack createItemStack() {
+    public void giveItemStack(Player player) {
 
         ItemStack itemStack = new ItemStack(PluginCore.getConfig().getPositionToolItem(), 1);
 
@@ -120,7 +120,7 @@ public class PositionTool implements GameplayRegisterable, BlockBreakEventRegist
 
         itemStack.setItemMeta(itemMeta);
 
-        return itemStack;
+        player.getInventory().addItem(itemStack);
     }
     //endregion
 
