@@ -35,7 +35,7 @@ public class CreateMapCommandExecutor extends PlayerOnlyCommandExecutor {
             name.append(args[i]);
         }
 
-        MapEntity map = new MapEntity(args[0], name.toString(), player.getLocation().subtract(0, 1, 0));
+        MapEntity map = new MapEntity(args[0], name.toString(), player.getLocation().subtract(0, 1, 0), player.getWorld().getName());
         PluginCore.addMap(map);
 
         return "Successfully created map: " + ChatColor.BOLD + map.getName();

@@ -1,11 +1,17 @@
 package com.mango.zombies;
 
 import com.mango.zombies.commands.*;
+import com.mango.zombies.entities.MapEntity;
+import com.mango.zombies.entities.SignEntity;
+import com.mango.zombies.helper.SignUtil;
 import com.mango.zombies.listeners.*;
 import com.mango.zombies.services.StockFilingService;
 import com.mango.zombies.services.StockGameplayService;
 import com.mango.zombies.services.StockMessagingService;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.TimerTask;
@@ -40,6 +46,8 @@ public class Main extends JavaPlugin {
         PluginCore.getFilingService().setupFolders(getDataFolder());
 
         PluginCore.getFilingService().importEverything();
+
+        resetAllMapSigns();
 
         long delay = Time.fromMinutes(PluginCore.getConfig().getAutoSaveTimerInterval()).totalMilliseconds();
 
@@ -99,6 +107,73 @@ public class Main extends JavaPlugin {
         PluginCore.setFilingService(new StockFilingService());
         PluginCore.setGameplayService(new StockGameplayService());
         PluginCore.setMessagingService(new StockMessagingService());
+    }
+    //endregion
+
+    //region Private Methods
+    private void resetAllMapSigns() {
+
+        Log.information("Validating signs...");
+
+        int removals = 0;
+
+        for (MapEntity mapEntity : PluginCore.getMaps()) {
+
+            World world = getServer().getWorld(mapEntity.getWorldName());
+
+            if (world == null)
+                continue;
+
+            for (SignEntity signEntity : mapEntity.getSigns()) {
+
+                Block block = world.getBlockAt(signEntity.getLocation().getX(), signEntity.getLocation().getY(), signEntity.getLocation().getZ());
+
+                if (!(block.getState() instanceof Sign)) {
+
+                    mapEntity.removeSign(signEntity);
+                    removals++;
+
+                    continue;
+                }
+
+                Sign sign = (Sign)block.getState();
+
+                String[] lines;
+
+                try{
+
+                    lines = SignUtil.getLinesForSign(mapEntity, signEntity);
+
+                } catch (Exception ex) {
+
+                    Log.information("Exception: " + ex.getMessage());
+
+                    mapEntity.removeSign(signEntity);
+                    removals++;
+
+                    sign.setLine(0, "");
+                    sign.setLine(1, "INVALID");
+                    sign.setLine(2, "SIGN");
+                    sign.setLine(3, "");
+
+                    continue;
+                }
+
+                for (int i = 0; i < lines.length; i++)
+                    sign.setLine(i, lines[i]);
+
+                sign.update();
+            }
+        }
+
+        if (removals == 1)
+            Log.information("Sign validation complete. 1 error was detected and the sign was removed.");
+
+        else if (removals > 1)
+            Log.information("Sign validation complete. " + removals + " errors were detected and the signs were removed.");
+
+        else
+            Log.information("Sign validation complete.");
     }
     //endregion
 }

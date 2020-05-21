@@ -24,7 +24,7 @@ public class StockFilingService implements FilingService {
 	private File perksFolder;
 	private File weaponsFolder;
 
-	private Timer autoSaveTimer = new Timer();
+	private final Timer autoSaveTimer = new Timer();
 	//endregion
 
 	//region Getters/Setters
@@ -173,10 +173,10 @@ public class StockFilingService implements FilingService {
 
 		debugFolder = new File(this.rootFolder + "/Debug/");
 		enemiesFolder = new File(this.rootFolder + "/Enemies/");
-		mapsFolder = new File(this.rootFolder + "/Maps/");
 		importFolder = new File(this.rootFolder + "/Import/");
-		weaponsFolder = new File(this.rootFolder + "/Weapons/");
+		mapsFolder = new File(this.rootFolder + "/Maps/");
 		perksFolder = new File(this.rootFolder + "/Perks/");
+		weaponsFolder = new File(this.rootFolder + "/Weapons/");
 
 		createDirectory(this.rootFolder);
 		createDirectory(debugFolder);
@@ -311,7 +311,7 @@ public class StockFilingService implements FilingService {
 		for (File file : enemiesFolder.listFiles())
 			PluginCore.addEnemy(readContents(file.toString(), EnemyEntity.class));
 
-		int enemyCount = PluginCore.getEnemies().size();
+		int enemyCount = PluginCore.getEnemies().length;
 
 		Log.information(String.format(enemyCount == 1 ? "%d enemy imported." : "%d enemies imported.", enemyCount));
 	}
@@ -323,7 +323,7 @@ public class StockFilingService implements FilingService {
 		for (File file : mapsFolder.listFiles())
 			PluginCore.addMap(readContents(file.toString(), MapEntity.class));
 
-		int mapCount = PluginCore.getMaps().size();
+		int mapCount = PluginCore.getMaps().length;
 
 		Log.information(String.format(mapCount == 1 ? "%d map imported." : "%d maps imported.", mapCount));
 	}
@@ -335,7 +335,7 @@ public class StockFilingService implements FilingService {
 		for (File file : perksFolder.listFiles())
 			PluginCore.addPerk(readContents(file.toString(), PerkEntity.class));
 
-		int perkCount = PluginCore.getPerks().size();
+		int perkCount = PluginCore.getPerks().length;
 
 		Log.information(String.format(perkCount == 1 ? "%d perk imported." : "%d perks imported.", perkCount));
 	}
@@ -347,7 +347,7 @@ public class StockFilingService implements FilingService {
 		for (File file : weaponsFolder.listFiles())
 			PluginCore.addWeapon(readContents(file.toString(), WeaponEntity.class));
 
-		int weaponCount = PluginCore.getWeapons().size();
+		int weaponCount = PluginCore.getWeapons().length;
 
 		Log.information(String.format(weaponCount == 1 ? "%d weapon imported." : "%d weapons imported.", weaponCount));
 	}

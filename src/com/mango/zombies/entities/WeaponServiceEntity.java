@@ -13,7 +13,7 @@ public class WeaponServiceEntity {
 
 	@Expose private int damage;
 
-	@Expose private List<WeaponServiceCharacteristicEntity> characteristics = new ArrayList<WeaponServiceCharacteristicEntity>();
+	@Expose private final List<WeaponServiceCharacteristicEntity> characteristics = new ArrayList<WeaponServiceCharacteristicEntity>();
 
 	@Expose private Sound usageSound;
 
@@ -24,8 +24,8 @@ public class WeaponServiceEntity {
 	/**
 	 * Gets the service's characteristics.
 	 */
-	public List<WeaponServiceCharacteristicEntity> getCharacteristics() {
-		return new ArrayList<WeaponServiceCharacteristicEntity>(characteristics);
+	public WeaponServiceCharacteristicEntity[] getCharacteristics() {
+		return characteristics.toArray(new WeaponServiceCharacteristicEntity[0]);
 	}
 
 	/**

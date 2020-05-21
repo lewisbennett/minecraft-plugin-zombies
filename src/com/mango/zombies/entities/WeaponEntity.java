@@ -22,7 +22,7 @@ public class WeaponEntity {
 
 	@Expose private int cost;
 
-	@Expose private List<WeaponServiceEntity> services = new ArrayList<WeaponServiceEntity>();
+	@Expose private final List<WeaponServiceEntity> services = new ArrayList<WeaponServiceEntity>();
 
 	@Expose private Material item;
 
@@ -105,8 +105,8 @@ public class WeaponEntity {
 	/**
 	 * Gets the weapon's services.
 	 */
-	public List<WeaponServiceEntity> getServices() {
-		return new ArrayList<WeaponServiceEntity>(services);
+	public WeaponServiceEntity[] getServices() {
+		return services.toArray(new WeaponServiceEntity[0]);
 	}
 
 	/**
@@ -156,6 +156,31 @@ public class WeaponEntity {
 			return service.doesRequirePackAPunch() ? PluginCore.getWeaponConfig().getDefaultPackAPunchAccuracy() : PluginCore.getWeaponConfig().getDefaultAccuracy();
 
 		return ((Number)accuracyCharacteristic.getValue()).intValue();
+	}
+
+	/**
+	 * Gets the ammo cost from a service, if available, or default.
+	 * @param isPackAPunched Whether to look for a Pack-A-Punched service.
+	 */
+	public int getAmmoCost(boolean isPackAPunched) {
+		return getAmmoCost(getService(WeaponService.GUNSHOT, isPackAPunched));
+	}
+
+	/**
+	 * Gets the ammo cost from a service, if available, or default.
+	 * @param service The service to look for the ammo cost in.
+	 */
+	public int getAmmoCost(WeaponServiceEntity service) {
+
+		if (service == null || !service.getType().equals(WeaponService.GUNSHOT))
+			throw new IllegalArgumentException("Gunshot service required.");
+
+		WeaponServiceCharacteristicEntity ammoCostCharacteristic = getCharacteristic(service, WeaponServiceCharacteristic.AMMO_COST);
+
+		if (ammoCostCharacteristic == null || !(ammoCostCharacteristic.getValue() instanceof Number))
+			return service.doesRequirePackAPunch() ? cost : cost / 2;
+
+		return ((Number)ammoCostCharacteristic.getValue()).intValue();
 	}
 
 	/**

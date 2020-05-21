@@ -19,10 +19,10 @@ public class PluginCore {
 
     private static GameplayService gameplayService;
 
-    private static List<EnemyEntity> enemies = new ArrayList<EnemyEntity>();
-    private static List<MapEntity> maps = new ArrayList<MapEntity>();
-    private static List<PerkEntity> perks = new ArrayList<PerkEntity>();
-    private static List<WeaponEntity> weapons = new ArrayList<WeaponEntity>();
+    private static final List<EnemyEntity> enemies = new ArrayList<EnemyEntity>();
+    private static final List<MapEntity> maps = new ArrayList<MapEntity>();
+    private static final List<PerkEntity> perks = new ArrayList<PerkEntity>();
+    private static final List<WeaponEntity> weapons = new ArrayList<WeaponEntity>();
 
     private static MapConfigEntity mapConfig;
 
@@ -93,22 +93,22 @@ public class PluginCore {
     /**
      * Gets the enemies.
      */
-    public static List<EnemyEntity> getEnemies() {
-        return new ArrayList<EnemyEntity>(enemies);
+    public static EnemyEntity[] getEnemies() {
+        return enemies.toArray(new EnemyEntity[0]);
     }
 
     /**
      * Gets the perks.
      */
-    public static List<PerkEntity> getPerks() {
-        return new ArrayList<PerkEntity>(perks);
+    public static PerkEntity[] getPerks() {
+        return perks.toArray(new PerkEntity[0]);
     }
 
     /**
      * Gets the maps.
      */
-    public static List<MapEntity> getMaps() {
-        return new ArrayList<MapEntity>(maps);
+    public static MapEntity[] getMaps() {
+        return maps.toArray(new MapEntity[0]);
     }
 
     /**
@@ -142,8 +142,8 @@ public class PluginCore {
     /**
      * Gets the weapons.
      */
-    public static List<WeaponEntity> getWeapons() {
-        return new ArrayList<WeaponEntity>(weapons);
+    public static WeaponEntity[] getWeapons() {
+        return weapons.toArray(new WeaponEntity[0]);
     }
 
     /**

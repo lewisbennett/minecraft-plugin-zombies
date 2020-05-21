@@ -12,12 +12,18 @@ import java.util.Random;
 public class MapEntity {
 
 	//region Fields
-	@Expose private List<String> enemyBlacklist = new ArrayList<String>();
-	@Expose private List<String> enemyWhitelist = new ArrayList<String>();
-	@Expose private List<LocationEntity> enemySpawns = new ArrayList<LocationEntity>();
-	@Expose private List<LocationEntity> playerSpawns = new ArrayList<LocationEntity>();
-	@Expose private List<String> weaponBlacklist = new ArrayList<String>();
-	@Expose private List<String> weaponWhitelist = new ArrayList<String>();
+	@Expose private int mysteryBoxCost;
+	@Expose private int packAPunchCost;
+
+	@Expose private final List<LocationEntity> enemySpawns = new ArrayList<LocationEntity>();
+	@Expose private final List<LocationEntity> playerSpawns = new ArrayList<LocationEntity>();
+
+	@Expose private final List<SignEntity> signs = new ArrayList<SignEntity>();
+
+	@Expose private final List<String> enemyBlacklist = new ArrayList<String>();
+	@Expose private final List<String> enemyWhitelist = new ArrayList<String>();
+	@Expose private final List<String> weaponBlacklist = new ArrayList<String>();
+	@Expose private final List<String> weaponWhitelist = new ArrayList<String>();
 
 	@Expose private LocationEntity bottom = new LocationEntity();
 	@Expose private LocationEntity top = new LocationEntity();
@@ -29,6 +35,7 @@ public class MapEntity {
 	@Expose private String deleteKey;
 	@Expose private String id;
 	@Expose private String name;
+	@Expose private String worldName;
 	//endregion
 
 	//region Getters/Setters
@@ -63,22 +70,22 @@ public class MapEntity {
 	/**
 	 * Gets the enemy blacklist.
 	 */
-	public List<String> getEnemyBlacklist() {
-		return new ArrayList<String>(enemyBlacklist);
+	public String[] getEnemyBlacklist() {
+		return enemyBlacklist.toArray(new String[0]);
 	}
 
 	/**
 	 * Gets the locations where enemies can spawn in the map.
 	 */
-	public List<LocationEntity> getEnemySpawns() {
-		return new ArrayList<LocationEntity>(enemySpawns);
+	public LocationEntity[] getEnemySpawns() {
+		return enemySpawns.toArray(new LocationEntity[0]);
 	}
 
 	/**
 	 * Gets the enemy whitelist.
 	 */
-	public List<String> getEnemyWhitelist() {
-		return new ArrayList<String>(enemyWhitelist);
+	public String[] getEnemyWhitelist() {
+		return enemyWhitelist.toArray(new String[0]);
 	}
 
 	/**
@@ -93,6 +100,20 @@ public class MapEntity {
 	 */
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	/**
+	 * Gets the mystery box cost.
+	 */
+	public int getMysteryBoxCost() {
+		return mysteryBoxCost;
+	}
+
+	/**
+	 * Sets the mystery box cost.
+	 */
+	public void setMysteryBoxCost(int mysteryBoxCost) {
+		this.mysteryBoxCost = mysteryBoxCost;
 	}
 
 	/**
@@ -131,10 +152,24 @@ public class MapEntity {
 	}
 
 	/**
+	 * Gets the Pack-A-Punch cost.
+	 */
+	public int getPackAPunchCost() {
+		return packAPunchCost;
+	}
+
+	/**
+	 * Sets the Pack-A-Punch cost.
+	 */
+	public void setPackAPunchCost(int packAPunchCost) {
+		this.packAPunchCost = packAPunchCost;
+	}
+
+	/**
 	 * Gets the locations where players can spawn in the map.
 	 */
-	public List<LocationEntity> getPlayerSpawns() {
-		return new ArrayList<LocationEntity>(playerSpawns);
+	public LocationEntity[] getPlayerSpawns() {
+		return playerSpawns.toArray(new LocationEntity[0]);
 	}
 
 	/**
@@ -166,6 +201,13 @@ public class MapEntity {
 	}
 
 	/**
+	 * Gets the signs, if any.
+	 */
+	public SignEntity[] getSigns() {
+		return signs.toArray(new SignEntity[0]);
+	}
+
+	/**
 	 * Gets the top corner of the map.
 	 */
 	public LocationEntity getTop() {
@@ -182,15 +224,29 @@ public class MapEntity {
 	/**
 	 * Gets the weapon blacklist.
 	 */
-	public List<String> getWeaponBlacklist() {
-		return new ArrayList<String>(weaponBlacklist);
+	public String[] getWeaponBlacklist() {
+		return weaponBlacklist.toArray(new String[0]);
 	}
 
 	/**
 	 * Gets the weapon whitelist.
 	 */
-	public List<String> getWeaponWhitelist() {
-		return new ArrayList<String>(weaponWhitelist);
+	public String[] getWeaponWhitelist() {
+		return weaponWhitelist.toArray(new String[0]);
+	}
+
+	/**
+	 * Gets the world name.
+	 */
+	public String getWorldName() {
+		return worldName;
+	}
+
+	/**
+	 * Sets the world name.
+	 */
+	public void setWorldName(String worldName) {
+		this.worldName = worldName;
 	}
 	//endregion
 
@@ -228,6 +284,13 @@ public class MapEntity {
 	}
 
 	/**
+	 * Adds a sign.
+	 */
+	public void addSign(SignEntity sign) {
+		signs.add(sign);
+	}
+
+	/**
 	 * Adds an entry to the weapon blacklist.
 	 * @param weaponId The ID of the enemy to add.
 	 */
@@ -241,6 +304,32 @@ public class MapEntity {
 	 */
 	public void addWeaponWhitelistEntry(String weaponId) {
 		weaponWhitelist.add(weaponId);
+	}
+
+	/**
+	 * Gets whether a location is within the map's bounds.
+	 */
+	public boolean isWithinMapBounds(int x, int y, int z) {
+
+		boolean isWithinX = x >= Math.min(top.getX(), bottom.getX()) && x <= Math.max(top.getX(), bottom.getX());
+		boolean isWithinY = y >= Math.min(top.getY(), bottom.getY()) && y <= Math.max(top.getY(), bottom.getY());
+		boolean isWithinZ = z >= Math.min(top.getZ(), bottom.getZ()) && z <= Math.max(top.getZ(), bottom.getZ());
+
+		return isWithinX && isWithinY && isWithinZ;
+	}
+
+	/**
+	 * Gets whether a location is within the map's bounds.
+	 */
+	public boolean isWithinMapBounds(Location location) {
+		return isWithinMapBounds(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+	}
+
+	/**
+	 * Gets whether a location is within the map's bounds.
+	 */
+	public boolean isWithinMapBounds(LocationEntity locationEntity) {
+		return isWithinMapBounds(locationEntity.getX(), locationEntity.getY(), locationEntity.getZ());
 	}
 
 	/**
@@ -276,6 +365,13 @@ public class MapEntity {
 	}
 
 	/**
+	 * Removes a sign.
+	 */
+	public void removeSign(SignEntity sign) {
+		signs.remove(sign);
+	}
+
+	/**
 	 * Removes an entry from the weapon blacklist.
 	 * @param weaponId The ID of the weapon to remove.
 	 */
@@ -295,15 +391,20 @@ public class MapEntity {
 	//region Constructors
 	public MapEntity() { }
 
-	public MapEntity(String id, String name, Location origin) {
+	public MapEntity(String id, String name, Location origin, String worldName) {
 		this();
 
 		this.id = id;
 		this.name = name;
-		originPoint = new LocationEntity(origin);
+		this.worldName = worldName;
+
 		deleteKey = Integer.toString(100000 + new Random().nextInt(999999)).substring(0, 6);
+		originPoint = new LocationEntity(origin);
 
 		MapConfigEntity config = PluginCore.getMapConfig();
+
+		mysteryBoxCost = config.getDefaultMysteryBoxCost();
+		packAPunchCost = config.getDefaultPackAPunchCost();
 
 		roundEndSound = config.getDefaultRoundEndSound();
 		roundStartSound = config.getDefaultRoundStartSound();

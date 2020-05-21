@@ -41,8 +41,8 @@ public class MapInfoCommandExecutor extends BaseCommandExecutor {
 			ChatColor.YELLOW + "Top: " + ChatColor.RESET + map.getTop().toString(),
 			ChatColor.YELLOW + "Bottom: " + ChatColor.RESET + map.getBottom().toString(),
 			ChatColor.YELLOW + "Origin point: " + ChatColor.RESET + map.getOriginPoint().toString(),
-			ChatColor.YELLOW + "Player spawn points: " + ChatColor.RESET + map.getPlayerSpawns().size(),
-			ChatColor.YELLOW + "Enemy spawn points: " + ChatColor.RESET + map.getEnemySpawns().size(),
+			ChatColor.YELLOW + "Player spawn points: " + ChatColor.RESET + map.getPlayerSpawns().length,
+			ChatColor.YELLOW + "Enemy spawn points: " + ChatColor.RESET + map.getEnemySpawns().length,
 			ChatColor.YELLOW + "Delete key: " + ChatColor.RESET + (sender.isOp() ? map.getDeleteKey() : "RESTRICTED")
 		});
 		
