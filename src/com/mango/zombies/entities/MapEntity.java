@@ -12,6 +12,7 @@ import java.util.Random;
 public class MapEntity {
 
 	//region Fields
+	@Expose private int maxPlayers;
 	@Expose private int mysteryBoxCost;
 	@Expose private int packAPunchCost;
 
@@ -100,6 +101,20 @@ public class MapEntity {
 	 */
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	/**
+	 * Gets the max player count.
+	 */
+	public int getMaxPlayers() {
+		return maxPlayers;
+	}
+
+	/**
+	 * Sets the max player count.
+	 */
+	public void setMaxPlayers(int maxPlayers) {
+		this.maxPlayers = maxPlayers;
 	}
 
 	/**
@@ -403,6 +418,7 @@ public class MapEntity {
 
 		MapConfigEntity config = PluginCore.getMapConfig();
 
+		maxPlayers = config.getDefaultMaxPlayers();
 		mysteryBoxCost = config.getDefaultMysteryBoxCost();
 		packAPunchCost = config.getDefaultPackAPunchCost();
 

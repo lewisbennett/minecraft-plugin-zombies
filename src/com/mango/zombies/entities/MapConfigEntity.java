@@ -6,6 +6,7 @@ import org.bukkit.Sound;
 public class MapConfigEntity {
 
     //region Constant Values
+    public static final int DEFAULT_DEFAULT_MAX_PLAYERS = 4;
     public static final int DEFAULT_DEFAULT_MYSTERY_BOX_COST = 950;
     public static final int DEFAULT_DEFAULT_PACK_A_PUNCH_COST = 5000;
 
@@ -14,6 +15,7 @@ public class MapConfigEntity {
     //endregion
 
     //region Fields
+    @Expose private int defaultMaxPlayers = DEFAULT_DEFAULT_MAX_PLAYERS;
     @Expose private int defaultMysteryBoxCost = DEFAULT_DEFAULT_MYSTERY_BOX_COST;
     @Expose private int defaultPackAPunchCost = DEFAULT_DEFAULT_PACK_A_PUNCH_COST;
 
@@ -22,6 +24,20 @@ public class MapConfigEntity {
     //endregion
 
     //region Getters/Setters
+    /**
+     * Gets the default max player count.
+     */
+    public int getDefaultMaxPlayers() {
+        return defaultMaxPlayers;
+    }
+
+    /**
+     * Sets the default max players.
+     */
+    public void setDefaultMaxPlayers(int defaultMaxPlayers) {
+        this.defaultMaxPlayers = defaultMaxPlayers;
+    }
+
     /**
      * Gets the default mystery box cost.
      */
