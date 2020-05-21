@@ -41,7 +41,7 @@ public class Main extends JavaPlugin {
 
         PluginCore.getFilingService().importEverything();
 
-        int delay = Time.fromMinutes(PluginCore.getConfig().getAutoSaveTimerInterval()).totalMilliseconds();
+        long delay = Time.fromMinutes(PluginCore.getConfig().getAutoSaveTimerInterval()).totalMilliseconds();
 
         PluginCore.getFilingService().getAutoSaveTimer().scheduleAtFixedRate(new TimerTask() {
             @Override

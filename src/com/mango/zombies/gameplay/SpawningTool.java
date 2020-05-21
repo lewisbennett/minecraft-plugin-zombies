@@ -51,7 +51,7 @@ public class SpawningTool implements GameplayRegisterable, PlayerInteractEventRe
         GameplayEnemy gameplayEnemy = new GameplayEnemy(enemyEntity);
         gameplayEnemy.setSpawnLocation(clickedBlock.getLocation().add(0, 1, 0));
 
-        gameplayEnemy.setHealth(PluginCore.getGameplayService().calculateHealthForRound(spawnRound, enemyEntity.getRoundMultiplier(), enemyEntity.getMaxHealth()));
+        gameplayEnemy.setCurrentHealth(PluginCore.getGameplayService().calculateHealthForRound(spawnRound, enemyEntity.getRoundMultiplier(), enemyEntity.getMaxHealth()));
         gameplayEnemy.spawn();
     }
     //endregion

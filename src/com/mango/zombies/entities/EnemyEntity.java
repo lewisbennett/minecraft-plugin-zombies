@@ -7,8 +7,10 @@ import org.bukkit.entity.EntityType;
 public class EnemyEntity {
 
     //region Fields
+    @Expose private double bleedOutHealthMultiplier;
     @Expose private double roundMultiplier;
 
+    @Expose private int bleedOutChance;
     @Expose private int despawnTime;
     @Expose private int maxHealth;
 
@@ -18,6 +20,23 @@ public class EnemyEntity {
     //endregion
 
     //region Getters/Setters
+    /**
+     * Gets how like this enemy is to bleed out once the health requirement has been met.
+     */
+    public int getBleedOutChance() {
+        return bleedOutChance;
+    }
+
+    /**
+     * Sets
+     * Sets how like this enemy is to bleed out once the health requirement has been met. Only values between 0 and 100 are accepted.
+     */
+    public void setBleedOutChance(int bleedOutChance) {
+
+        if (bleedOutChance >= 0 && bleedOutChance <= 100)
+            this.bleedOutChance = bleedOutChance;
+    }
+
     /**
      * Gets the despawn time in minutes.
      */
@@ -63,6 +82,22 @@ public class EnemyEntity {
     }
 
     /**
+     * Gets the multiplier that determines when this enemy can potentially bleed out.
+     */
+    public double getBleedOutHealthMultiplier() {
+        return bleedOutHealthMultiplier;
+    }
+
+    /**
+     * Sets the multiplier that determines when this enemy can potentially bleed out.
+     */
+    public void setBleedOutHealthMultiplier(double bleedOutHealthMultiplier) {
+
+        if (bleedOutHealthMultiplier >= 0 && bleedOutHealthMultiplier < 1)
+            this.bleedOutHealthMultiplier = bleedOutHealthMultiplier;
+    }
+
+    /**
      * Gets the round multiplier.
      */
     public double getRoundMultiplier() {
@@ -103,6 +138,8 @@ public class EnemyEntity {
 
         EnemyConfigEntity config = PluginCore.getEnemyConfig();
 
+        bleedOutChance = config.getDefaultBleedOutChance();
+        bleedOutHealthMultiplier = config.getDefaultBleedOutHealthMultiplier();
         despawnTime = config.getDefaultDespawnTime();
         maxHealth = config.getDefaultMaxHealth();
         roundMultiplier = config.getDefaultRoundMultiplier();

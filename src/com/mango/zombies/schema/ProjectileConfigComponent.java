@@ -4,7 +4,7 @@ public class ProjectileConfigComponent {
 
     //region Constant Values
     public static final String DAMAGE = "damage";
-    public static final String SPLASH_DAMAGE = "splash_damage";
-    public static final String SPLASH_RADIUS = "splash_radius";
+    public static final String SPLASH_DAMAGE = "splashDamage";
+    public static final String SPLASH_DAMAGE_RADIUS = "splashDamageRadius";
     //endregion
 }

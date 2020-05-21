@@ -6,6 +6,8 @@ import com.mango.zombies.Time;
 import com.mango.zombies.entities.EnemyEntity;
 import com.mango.zombies.gameplay.base.GameplayRegisterable;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -15,10 +17,16 @@ import java.util.UUID;
 public class GameplayEnemy implements GameplayRegisterable {
 
     //region Fields
-    private EnemyEntity enemyEntity;
-    private LivingEntity entity;
     private boolean hasBeenDamaged, hasBeenSpawned;
-    private int health;
+
+    private EnemyEntity enemyEntity;
+
+    private int bleedOutTaskReference;
+    private int currentHealth;
+    private int originalHealth;
+
+    private LivingEntity entity;
+
     private Location spawnLocation;
     //endregion
 
@@ -33,15 +41,17 @@ public class GameplayEnemy implements GameplayRegisterable {
     /**
      * Gets the health of the enemy.
      */
-    public int getHealth() {
-        return health;
+    public int getCurrentHealth() {
+        return currentHealth;
     }
 
     /**
      * Sets the health of the enemy.
      */
-    public void setHealth(int health) {
-        this.health = health;
+    public void setCurrentHealth(int currentHealth) {
+
+        this.currentHealth = currentHealth;
+        originalHealth = this.currentHealth;
     }
 
     /**
@@ -77,9 +87,22 @@ public class GameplayEnemy implements GameplayRegisterable {
 
         hasBeenDamaged = true;
 
-        health -= damage;
+        currentHealth -= damage;
 
-        if (health > 0)
+        spawnBloodEffect(damage / 10);
+
+        int healthThreshhold = (int)Math.round(originalHealth * enemyEntity.getBleedOutHealthMultiplier());
+
+        if (currentHealth < healthThreshhold && Math.random() * 100 <= enemyEntity.getBleedOutChance()) {
+
+            Main instance = Main.getInstance();
+
+            long time = Time.fromSeconds(1).totalTicks();
+
+            bleedOutTaskReference = instance.getServer().getScheduler().scheduleSyncRepeatingTask(instance, this::bleedOut_runnable, time, time);
+        }
+
+        if (currentHealth > 0)
             return;
 
         entity.damage(100);
@@ -118,6 +141,25 @@ public class GameplayEnemy implements GameplayRegisterable {
     //endregion
 
     //region Runnables
+    private void bleedOut_runnable() {
+
+        if (entity == null || currentHealth < 1)
+            return;
+
+        spawnBloodEffect(20);
+
+        currentHealth -= (originalHealth * 0.05);
+
+        if (currentHealth > 0)
+            entity.damage(0);
+
+        else {
+
+            entity.damage(100);
+            Main.getInstance().getServer().getScheduler().cancelTask(bleedOutTaskReference);
+        }
+    }
+
     private void despawn_runnable() {
 
         if (!hasBeenDamaged)
@@ -128,6 +170,12 @@ public class GameplayEnemy implements GameplayRegisterable {
     //region Constructors
     public GameplayEnemy(EnemyEntity enemyEntity) {
         this.enemyEntity = enemyEntity;
+    }
+    //endregion
+
+    //region Private Methods
+    private void spawnBloodEffect(int count) {
+        entity.getWorld().spawnParticle(Particle.BLOCK_CRACK, Math.random() > 0.5 ? entity.getEyeLocation() : entity.getLocation(), count, Material.RED_WOOL.createBlockData());
     }
     //endregion
 }

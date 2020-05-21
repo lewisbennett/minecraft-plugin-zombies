@@ -152,10 +152,10 @@ public class WeaponEntity {
 
 		WeaponServiceCharacteristicEntity accuracyCharacteristic = getCharacteristic(service, WeaponServiceCharacteristic.ACCURACY);
 
-		if (accuracyCharacteristic == null || !(accuracyCharacteristic.getValue() instanceof Integer))
+		if (accuracyCharacteristic == null || !(accuracyCharacteristic.getValue() instanceof Number))
 			return service.doesRequirePackAPunch() ? PluginCore.getWeaponConfig().getDefaultPackAPunchAccuracy() : PluginCore.getWeaponConfig().getDefaultAccuracy();
 
-		return (int)accuracyCharacteristic.getValue();
+		return ((Number)accuracyCharacteristic.getValue()).intValue();
 	}
 
 	/**
@@ -205,10 +205,10 @@ public class WeaponEntity {
 
 		WeaponServiceCharacteristicEntity magazineCapacityCharacteristic = getCharacteristic(service, WeaponServiceCharacteristic.MAGAZINE_CAPACITY);
 
-		if (magazineCapacityCharacteristic == null || !(magazineCapacityCharacteristic.getValue() instanceof Integer))
+		if (magazineCapacityCharacteristic == null || !(magazineCapacityCharacteristic.getValue() instanceof Number))
 			return service.doesRequirePackAPunch() ? PluginCore.getWeaponConfig().getDefaultPackAPunchMagazineCapacity() : PluginCore.getWeaponConfig().getDefaultMagazineCapacity();
 
-		return (int)magazineCapacityCharacteristic.getValue();
+		return ((Number)magazineCapacityCharacteristic.getValue()).intValue();
 	}
 
 	/**
@@ -255,10 +255,10 @@ public class WeaponEntity {
 
 		WeaponServiceCharacteristicEntity projectileCountCharacteristic = getCharacteristic(service, WeaponServiceCharacteristic.PROJECTILES_IN_CARTRIDGE);
 
-		if (projectileCountCharacteristic == null || !(projectileCountCharacteristic.getValue() instanceof Integer))
+		if (projectileCountCharacteristic == null || !(projectileCountCharacteristic.getValue() instanceof Number))
 			return service.doesRequirePackAPunch() ? PluginCore.getWeaponConfig().getDefaultPackAPunchProjectileCount() : PluginCore.getWeaponConfig().getDefaultProjectileCount();
 
-		return (int)projectileCountCharacteristic.getValue();
+		return ((Number)projectileCountCharacteristic.getValue()).intValue();
 	}
 
 	/**
@@ -312,10 +312,10 @@ public class WeaponEntity {
 
 		WeaponServiceCharacteristicEntity reloadSpeedCharacteristic = getCharacteristic(service, WeaponServiceCharacteristic.RELOAD_SPEED);
 
-		if (reloadSpeedCharacteristic == null || !(reloadSpeedCharacteristic.getValue() instanceof Integer))
+		if (reloadSpeedCharacteristic == null || !(reloadSpeedCharacteristic.getValue() instanceof Number))
 			return service.doesRequirePackAPunch() ? PluginCore.getWeaponConfig().getDefaultPackAPunchReloadSpeed() : PluginCore.getWeaponConfig().getDefaultReloadSpeed();
 
-		return (int)reloadSpeedCharacteristic.getValue();
+		return ((Number)reloadSpeedCharacteristic.getValue()).intValue();
 	}
 
 	/**
@@ -362,12 +362,12 @@ public class WeaponEntity {
 		if (service == null || !service.getType().equals(WeaponService.GUNSHOT))
 			throw new IllegalArgumentException("Gunshot service required.");
 
-		WeaponServiceCharacteristicEntity reloadSpeedCharacteristic = getCharacteristic(service, WeaponServiceCharacteristic.TOTAL_AMMO_CAPACITY);
+		WeaponServiceCharacteristicEntity totalAmmoCapacityCharacteristic = getCharacteristic(service, WeaponServiceCharacteristic.TOTAL_AMMO_CAPACITY);
 
-		if (reloadSpeedCharacteristic == null || !(reloadSpeedCharacteristic.getValue() instanceof Integer))
+		if (totalAmmoCapacityCharacteristic == null || !(totalAmmoCapacityCharacteristic.getValue() instanceof Number))
 			return service.doesRequirePackAPunch() ? PluginCore.getWeaponConfig().getDefaultPackAPunchTotalAmmoCapacity() : PluginCore.getWeaponConfig().getDefaultTotalAmmoCapacity();
 
-		return (int)reloadSpeedCharacteristic.getValue();
+		return ((Number)totalAmmoCapacityCharacteristic.getValue()).intValue();
 	}
 	//endregion
 

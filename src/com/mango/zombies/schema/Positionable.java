@@ -13,7 +13,6 @@ public class Positionable {
     //region Public Static Methods
     /**
      * Gets all positionables as an array.
-     * @return
      */
     public static List<String> toList() {
 
