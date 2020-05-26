@@ -2,6 +2,8 @@ package com.mango.zombies.entities;
 
 import com.google.gson.annotations.Expose;
 import com.mango.zombies.PluginCore;
+import com.mango.zombies.gameplay.GameplaySession;
+import com.mango.zombies.gameplay.base.GameplayRegisterable;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 
@@ -12,12 +14,16 @@ import java.util.Random;
 public class MapEntity {
 
 	//region Fields
+	private boolean isEnabled;
+
 	@Expose private int maxPlayers;
 	@Expose private int mysteryBoxCost;
 	@Expose private int packAPunchCost;
 
 	@Expose private final List<LocationEntity> enemySpawns = new ArrayList<LocationEntity>();
 	@Expose private final List<LocationEntity> playerSpawns = new ArrayList<LocationEntity>();
+	@Expose private final List<LocationEntity> spectatorSpawns = new ArrayList<LocationEntity>();
+	@Expose private final List<LocationEntity> zombieCureSpawns = new ArrayList<LocationEntity>();
 
 	@Expose private final List<SignEntity> signs = new ArrayList<SignEntity>();
 
@@ -26,8 +32,9 @@ public class MapEntity {
 	@Expose private final List<String> weaponBlacklist = new ArrayList<String>();
 	@Expose private final List<String> weaponWhitelist = new ArrayList<String>();
 
-	@Expose private LocationEntity bottom = new LocationEntity();
-	@Expose private LocationEntity top = new LocationEntity();
+	@Expose private LocationEntity lobbyPoint = new LocationEntity();
+	@Expose private LocationEntity bottomPoint = new LocationEntity();
+	@Expose private LocationEntity topPoint = new LocationEntity();
 	@Expose private LocationEntity originPoint;
 
 	@Expose private Sound roundEndSound;
@@ -41,17 +48,24 @@ public class MapEntity {
 
 	//region Getters/Setters
 	/**
+	 * Gets whether the map is enabled.
+	 */
+	public boolean isEnabled() {
+		return isEnabled;
+	}
+
+	/**
 	 * Gets the bottom corner of the map.
 	 */
-	public LocationEntity getBottom() {
-		return bottom;
+	public LocationEntity getBottomPoint() {
+		return bottomPoint;
 	}
 
 	/**
 	 * Sets the bottom corner of the map.
 	 */
-	public void setBottom(LocationEntity bottom) {
-		this.bottom = bottom;
+	public void setBottomPoint(LocationEntity bottomPoint) {
+		this.bottomPoint = bottomPoint;
 	}
 
 	/**
@@ -101,6 +115,20 @@ public class MapEntity {
 	 */
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	/**
+	 * Gets the lobby spawn location.
+	 */
+	public LocationEntity getLobbyPoint() {
+		return lobbyPoint;
+	}
+
+	/**
+	 * Sets the lobby spawn location.
+	 */
+	public void setLobbyPoint(LocationEntity lobbyPoint) {
+		this.lobbyPoint = lobbyPoint;
 	}
 
 	/**
@@ -223,17 +251,24 @@ public class MapEntity {
 	}
 
 	/**
+	 * Gets the spectator spawn points.
+	 */
+	public LocationEntity[] getSpectatorSpawns() {
+		return spectatorSpawns.toArray(new LocationEntity[0]);
+	}
+
+	/**
 	 * Gets the top corner of the map.
 	 */
-	public LocationEntity getTop() {
-		return top;
+	public LocationEntity getTopPoint() {
+		return topPoint;
 	}
 
 	/**
 	 * Sets the top corner of the map.
 	 */
-	public void setTop(LocationEntity top) {
-		this.top = top;
+	public void setTopPoint(LocationEntity topPoint) {
+		this.topPoint = topPoint;
 	}
 
 	/**
@@ -262,6 +297,13 @@ public class MapEntity {
 	 */
 	public void setWorldName(String worldName) {
 		this.worldName = worldName;
+	}
+
+	/**
+	 * Gets the zombie cure spawn locations.
+ 	 */
+	public LocationEntity[] getZombieCureSpawns() {
+		return zombieCureSpawns.toArray(new LocationEntity[0]);
 	}
 	//endregion
 
@@ -306,6 +348,13 @@ public class MapEntity {
 	}
 
 	/**
+	 * Adds a spectator spawn location.
+	 */
+	public void addSpectatorSpawnLocation(LocationEntity location) {
+		spectatorSpawns.add(location);
+	}
+
+	/**
 	 * Adds an entry to the weapon blacklist.
 	 * @param weaponId The ID of the enemy to add.
 	 */
@@ -322,29 +371,77 @@ public class MapEntity {
 	}
 
 	/**
+	 * Adds a zombie cure spawn location.
+	 */
+	public void addZombieCureSpawn(LocationEntity location) {
+		zombieCureSpawns.add(location);
+	}
+
+	/**
+	 * Disables the map, if it can.
+	 */
+	public void disableMap() {
+
+		boolean isActiveInSession = false;
+
+		for (GameplayRegisterable queryRegisterable : PluginCore.getGameplayService().getRegisterables()) {
+
+			if (!(queryRegisterable instanceof GameplaySession))
+				continue;
+
+			GameplaySession querySession = (GameplaySession)queryRegisterable;
+
+			if (querySession.getMap().getId().equals(id)) {
+				isActiveInSession = true;
+				break;
+			}
+		}
+
+		if (isActiveInSession)
+			throw new IllegalStateException("Map not disabled. A session is currently active.");
+
+		isEnabled = false;
+	}
+
+	/**
+	 * Enables the map, if it can.
+	 */
+	public void enableMap() {
+
+		if (enemySpawns.size() < 1)
+			throw new IllegalStateException("Map not enabled. At least 1 enemy spawn point is required.");
+
+		if (playerSpawns.size() < 1)
+			throw new IllegalStateException("Map not enabled. At least 1 player spawn point is required.");
+
+		if (maxPlayers < 1)
+			throw new IllegalStateException("Map not enabled. Max players must be at least 1.");
+
+		if (lobbyPoint == null || lobbyPoint.isEmpty())
+			throw new IllegalStateException("Map not enabled. The lobby spawn location has not been configured.");
+
+		isEnabled = true;
+	}
+
+	/**
 	 * Gets whether a location is within the map's bounds.
 	 */
-	public boolean isWithinMapBounds(int x, int y, int z) {
+	public boolean isWithinMapBounds(String worldName, int x, int y, int z) {
 
-		boolean isWithinX = x >= Math.min(top.getX(), bottom.getX()) && x <= Math.max(top.getX(), bottom.getX());
-		boolean isWithinY = y >= Math.min(top.getY(), bottom.getY()) && y <= Math.max(top.getY(), bottom.getY());
-		boolean isWithinZ = z >= Math.min(top.getZ(), bottom.getZ()) && z <= Math.max(top.getZ(), bottom.getZ());
+		boolean isWithinWorld = this.worldName.equals(worldName);
 
-		return isWithinX && isWithinY && isWithinZ;
+		boolean isWithinX = x >= Math.min(topPoint.getX(), bottomPoint.getX()) && x <= Math.max(topPoint.getX(), bottomPoint.getX());
+		boolean isWithinY = y >= Math.min(topPoint.getY(), bottomPoint.getY()) && y <= Math.max(topPoint.getY(), bottomPoint.getY());
+		boolean isWithinZ = z >= Math.min(topPoint.getZ(), bottomPoint.getZ()) && z <= Math.max(topPoint.getZ(), bottomPoint.getZ());
+
+		return isWithinWorld && isWithinX && isWithinY && isWithinZ;
 	}
 
 	/**
 	 * Gets whether a location is within the map's bounds.
 	 */
 	public boolean isWithinMapBounds(Location location) {
-		return isWithinMapBounds(location.getBlockX(), location.getBlockY(), location.getBlockZ());
-	}
-
-	/**
-	 * Gets whether a location is within the map's bounds.
-	 */
-	public boolean isWithinMapBounds(LocationEntity locationEntity) {
-		return isWithinMapBounds(locationEntity.getX(), locationEntity.getY(), locationEntity.getZ());
+		return isWithinMapBounds(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
 	}
 
 	/**
@@ -387,6 +484,13 @@ public class MapEntity {
 	}
 
 	/**
+	 * Removes a spectator spawn location.
+	 */
+	public void removeSpectatorSpawn(LocationEntity location) {
+		spectatorSpawns.remove(location);
+	}
+
+	/**
 	 * Removes an entry from the weapon blacklist.
 	 * @param weaponId The ID of the weapon to remove.
 	 */
@@ -400,6 +504,13 @@ public class MapEntity {
 	 */
 	public void removeWeaponWhitelistEntry(String weaponId) {
 		weaponWhitelist.remove(weaponId);
+	}
+
+	/**
+	 * Removes a zombie cure spawn location.
+	 */
+	public void removeZombieCureLocation(LocationEntity location) {
+		zombieCureSpawns.remove(location);
 	}
 	//endregion
 

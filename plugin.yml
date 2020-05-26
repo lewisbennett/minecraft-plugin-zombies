@@ -9,26 +9,59 @@ commands:
     info:
       description: Get plugin information.
       usage: /<command>
-        
-    mapinfo:
-      description: Gets information related to specified map.
-      usage: /<command> [map ID]
-        
-    createmap:
-      description: Creates a new map.
-      usage: /<command> [ID] [name]
 
-    createweapon:
-      description: Creates a new weapon.
-      usage: /<command> [ID] [weapon class ID] [name]
+
+    createsession:
+      description: Create a new session.
+      usage: /<command> [map ID] [gamemode]
+
+    joinsession:
+      description: Joins a session.
+      usage: /<command> [map ID]
+
+    leavesession:
+      description: Leaves a session.
+      usage: /<command>
+
+    listsessions:
+      description: Lists all available sessions.
+      usage: /<command>
 
     createenemy:
       description: Creates a new enemy.
       usage: /<command> [ID] [entity type]
 
+    createmap:
+      description: Creates a new map.
+      usage: /<command> [ID] [name]
+
+    deletemap:
+      description: Deletes a map.
+      usage: /<command> [map ID] [delete key]
+
+    enablemap:
+      description: Enables a map, if possible.
+      usage: /<command> [map ID]
+
+    disablemap:
+      description: Disables a map, if possible.
+      usage: /<command> [map ID]
+
+    mapinfo:
+      description: Gets information related to specified map.
+      usage: /<command> [map ID]
+
+    listmaps:
+      description: Lists all available maps.
+      usage: /<command>
+
     createperk:
       description: Creates a new perk.
       usage: /<command> [ID] [cost] [name]
+
+    createweapon:
+      description: Creates a new weapon.
+      usage: /<command> [ID] [weapon class ID] [name]
         
     getweapon:
       description: Gets the specified weapon and adds it to your inventory.
@@ -41,7 +74,3 @@ commands:
     getspawningtool:
       description: Gets the spawning tool.
       usage: /<command> [enemy ID] [spawn round]
-
-    deletemap:
-      description: Deletes a map.
-      usage: /<command> [map ID] [delete key]

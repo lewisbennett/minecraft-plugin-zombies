@@ -56,6 +56,13 @@ public class LocationEntity {
     //endregion
 
     //region Public Methods
+    /**
+     * Gets whether the location is empty.
+     */
+    public boolean isEmpty() {
+        return x == 0 && y == 0 && z == 0;
+    }
+
     @Override
     public String toString() {
         return x + ", " + y + ", " + z;

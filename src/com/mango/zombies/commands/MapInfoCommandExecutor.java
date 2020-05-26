@@ -38,8 +38,8 @@ public class MapInfoCommandExecutor extends BaseCommandExecutor {
 		sender.sendMessage(new String[] {
 			ChatColor.GREEN + "" + "<==-- " + map.getName() + " --==>",
 			ChatColor.YELLOW + "ID: " + ChatColor.RESET + map.getId(),
-			ChatColor.YELLOW + "Top: " + ChatColor.RESET + map.getTop().toString(),
-			ChatColor.YELLOW + "Bottom: " + ChatColor.RESET + map.getBottom().toString(),
+			ChatColor.YELLOW + "Top: " + ChatColor.RESET + map.getTopPoint().toString(),
+			ChatColor.YELLOW + "Bottom: " + ChatColor.RESET + map.getBottomPoint().toString(),
 			ChatColor.YELLOW + "Origin point: " + ChatColor.RESET + map.getOriginPoint().toString(),
 			ChatColor.YELLOW + "Player spawn points: " + ChatColor.RESET + map.getPlayerSpawns().length,
 			ChatColor.YELLOW + "Enemy spawn points: " + ChatColor.RESET + map.getEnemySpawns().length,

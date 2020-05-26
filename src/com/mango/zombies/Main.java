@@ -49,6 +49,8 @@ public class Main extends JavaPlugin {
 
         resetAllMapSigns();
 
+        enableAllMaps();
+
         long delay = Time.fromMinutes(PluginCore.getConfig().getAutoSaveTimerInterval()).totalMilliseconds();
 
         PluginCore.getFilingService().getAutoSaveTimer().scheduleAtFixedRate(new TimerTask() {
@@ -72,15 +74,21 @@ public class Main extends JavaPlugin {
     public void registerCommands() {
 
         this.getCommand("info").setExecutor(new InfoCommandExecutor());
-        this.getCommand("mapinfo").setExecutor(new MapInfoCommandExecutor());
-        this.getCommand("createmap").setExecutor(new CreateMapCommandExecutor());
+        this.getCommand("createsession").setExecutor(new CreateSessionCommandExecutor());
+        this.getCommand("joinsession").setExecutor(new JoinSessionCommandExecutor());
+        this.getCommand("leavesession").setExecutor(new LeaveSessionCommandExecutor());
+        this.getCommand("listsessions").setExecutor(new ListSessionsCommandExecutor());
         this.getCommand("createenemy").setExecutor(new CreateEnemyCommandExecutor());
-        this.getCommand("createweapon").setExecutor(new CreateWeaponCommandExecutor());
+        this.getCommand("createmap").setExecutor(new CreateMapCommandExecutor());
+        this.getCommand("enablemap").setExecutor(new EnableMapCommandExecutor());
+        this.getCommand("disablemap").setExecutor(new DisableMapCommandExecutor());
+        this.getCommand("mapinfo").setExecutor(new MapInfoCommandExecutor());
+        this.getCommand("listmaps").setExecutor(new ListMapsCommandExecutor());
         this.getCommand("createperk").setExecutor(new CreatePerkCommandExecutor());
+        this.getCommand("createweapon").setExecutor(new CreateWeaponCommandExecutor());
         this.getCommand("getweapon").setExecutor(new GetWeaponCommandExecutor());
         this.getCommand("getpositiontool").setExecutor(new GetPositionToolCommandExecutor());
         this.getCommand("getspawningtool").setExecutor(new GetSpawningToolCommandExecutor());
-        this.getCommand("deletemap").setExecutor(new DeleteMapCommandExecutor());
     }
 
     /**
@@ -89,12 +97,14 @@ public class Main extends JavaPlugin {
     public void registerEvents() {
 
         Bukkit.getPluginManager().registerEvents(new BlockBreakListener(), this);
+        Bukkit.getPluginManager().registerEvents(new BlockPlaceListener(), this);
         Bukkit.getPluginManager().registerEvents(new EntityDamageByEntityListener(), this);
         Bukkit.getPluginManager().registerEvents(new EntityDeathListener(), this);
         Bukkit.getPluginManager().registerEvents(new InventoryPickupItemListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerEggThrowListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerInteractListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerPickupArrowListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerQuitListener(), this);
         Bukkit.getPluginManager().registerEvents(new ProjectileHitListener(), this);
         Bukkit.getPluginManager().registerEvents(new SignChangedListener(), this);
     }
@@ -111,6 +121,33 @@ public class Main extends JavaPlugin {
     //endregion
 
     //region Private Methods
+    private void enableAllMaps() {
+
+        int enabledCount = 0;
+        int disableCount = 0;
+
+        for (MapEntity queryMap : PluginCore.getMaps()) {
+
+            try {
+
+                queryMap.enableMap();
+
+            } catch (Exception ignored) { }
+
+            if (queryMap.isEnabled())
+                enabledCount++;
+            else
+                disableCount++;
+        }
+
+        String message = enabledCount + " " + (enabledCount == 1 ? "map has" : "maps have") + " been enabled.";
+
+        if (disableCount > 0)
+            message += " " + disableCount + " " + (disableCount == 1 ? "map is" : "maps are") + " currently disabled.";
+
+        Log.information(message);
+    }
+
     private void resetAllMapSigns() {
 
         Log.information("Validating signs...");

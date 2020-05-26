@@ -1,6 +1,7 @@
 package com.mango.zombies.listeners;
 
 import com.mango.zombies.PluginCore;
+import com.mango.zombies.entities.MapEntity;
 import com.mango.zombies.gameplay.base.BlockBreakEventRegisterable;
 import com.mango.zombies.gameplay.base.GameplayRegisterable;
 import com.mango.zombies.helper.HiddenStringUtils;
@@ -15,7 +16,24 @@ public class BlockBreakListener implements Listener {
     //region Event Handlers
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
+
         handOffToRegisterables(event);
+
+        if (event.isCancelled())
+            return;
+
+        MapEntity mapEntity = null;
+
+        for (MapEntity queryMap : PluginCore.getMaps()) {
+
+            if (queryMap.isWithinMapBounds(event.getBlock().getLocation())) {
+                mapEntity = queryMap;
+                break;
+            }
+        }
+
+        if (mapEntity != null && mapEntity.isEnabled())
+            event.setCancelled(true);
     }
     //endregion
 

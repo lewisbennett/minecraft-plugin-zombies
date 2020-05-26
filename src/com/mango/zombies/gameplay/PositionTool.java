@@ -92,8 +92,8 @@ public class PositionTool implements GameplayRegisterable, BlockBreakEventRegist
 
         if (positionable.equals(Positionable.MAP)) {
 
-            map.setTop(top);
-            map.setBottom(bottom);
+            map.setTopPoint(top);
+            map.setBottomPoint(bottom);
 
             PluginCore.getMessagingService().success(event.getPlayer(), "Top and bottom positions for " + map.getId() + " set.");
         }

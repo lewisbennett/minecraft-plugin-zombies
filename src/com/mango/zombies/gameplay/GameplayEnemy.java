@@ -1,5 +1,6 @@
 package com.mango.zombies.gameplay;
 
+import com.mango.zombies.Log;
 import com.mango.zombies.Main;
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.Time;
@@ -11,6 +12,7 @@ import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
@@ -19,7 +21,9 @@ public class GameplayEnemy implements GameplayRegisterable {
     //region Fields
     private boolean hasBeenDamaged, hasBeenSpawned;
 
-    private EnemyEntity enemyEntity;
+    private final EnemyEntity enemyEntity;
+
+    private GameplaySession gameplaySession;
 
     private int bleedOutTaskReference;
     private int currentHealth;
@@ -31,13 +35,6 @@ public class GameplayEnemy implements GameplayRegisterable {
     //endregion
 
     //region Getters/Setters
-    /**
-     * Gets the entity.
-     */
-    public LivingEntity getEntity() {
-        return entity;
-    }
-
     /**
      * Gets the health of the enemy.
      */
@@ -52,6 +49,27 @@ public class GameplayEnemy implements GameplayRegisterable {
 
         this.currentHealth = currentHealth;
         originalHealth = this.currentHealth;
+    }
+
+    /**
+     * Gets the entity.
+     */
+    public LivingEntity getEntity() {
+        return entity;
+    }
+
+    /**
+     * Gets the session that this enemy is a part of, if any.
+     */
+    public GameplaySession getGameplaySession() {
+        return gameplaySession;
+    }
+
+    /**
+     * Sets the session that this enemy is a part of, if any.
+     */
+    public void setGameplaySession(GameplaySession gameplaySession) {
+        this.gameplaySession = gameplaySession;
     }
 
     /**
@@ -80,7 +98,7 @@ public class GameplayEnemy implements GameplayRegisterable {
     /**
      * Damages the enemy.
      */
-    public void damage(int damage) {
+    public void damage(Player player, int damage, String weaponServiceType) {
 
         if (entity == null)
             return;
@@ -102,10 +120,20 @@ public class GameplayEnemy implements GameplayRegisterable {
             bleedOutTaskReference = instance.getServer().getScheduler().scheduleSyncRepeatingTask(instance, this::bleedOut_runnable, time, time);
         }
 
-        if (currentHealth > 0)
+        GameplayPlayer gameplayPlayer = findGameplayPlayerForPlayer(player);
+
+        if (currentHealth > 0) {
+
+            if (gameplaySession != null && gameplayPlayer != null)
+                gameplaySession.getGamemode().onEnemyDamaged(gameplayPlayer, this);
+
             return;
+        }
 
         entity.damage(100);
+
+        if (gameplaySession != null && gameplayPlayer != null)
+            gameplaySession.getGamemode().onEnemyKilled(gameplayPlayer, this, weaponServiceType);
     }
 
     /**
@@ -133,6 +161,8 @@ public class GameplayEnemy implements GameplayRegisterable {
         this.entity = (LivingEntity)entity;
 
         PluginCore.getGameplayService().register(this);
+
+        Log.information("Enemy spawned at: " + entity.getLocation().getBlockX() + entity.getLocation().getBlockY() + entity.getLocation().getBlockZ());
 
         Main instance = Main.getInstance();
 
@@ -174,6 +204,25 @@ public class GameplayEnemy implements GameplayRegisterable {
     //endregion
 
     //region Private Methods
+    private GameplayPlayer findGameplayPlayerForPlayer(Player player) {
+
+        for (GameplayRegisterable queryRegisterable : PluginCore.getGameplayService().getRegisterables()) {
+
+            if (!(queryRegisterable instanceof GameplaySession))
+                continue;
+
+            GameplaySession querySession = (GameplaySession)queryRegisterable;
+
+            for (GameplayPlayer queryPlayer : querySession.getPlayers()) {
+
+                if (queryPlayer.getPlayer().getUniqueId().equals(player.getUniqueId()))
+                    return queryPlayer;
+            }
+        }
+
+        return null;
+    }
+
     private void spawnBloodEffect(int count) {
         entity.getWorld().spawnParticle(Particle.BLOCK_CRACK, Math.random() > 0.5 ? entity.getEyeLocation() : entity.getLocation(), count, Material.RED_WOOL.createBlockData());
     }

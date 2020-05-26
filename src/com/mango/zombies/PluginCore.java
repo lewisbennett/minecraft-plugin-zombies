@@ -17,6 +17,8 @@ public class PluginCore {
 
     private static FilingService filingService;
 
+    private static GameplayConfigEntity gameplayConfig;
+
     private static GameplayService gameplayService;
 
     private static final List<EnemyEntity> enemies = new ArrayList<EnemyEntity>();
@@ -74,6 +76,20 @@ public class PluginCore {
      */
     public static void setFilingService(FilingService filingService) {
         PluginCore.filingService = filingService;
+    }
+
+    /**
+     * Gets the gamemode config.
+     */
+    public static GameplayConfigEntity getGameplayConfig() {
+        return gameplayConfig;
+    }
+
+    /**
+     * Sets the gamemode config.
+     */
+    public static void setGameplayConfig(GameplayConfigEntity gameplayConfig) {
+        PluginCore.gameplayConfig = gameplayConfig;
     }
 
     /**

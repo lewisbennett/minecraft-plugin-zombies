@@ -153,6 +153,7 @@ public class StockFilingService implements FilingService {
 
 		saveConfig();
 		saveEnemyConfig();
+		saveGameplayConfig();
 		saveMapConfig();
 		savePerkConfig();
 		saveWeaponConfig();
@@ -273,6 +274,10 @@ public class StockFilingService implements FilingService {
 					PluginCore.setEnemyConfig(readContents(file.toString(), EnemyConfigEntity.class));
 					continue;
 
+				case FileName.GAMEPLAY_CONFIG_FILE + ".json":
+					PluginCore.setGameplayConfig(readContents(file.toString(), GameplayConfigEntity.class));
+					continue;
+
 				case FileName.MAP_CONFIG_FILE + ".json":
 					PluginCore.setMapConfig(readContents(file.toString(), MapConfigEntity.class));
 					continue;
@@ -291,6 +296,9 @@ public class StockFilingService implements FilingService {
 
 		if (PluginCore.getEnemyConfig() == null)
 			PluginCore.setEnemyConfig(new EnemyConfigEntity());
+
+		if (PluginCore.getGameplayConfig() == null)
+			PluginCore.setGameplayConfig(new GameplayConfigEntity());
 
 		if (PluginCore.getMapConfig() == null)
 			PluginCore.setMapConfig(new MapConfigEntity());
@@ -391,6 +399,15 @@ public class StockFilingService implements FilingService {
 		boolean result = writeFile(rootFolder, FileName.ENEMY_CONFIG_FILE, PluginCore.getEnemyConfig());
 
 		Log.information(result ? "Enemy configuration file saved." : "Failed to save enemy configuration file.");
+	}
+
+	private void saveGameplayConfig() {
+
+		Log.information("Saving gameplay configuration file...");
+
+		boolean result = writeFile(rootFolder, FileName.GAMEPLAY_CONFIG_FILE, PluginCore.getGameplayConfig());
+
+		Log.information(result ? "Gameplay configuration file saved." : "Failed to save gameplay configuration file.");
 	}
 
 	private void saveMapConfig() {

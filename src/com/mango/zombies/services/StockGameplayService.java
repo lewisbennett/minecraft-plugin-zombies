@@ -1,6 +1,13 @@
 package com.mango.zombies.services;
 
+import com.mango.zombies.PluginCore;
+import com.mango.zombies.entities.MapEntity;
+import com.mango.zombies.gamemodes.StandardGamemode;
+import com.mango.zombies.gamemodes.TurnedGamemode;
+import com.mango.zombies.gamemodes.base.ZombiesGamemode;
+import com.mango.zombies.gameplay.GameplaySession;
 import com.mango.zombies.gameplay.base.GameplayRegisterable;
+import com.mango.zombies.schema.Gamemode;
 import com.mango.zombies.services.base.GameplayService;
 
 import java.util.ArrayList;
@@ -9,20 +16,37 @@ import java.util.UUID;
 
 public class StockGameplayService implements GameplayService {
 
+    //region Constant Values
+    public static final String GAMEMODE_DOES_NOT_EXIST_ERROR = "Session not created. %s is not a valid gamemode.";
+    public static final String MAP_DISABLED_ERROR = "Session not created. %s is currently disabled.";
+    public static final String MAP_ID_DOES_NOT_EXIST_ERROR = "Session not created. %s does not exist.";
+    public static final String MAP_DOES_NOT_SUPPORT_TURNED_ERROR = "Session not created. %s does not support Turned.";
+    public static final String SESSION_ALREADY_EXISTS_ERROR = "A session for %s already exists. Join using /joinsession %s";
+    //endregion
+
     //region Fields
-    private List<GameplayRegisterable> gameplayRegisterables = new ArrayList<GameplayRegisterable>();
+    private final List<GameplayRegisterable> gameplayRegisterables = new ArrayList<GameplayRegisterable>();
     //endregion
 
     //region Getters/Setters
     /**
      * Gets the currently active registerables.
      */
-    public List<GameplayRegisterable> getRegisterables() {
-        return new ArrayList<GameplayRegisterable>(gameplayRegisterables);
+    public GameplayRegisterable[] getRegisterables() {
+        return gameplayRegisterables.toArray(new GameplayRegisterable[0]);
     }
     //endregion
 
     //region Public Methods
+    /**
+     * Calculates how many enemies to spawn in a round.
+     * @param playerCount The number of players in the game.
+     * @param round The round.
+     */
+    public int calculateEnemiesForRound(int playerCount, int round) {
+        return (int)Math.round((playerCount * 0.000058) * Math.pow(round, 3) + (playerCount * 0.074032) * Math.pow(round, 2) + (playerCount * 0.718119) * round + 14.738699 * (round < 10 ? 0.45 : 1));
+    }
+
     /**
      * Calculates the health for an enemy on a particular round.
      * @param round The round.
@@ -39,6 +63,93 @@ public class StockGameplayService implements GameplayService {
             health = (int)(Math.round(health * Math.pow(1.1, (round - 9) * roundMultiplier)));
 
         return maxHealth > 0 ? Math.min(health, maxHealth) : health;
+    }
+
+    /**
+     * Calculates the spawn rate for a given round.
+     * @param round The round.
+     */
+    public double calculateSpawnRateForRound(int round) {
+        return Math.max(round <= 1 ? 2 : Math.pow(0.95, round - 1), 0.08);
+    }
+
+    /**
+     * Creates a session for a map.
+     * @param map The map to create the session for.
+     */
+    public GameplaySession createSession(MapEntity map, String gamemode) {
+
+        if (!map.isEnabled())
+            throw new IllegalStateException(String.format(MAP_DISABLED_ERROR, map.getName()));
+
+        GameplaySession session = null;
+
+        for (GameplayRegisterable queryRegisterable : gameplayRegisterables) {
+
+            if (!(queryRegisterable instanceof GameplaySession))
+                continue;
+
+            GameplaySession querySession = (GameplaySession)queryRegisterable;
+
+            if (querySession.getMap().getId().equals(map.getId())) {
+                session = querySession;
+                break;
+            }
+        }
+
+        if (session != null)
+            throw new IllegalStateException(String.format(SESSION_ALREADY_EXISTS_ERROR, map.getName(), map.getId()));
+
+        ZombiesGamemode zombiesGamemode;
+
+        switch (gamemode) {
+
+            case Gamemode.TURNED:
+
+                if (map.getZombieCureSpawns().length < 1)
+                    throw new IllegalStateException(String.format(MAP_DOES_NOT_SUPPORT_TURNED_ERROR, map.getName()));
+
+                zombiesGamemode = new TurnedGamemode();
+
+                break;
+
+            case Gamemode.ZOMBIES:
+                zombiesGamemode = new StandardGamemode();
+                break;
+
+            default:
+                throw new IllegalStateException(String.format(GAMEMODE_DOES_NOT_EXIST_ERROR, gamemode));
+        }
+
+        session = new GameplaySession(map, zombiesGamemode);
+
+        zombiesGamemode.setGameplaySession(session);
+
+        gameplayRegisterables.add(session);
+
+        return session;
+    }
+
+    /**
+     * Creates a session for a map.
+     * @param mapId The ID of the map to create the session for.
+     */
+    public GameplaySession createSession(String mapId, String gamemode) {
+
+        MapEntity map = null;
+
+        for (MapEntity queryMap : PluginCore.getMaps()) {
+
+            if (queryMap.getId().equals(mapId)) {
+                map = queryMap;
+                break;
+            }
+        }
+
+        if (map == null)
+            throw new IllegalStateException(String.format(MAP_ID_DOES_NOT_EXIST_ERROR, mapId));
+
+        return createSession(map, gamemode);
     }
 
     /**

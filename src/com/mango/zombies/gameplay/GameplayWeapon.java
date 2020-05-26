@@ -104,7 +104,7 @@ public class GameplayWeapon implements GameplayRegisterable, PlayerInteractEvent
         }
 
         livingEntity.setHealth(20);
-        gameplayEnemy.damage(meleeService.getDamage());
+        gameplayEnemy.damage(player, meleeService.getDamage(), WeaponService.MELEE);
     }
 
     /**
@@ -271,7 +271,7 @@ public class GameplayWeapon implements GameplayRegisterable, PlayerInteractEvent
 
         for (int i = 0; i < projectiles; i++) {
 
-            GameplayProjectile gameplayProjectile = new GameplayProjectile();
+            GameplayProjectile gameplayProjectile = new GameplayProjectile(player);
             gameplayProjectile.getConfiguration().put(ProjectileConfigComponent.DAMAGE, damage);
 
             PluginCore.getGameplayService().register(gameplayProjectile);

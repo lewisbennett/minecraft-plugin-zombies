@@ -2,20 +2,26 @@ package com.mango.zombies.gameplay;
 
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.gameplay.base.GameplayRegisterable;
+import com.mango.zombies.gameplay.base.InventoryPickupItemEventRegisterable;
 import com.mango.zombies.gameplay.base.ProjectileHitEventRegisterable;
 import com.mango.zombies.schema.ProjectileConfigComponent;
+import com.mango.zombies.schema.WeaponService;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.inventory.InventoryPickupItemEvent;
 
 import java.util.HashMap;
 import java.util.UUID;
 
-public class GameplayProjectile implements GameplayRegisterable, ProjectileHitEventRegisterable {
+public class GameplayProjectile implements GameplayRegisterable, ProjectileHitEventRegisterable, InventoryPickupItemEventRegisterable {
 
     //region Fields
-    private HashMap<String, Object> configuration = new HashMap<String, Object>();
+    private final HashMap<String, Object> configuration = new HashMap<String, Object>();
 
-    private UUID uuid;
+    private final Player player;
+
+    private final UUID uuid;
     //endregion
 
     //region Getters/Setters
@@ -36,6 +42,14 @@ public class GameplayProjectile implements GameplayRegisterable, ProjectileHitEv
 
     //region Event Handlers
     /**
+     * Called when an inventory picks up an item.
+     * @param event The event caused by the pickup.
+     */
+    public void onInventoryPickUpItem(InventoryPickupItemEvent event) {
+        event.setCancelled(true);
+    }
+
+    /**
      * Called when a projectile hits something.
      * @param event The event.
      */
@@ -54,14 +68,17 @@ public class GameplayProjectile implements GameplayRegisterable, ProjectileHitEv
         GameplayEnemy gameplayEnemy = (GameplayEnemy)gameplayRegisterable;
 
         if (configuration.containsKey(ProjectileConfigComponent.DAMAGE))
-            gameplayEnemy.damage((int)configuration.get(ProjectileConfigComponent.DAMAGE));
+            gameplayEnemy.damage(player, (int)configuration.get(ProjectileConfigComponent.DAMAGE), WeaponService.GUNSHOT);
 
         PluginCore.getGameplayService().unregister(this);
     }
     //endregion
 
     //region Constructors
-    public GameplayProjectile() {
+    public GameplayProjectile(Player player) {
+
+        this.player = player;
+
         uuid = UUID.randomUUID();
     }
     //endregion
