@@ -9,6 +9,7 @@ import com.mango.zombies.gameplay.base.EntityDamageByEntityEventRegisterable;
 import com.mango.zombies.gameplay.base.GameplayRegisterable;
 import com.mango.zombies.gameplay.base.PlayerInteractEventRegisterable;
 import com.mango.zombies.helper.HiddenStringUtils;
+import com.mango.zombies.helper.SoundUtil;
 import com.mango.zombies.schema.ProjectileConfigComponent;
 import com.mango.zombies.schema.WeaponService;
 import org.bukkit.ChatColor;
@@ -172,7 +173,7 @@ public class GameplayWeapon extends GameplayRegisterable implements PlayerIntera
         if (meleeService == null)
             return false;
 
-        playSound(player, meleeService.getUsageSound(), 1);
+        SoundUtil.playGlobalSound(player.getLocation(), meleeService.getUsageSound(), 1f);
 
         return true;
     }
@@ -193,7 +194,7 @@ public class GameplayWeapon extends GameplayRegisterable implements PlayerIntera
         if (isReloading || currentAmmo == weaponEntity.getMagazineCapacity(gunshotService))
             return false;
 
-        playSound(player, weaponEntity.getOutOfAmmoSound(gunshotService), 1);
+        SoundUtil.playGlobalSound(player.getLocation(), weaponEntity.getOutOfAmmoSound(gunshotService), 1f);
 
         if (availableAmmo < 1) {
             setWeaponDisplay(fetchItemStack(), currentAmmo > 0 ? getAmmoStatus() : getNoAmmoStatus());
@@ -250,7 +251,7 @@ public class GameplayWeapon extends GameplayRegisterable implements PlayerIntera
             return false;
 
         if (isReloading) {
-            playSound(player, weaponEntity.getOutOfAmmoSound(gunshotService), 1);
+            SoundUtil.playGlobalSound(player.getLocation(), weaponEntity.getOutOfAmmoSound(gunshotService), 1);
             return false;
         }
 
@@ -259,7 +260,7 @@ public class GameplayWeapon extends GameplayRegisterable implements PlayerIntera
             return false;
         }
 
-        playSound(player, gunshotService.getUsageSound(), 4);
+        SoundUtil.playGlobalSound(player.getLocation(), gunshotService.getUsageSound(), 4f);
 
         int damage = gunshotService.getDamage();
 
@@ -362,10 +363,6 @@ public class GameplayWeapon extends GameplayRegisterable implements PlayerIntera
 
     private boolean isWithinRange(double positionOne, double positionTwo) {
         return Math.max(positionOne, positionTwo) - Math.min(positionOne, positionTwo) < (double)3;
-    }
-
-    private void playSound(Player player, Sound sound, float volume) {
-        player.getWorld().playSound(player.getLocation(), sound, volume, 1);
     }
 
     private void setWeaponDisplay(ItemStack itemStack, String status) {
