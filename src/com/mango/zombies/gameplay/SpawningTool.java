@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class SpawningTool implements GameplayRegisterable, PlayerInteractEventRegisterable, BlockBreakEventRegisterable {
+public class SpawningTool extends GameplayRegisterable implements PlayerInteractEventRegisterable, BlockBreakEventRegisterable {
 
     //region Fields
     private EnemyEntity enemyEntity;

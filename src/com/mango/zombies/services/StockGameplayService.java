@@ -172,7 +172,10 @@ public class StockGameplayService implements GameplayService {
      * @param gameplayRegisterable The object to register.
      */
     public void register(GameplayRegisterable gameplayRegisterable) {
+
         gameplayRegisterables.add(gameplayRegisterable);
+
+        gameplayRegisterable.onRegistered();
     }
 
     /**
@@ -180,7 +183,10 @@ public class StockGameplayService implements GameplayService {
      * @param gameplayRegisterable The object to unregister.
      */
     public void unregister(GameplayRegisterable gameplayRegisterable) {
+
         gameplayRegisterables.remove(gameplayRegisterable);
+
+        gameplayRegisterable.onUnregistered();
     }
     //endregion
 }

@@ -14,7 +14,7 @@ import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class GameplayProjectile implements GameplayRegisterable, ProjectileHitEventRegisterable, InventoryPickupItemEventRegisterable {
+public class GameplayProjectile extends GameplayRegisterable implements ProjectileHitEventRegisterable, InventoryPickupItemEventRegisterable {
 
     //region Fields
     private final HashMap<String, Object> configuration = new HashMap<String, Object>();

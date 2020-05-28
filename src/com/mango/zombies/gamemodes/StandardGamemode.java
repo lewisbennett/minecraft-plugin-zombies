@@ -1,26 +1,24 @@
 package com.mango.zombies.gamemodes;
 
-import com.mango.zombies.Log;
 import com.mango.zombies.Main;
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.Time;
 import com.mango.zombies.entities.EnemyEntity;
 import com.mango.zombies.entities.LocationEntity;
+import com.mango.zombies.entities.LockedLocationEntity;
 import com.mango.zombies.entities.WeaponEntity;
 import com.mango.zombies.gamemodes.base.ZombiesGamemode;
 import com.mango.zombies.gameplay.GameplayEnemy;
 import com.mango.zombies.gameplay.GameplayPlayer;
 import com.mango.zombies.gameplay.GameplayWeapon;
+import com.mango.zombies.helper.SoundUtil;
 import com.mango.zombies.schema.WeaponService;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class StandardGamemode extends ZombiesGamemode {
 
@@ -32,7 +30,10 @@ public class StandardGamemode extends ZombiesGamemode {
     private int totalEnemiesInRound;
     private int enemiesKilledInRound;
     private int enemiesSpawnedInRound;
+    private int roundDelayTaskReference;
     private int spawnEnemyTaskReference;
+
+    private final Random random = new Random();
     //endregion
 
     //region Getters/Setters
@@ -63,6 +64,18 @@ public class StandardGamemode extends ZombiesGamemode {
         super.onEnemyDamaged(gameplayPlayer, gameplayEnemy);
 
         gameplayPlayer.addPoints(10);
+    }
+
+    /**
+     * Called when an enemy despawns.
+     * @param gameplayEnemy The despawned enemy.
+     */
+    @Override
+    public void onEnemyDespawned(GameplayEnemy gameplayEnemy) {
+
+        super.onEnemyDespawned(gameplayEnemy);
+
+        enemiesSpawnedInRound--;
     }
 
     /**
@@ -134,7 +147,7 @@ public class StandardGamemode extends ZombiesGamemode {
 
             Player player = gameplayPlayer.getPlayer();
 
-            playSound(player, getGameplaySession().getMap().getRoundStartSound(), 10);
+            SoundUtil.playInfiniteSound(player, getGameplaySession().getMap().getRoundStartSound());
 
             player.sendMessage(ChatColor.RED + "Round " + round);
         }
@@ -161,9 +174,23 @@ public class StandardGamemode extends ZombiesGamemode {
         instance.getServer().getScheduler().cancelTask(spawnEnemyTaskReference);
 
         for (GameplayPlayer gameplayPlayer : getGameplaySession().getPlayers())
-            playSound(gameplayPlayer.getPlayer(), getGameplaySession().getMap().getRoundEndSound(), 10);
+            SoundUtil.playInfiniteSound(gameplayPlayer.getPlayer(), getGameplaySession().getMap().getRoundEndSound());
 
-        instance.getServer().getScheduler().scheduleSyncDelayedTask(instance, this::roundDelay_runnable, Time.fromSeconds(10).totalTicks());
+        roundDelayTaskReference = instance.getServer().getScheduler().scheduleSyncDelayedTask(instance, this::roundDelay_runnable, Time.fromSeconds(10).totalTicks());
+    }
+
+    @Override
+    public void endGame() {
+
+        super.endGame();
+
+        Main instance = Main.getInstance();
+
+        if (instance.getServer().getScheduler().isCurrentlyRunning(spawnEnemyTaskReference))
+            instance.getServer().getScheduler().cancelTask(spawnEnemyTaskReference);
+
+        if (instance.getServer().getScheduler().isCurrentlyRunning(roundDelayTaskReference))
+            instance.getServer().getScheduler().cancelTask(roundDelayTaskReference);
     }
     //endregion
 
@@ -177,37 +204,22 @@ public class StandardGamemode extends ZombiesGamemode {
         if (enemiesSpawnedInRound >= totalEnemiesInRound || enemiesSpawnedInRound - enemiesKilledInRound > 24)
             return;
 
-        GameplayPlayer[] gameplayPlayers = getGameplaySession().getPlayers();
+        GameplayPlayer gameplayPlayer = getRandomPlayer();
 
-        LocationEntity spawnLocation = null;
-        Random random = new Random();
-
-        GameplayPlayer gameplayPlayer = gameplayPlayers[random.nextInt(gameplayPlayers.length)];
+        if (gameplayPlayer == null)
+            return;
 
         Player player = gameplayPlayer.getPlayer();
 
-        Location top = player.getLocation().add(20, 20, 20);
-        Location bottom = player.getLocation().subtract(20, 20, 20);
+        LockedLocationEntity enemySpawnPoint = getRandomEnemySpawnPoint(player);
 
-        LocationEntity[] enemySpawns = getEnemySpawnsBetweenPoints(top, bottom);
-
-        if (enemySpawns.length > 0)
-            spawnLocation = enemySpawns[random.nextInt(enemySpawns.length)];
-
-        if (spawnLocation == null)
+        if (enemySpawnPoint == null)
             return;
 
-        EnemyEntity[] enemyEntities = PluginCore.getEnemies();
+        GameplayEnemy gameplayEnemy = constructEnemyForSpawnPoint(enemySpawnPoint);
 
-        EnemyEntity enemyEntity = enemyEntities[random.nextInt(enemyEntities.length)];
-
-        GameplayEnemy gameplayEnemy = new GameplayEnemy(enemyEntity);
-
-        gameplayEnemy.setGameplaySession(getGameplaySession());
-
-        gameplayEnemy.setSpawnLocation(new Location(Bukkit.getWorld(getGameplaySession().getMap().getWorldName()), spawnLocation.getX(), spawnLocation.getY() + 1, spawnLocation.getZ()));
-
-        gameplayEnemy.setCurrentHealth(PluginCore.getGameplayService().calculateHealthForRound(getCurrentRound(), enemyEntity.getRoundMultiplier(), enemyEntity.getMaxHealth()));
+        if (gameplayEnemy == null)
+            return;
 
         gameplayEnemy.spawn();
 
@@ -216,25 +228,96 @@ public class StandardGamemode extends ZombiesGamemode {
     //endregion
 
     //region Private Methods
-    private LocationEntity[] getEnemySpawnsBetweenPoints(Location top, Location bottom) {
-
-        List<LocationEntity> enemySpawns = new ArrayList<LocationEntity>();
-
-        for (LocationEntity enemySpawn : getGameplaySession().getMap().getEnemySpawns()) {
-
-            boolean isWithinX = enemySpawn.getX() >= Math.min(top.getBlockX(), bottom.getBlockX()) && enemySpawn.getX() <= Math.max(top.getBlockX(), bottom.getBlockX());
-            boolean isWithinY = enemySpawn.getY() >= Math.min(top.getBlockY(), bottom.getBlockY()) && enemySpawn.getY() <= Math.max(top.getBlockY(), bottom.getBlockY());
-            boolean isWithinZ = enemySpawn.getZ() >= Math.min(top.getBlockZ(), bottom.getBlockZ()) && enemySpawn.getZ() <= Math.max(top.getBlockZ(), bottom.getBlockZ());
-
-            if (isWithinX && isWithinY && isWithinZ)
-                enemySpawns.add(enemySpawn);
-        }
-
-        return enemySpawns.toArray(new LocationEntity[0]);
+    private int calculateDifference(int v, int v1) {
+        return Math.max(v, v1) - Math.min(v, v1);
     }
 
-    private void playSound(Player player, Sound sound, float volume) {
-        player.getWorld().playSound(player.getLocation(), sound, volume, 1);
+    private GameplayEnemy constructEnemyForSpawnPoint(LockedLocationEntity lockedLocation) {
+
+        EnemyEntity enemyEntity = null;
+
+        if (lockedLocation.getLockId() != null && !lockedLocation.getLockId().isEmpty())
+            enemyEntity = getEnemy(lockedLocation.getLockId());
+
+        if (enemyEntity == null)
+            enemyEntity = getRandomEnemy();
+
+        if (enemyEntity == null)
+            return null;
+
+        GameplayEnemy gameplayEnemy = new GameplayEnemy(enemyEntity);
+
+        gameplayEnemy.setGameplaySession(getGameplaySession());
+
+        gameplayEnemy.setSpawnLocation(new Location(Bukkit.getWorld(getGameplaySession().getMap().getWorldName()), lockedLocation.getX(), lockedLocation.getY() + 1, lockedLocation.getZ()));
+
+        gameplayEnemy.applyHealth(getCurrentRound());
+
+        return gameplayEnemy;
+    }
+
+    private EnemyEntity getEnemy(String enemyId) {
+
+        for (EnemyEntity queryEnemy : PluginCore.getEnemies()) {
+
+            if (queryEnemy.getId().equals(enemyId))
+                return queryEnemy;
+        }
+
+        return null;
+    }
+
+    private EnemyEntity getRandomEnemy() {
+
+        EnemyEntity[] enemies = PluginCore.getEnemies();
+
+        return enemies.length > 0 ? enemies[random.nextInt(enemies.length)] : null;
+    }
+
+    private GameplayPlayer getRandomPlayer() {
+
+        GameplayPlayer[] gameplayPlayers = getGameplaySession().getPlayers();
+
+        return gameplayPlayers.length > 0 ? gameplayPlayers[random.nextInt(gameplayPlayers.length)] : null;
+    }
+
+    private LockedLocationEntity getRandomEnemySpawnPoint(Player player) {
+
+        Map<Integer, LockedLocationEntity> lockedLocationMap = new HashMap<Integer, LockedLocationEntity>();
+
+        for (LockedLocationEntity queryLockedLocation : getGameplaySession().getMap().getEnemySpawns()) {
+
+            int xDifference = calculateDifference(player.getLocation().getBlockX(), queryLockedLocation.getX());
+            int yDifference = calculateDifference(player.getLocation().getBlockY(), queryLockedLocation.getY());
+            int zDifference = calculateDifference(player.getLocation().getBlockZ(), queryLockedLocation.getZ());
+
+            if (xDifference < 0)
+                xDifference *= -1;
+
+            if (yDifference < 0)
+                yDifference *= -1;
+
+            if (zDifference < 0)
+                zDifference *= -1;
+
+            lockedLocationMap.put(xDifference + yDifference + zDifference, queryLockedLocation);
+        }
+
+        List<Integer> sortedPoints = new ArrayList<Integer>(lockedLocationMap.keySet());
+
+        Collections.sort(sortedPoints);
+
+        List<LockedLocationEntity> lockedLocations = new ArrayList<LockedLocationEntity>();
+
+        for (Integer sortedPoint : sortedPoints) {
+
+            lockedLocations.add(lockedLocationMap.get(sortedPoint));
+
+            if (lockedLocations.size() == 5)
+                break;
+        }
+
+        return lockedLocations.size() > 0 ? lockedLocations.get(random.nextInt(lockedLocations.size())) : null;
     }
     //endregion
 }

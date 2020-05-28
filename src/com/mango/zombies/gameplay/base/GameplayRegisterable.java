@@ -2,12 +2,24 @@ package com.mango.zombies.gameplay.base;
 
 import java.util.UUID;
 
-public interface GameplayRegisterable {
+public abstract class GameplayRegisterable {
 
     //region Getters/Setters
     /**
      * Gets the UUID of this gameplay registerable.
      */
-    UUID getUUID();
+    public abstract UUID getUUID();
+    //endregion
+
+    //region Event Handlers
+    /**
+     * Called when this gameplay registerable is registered.
+     */
+    public void onRegistered() { }
+
+    /**
+     * Called when this gameplay registerabled is unregistered.
+     */
+    public void onUnregistered() { }
     //endregion
 }

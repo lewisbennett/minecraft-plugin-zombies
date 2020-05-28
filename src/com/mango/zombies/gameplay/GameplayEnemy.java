@@ -1,6 +1,5 @@
 package com.mango.zombies.gameplay;
 
-import com.mango.zombies.Log;
 import com.mango.zombies.Main;
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.Time;
@@ -16,7 +15,7 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-public class GameplayEnemy implements GameplayRegisterable {
+public class GameplayEnemy extends GameplayRegisterable {
 
     //region Fields
     private boolean hasBeenDamaged, hasBeenSpawned;
@@ -96,6 +95,14 @@ public class GameplayEnemy implements GameplayRegisterable {
 
     //region Public Methods
     /**
+     * Calculates and applies the enemy's health.
+     * @param round The round to calculate the health for.
+     */
+    public void applyHealth(int round) {
+        currentHealth = PluginCore.getGameplayService().calculateHealthForRound(round, enemyEntity.getRoundMultiplier(), enemyEntity.getMaxHealth());
+    }
+
+    /**
      * Damages the enemy.
      */
     public void damage(Player player, int damage, String weaponServiceType) {
@@ -109,9 +116,9 @@ public class GameplayEnemy implements GameplayRegisterable {
 
         spawnBloodEffect(damage / 10);
 
-        int healthThreshhold = (int)Math.round(originalHealth * enemyEntity.getBleedOutHealthMultiplier());
+        int healthThreshold = (int)Math.round(originalHealth * enemyEntity.getBleedOutHealthMultiplier());
 
-        if (currentHealth < healthThreshhold && Math.random() * 100 <= enemyEntity.getBleedOutChance()) {
+        if (currentHealth < healthThreshold && Math.random() * 100 <= enemyEntity.getBleedOutChance()) {
 
             Main instance = Main.getInstance();
 
@@ -120,7 +127,7 @@ public class GameplayEnemy implements GameplayRegisterable {
             bleedOutTaskReference = instance.getServer().getScheduler().scheduleSyncRepeatingTask(instance, this::bleedOut_runnable, time, time);
         }
 
-        GameplayPlayer gameplayPlayer = findGameplayPlayerForPlayer(player);
+        GameplayPlayer gameplayPlayer = GameplayPlayer.findGameplayPlayerForPlayer(player, false);
 
         if (currentHealth > 0) {
 
@@ -130,10 +137,24 @@ public class GameplayEnemy implements GameplayRegisterable {
             return;
         }
 
+        // Kill the enemy.
         entity.damage(100);
 
         if (gameplaySession != null && gameplayPlayer != null)
             gameplaySession.getGamemode().onEnemyKilled(gameplayPlayer, this, weaponServiceType);
+
+        PluginCore.getGameplayService().unregister(this);
+    }
+
+    /**
+     * Despawns the enemy.
+     */
+    public void despawn() {
+
+        if (entity != null)
+            entity.remove();
+
+        PluginCore.getGameplayService().unregister(this);
     }
 
     /**
@@ -141,7 +162,7 @@ public class GameplayEnemy implements GameplayRegisterable {
      */
     public void spawn() {
 
-        if (spawnLocation == null || hasBeenSpawned)
+        if (spawnLocation == null || hasBeenSpawned || enemyEntity.getEntityType().getEntityClass() == null)
             return;
 
         World world = spawnLocation.getWorld();
@@ -161,8 +182,6 @@ public class GameplayEnemy implements GameplayRegisterable {
         this.entity = (LivingEntity)entity;
 
         PluginCore.getGameplayService().register(this);
-
-        Log.information("Enemy spawned at: " + entity.getLocation().getBlockX() + entity.getLocation().getBlockY() + entity.getLocation().getBlockZ());
 
         Main instance = Main.getInstance();
 
@@ -192,8 +211,13 @@ public class GameplayEnemy implements GameplayRegisterable {
 
     private void despawn_runnable() {
 
-        if (!hasBeenDamaged)
-            entity.remove();
+        if (hasBeenDamaged)
+            return;
+
+        entity.remove();
+
+        if (gameplaySession != null)
+            gameplaySession.getGamemode().onEnemyDespawned(this);
     }
     //endregion
 
@@ -204,25 +228,6 @@ public class GameplayEnemy implements GameplayRegisterable {
     //endregion
 
     //region Private Methods
-    private GameplayPlayer findGameplayPlayerForPlayer(Player player) {
-
-        for (GameplayRegisterable queryRegisterable : PluginCore.getGameplayService().getRegisterables()) {
-
-            if (!(queryRegisterable instanceof GameplaySession))
-                continue;
-
-            GameplaySession querySession = (GameplaySession)queryRegisterable;
-
-            for (GameplayPlayer queryPlayer : querySession.getPlayers()) {
-
-                if (queryPlayer.getPlayer().getUniqueId().equals(player.getUniqueId()))
-                    return queryPlayer;
-            }
-        }
-
-        return null;
-    }
-
     private void spawnBloodEffect(int count) {
         entity.getWorld().spawnParticle(Particle.BLOCK_CRACK, Math.random() > 0.5 ? entity.getEyeLocation() : entity.getLocation(), count, Material.RED_WOOL.createBlockData());
     }

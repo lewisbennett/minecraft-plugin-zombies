@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class PositionTool implements GameplayRegisterable, BlockBreakEventRegisterable, PlayerInteractEventRegisterable {
+public class PositionTool extends GameplayRegisterable implements BlockBreakEventRegisterable, PlayerInteractEventRegisterable {
 
     //region Fields
     private LocationEntity bottom;

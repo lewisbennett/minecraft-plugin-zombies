@@ -4,8 +4,8 @@ import com.mango.zombies.gameplay.GameplayEnemy;
 import com.mango.zombies.gameplay.GameplayPlayer;
 import com.mango.zombies.gameplay.GameplaySession;
 import com.mango.zombies.gameplay.base.GameplayDrop;
+import com.mango.zombies.helper.SoundUtil;
 import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 
 public abstract class ZombiesGamemode {
 
@@ -61,7 +61,7 @@ public abstract class ZombiesGamemode {
         if (sound != null) {
 
             for (GameplayPlayer queryPlayer : getGameplaySession().getPlayers())
-                playSound(queryPlayer.getPlayer(), sound, 5);
+                SoundUtil.playInfiniteSound(queryPlayer.getPlayer(), sound);
         }
     }
 
@@ -71,6 +71,12 @@ public abstract class ZombiesGamemode {
      * @param gameplayEnemy The damaged enemy.
      */
     public void onEnemyDamaged(GameplayPlayer gameplayPlayer, GameplayEnemy gameplayEnemy) { }
+
+    /**
+     * Called when an enemy despawns.
+     * @param gameplayEnemy The despawned enemy.
+     */
+    public void onEnemyDespawned(GameplayEnemy gameplayEnemy) { }
 
     /**
      * Called when an enemy is killed.
@@ -92,12 +98,6 @@ public abstract class ZombiesGamemode {
     }
 
     public void endGame() {
-    }
-    //endregion
-
-    //region Private Methods
-    private void playSound(Player player, Sound sound, float volume) {
-        player.getWorld().playSound(player.getLocation(), sound, volume, 1);
     }
     //endregion
 }

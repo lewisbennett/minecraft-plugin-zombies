@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class GameplayDrop implements GameplayRegisterable, InventoryPickupItemEventRegisterable {
+public abstract class GameplayDrop extends GameplayRegisterable implements InventoryPickupItemEventRegisterable {
 
     //region Fields
     private final UUID uuid;

@@ -6,7 +6,6 @@ import com.mango.zombies.Time;
 import com.mango.zombies.entities.MapEntity;
 import com.mango.zombies.gamemodes.base.ZombiesGamemode;
 import com.mango.zombies.gameplay.base.GameplayRegisterable;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -17,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class GameplaySession implements GameplayRegisterable {
+public class GameplaySession extends GameplayRegisterable {
 
     //region Fields
     private boolean hasBegun;
@@ -81,6 +80,34 @@ public class GameplaySession implements GameplayRegisterable {
     }
     //endregion
 
+    //region Event Handlers
+    /**
+     * Called when this gameplay registerable is unregistered.
+     */
+    @Override
+    public void onUnregistered() {
+
+        super.onUnregistered();
+
+        if (gamemode != null)
+            gamemode.endGame();
+
+        for (GameplayPlayer queryPlayer : players)
+            removePlayer(queryPlayer);
+
+        for (GameplayRegisterable queryRegisterable : PluginCore.getGameplayService().getRegisterables()) {
+
+            if (!(queryRegisterable instanceof GameplayEnemy))
+                continue;
+
+            GameplayEnemy queryEnemy = (GameplayEnemy)queryRegisterable;
+
+            if (queryEnemy.getGameplaySession() == this)
+                queryEnemy.despawn();
+        }
+    }
+    //endregion
+
     //region Public Methods
     /**
      * Adds a player to the session.
@@ -128,8 +155,6 @@ public class GameplaySession implements GameplayRegisterable {
         players.remove(gameplayPlayer);
 
         gameplayPlayer.applyPlayerState();
-
-        player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 
         String leftMessage = player.getDisplayName() + " has left.";
         int requiredPlayers = gamemode.getMinimumPlayers() - players.size();

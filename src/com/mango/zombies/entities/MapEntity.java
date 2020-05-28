@@ -20,8 +20,8 @@ public class MapEntity {
 	@Expose private int mysteryBoxCost;
 	@Expose private int packAPunchCost;
 
-	@Expose private final List<LocationEntity> enemySpawns = new ArrayList<LocationEntity>();
-	@Expose private final List<LocationEntity> playerSpawns = new ArrayList<LocationEntity>();
+	@Expose private final List<LockedLocationEntity> enemySpawns = new ArrayList<LockedLocationEntity>();
+	@Expose private final List<LockedLocationEntity> playerSpawns = new ArrayList<LockedLocationEntity>();
 	@Expose private final List<LocationEntity> spectatorSpawns = new ArrayList<LocationEntity>();
 	@Expose private final List<LocationEntity> zombieCureSpawns = new ArrayList<LocationEntity>();
 
@@ -92,8 +92,8 @@ public class MapEntity {
 	/**
 	 * Gets the locations where enemies can spawn in the map.
 	 */
-	public LocationEntity[] getEnemySpawns() {
-		return enemySpawns.toArray(new LocationEntity[0]);
+	public LockedLocationEntity[] getEnemySpawns() {
+		return enemySpawns.toArray(new LockedLocationEntity[0]);
 	}
 
 	/**
@@ -211,8 +211,8 @@ public class MapEntity {
 	/**
 	 * Gets the locations where players can spawn in the map.
 	 */
-	public LocationEntity[] getPlayerSpawns() {
-		return playerSpawns.toArray(new LocationEntity[0]);
+	public LockedLocationEntity[] getPlayerSpawns() {
+		return playerSpawns.toArray(new LockedLocationEntity[0]);
 	}
 
 	/**
@@ -328,7 +328,7 @@ public class MapEntity {
 	 * Adds an enemy spawn location.
 	 * @param location The enemy spawn location.
 	 */
-	public void addEnemySpawnLocation(LocationEntity location) {
+	public void addEnemySpawnLocation(LockedLocationEntity location) {
 		enemySpawns.add(location);
 	}
 
@@ -336,7 +336,7 @@ public class MapEntity {
 	 * Adds a player spawn location.
 	 * @param location The player spawn location.
 	 */
-	public void addPlayerSpawnLocation(LocationEntity location) {
+	public void addPlayerSpawnLocation(LockedLocationEntity location) {
 		playerSpawns.add(location);
 	}
 

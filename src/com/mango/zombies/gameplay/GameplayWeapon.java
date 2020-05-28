@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class GameplayWeapon implements GameplayRegisterable, PlayerInteractEventRegisterable, EntityDamageByEntityEventRegisterable {
+public class GameplayWeapon extends GameplayRegisterable implements PlayerInteractEventRegisterable, EntityDamageByEntityEventRegisterable {
 
     //region Private Methods
     private boolean hasSetInitialMagazineCount;
