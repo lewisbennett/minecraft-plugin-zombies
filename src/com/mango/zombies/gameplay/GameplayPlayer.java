@@ -14,6 +14,8 @@ import java.util.UUID;
 public class GameplayPlayer {
 
     //region Fields
+    private boolean isFlying;
+
     private double health;
 
     private float walkSpeed;
@@ -81,6 +83,7 @@ public class GameplayPlayer {
 
         player.setGameMode(gameMode);
         player.setHealth(health);
+        player.setFlying(isFlying);
         player.teleport(location);
         player.setWalkSpeed(walkSpeed);
 
@@ -96,6 +99,7 @@ public class GameplayPlayer {
 
         gameMode = player.getGameMode();
         health = player.getHealth();
+        isFlying = player.isFlying();
         location = player.getLocation();
         walkSpeed = player.getWalkSpeed();
 

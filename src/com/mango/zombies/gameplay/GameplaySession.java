@@ -6,17 +6,22 @@ import com.mango.zombies.Time;
 import com.mango.zombies.entities.MapEntity;
 import com.mango.zombies.gamemodes.base.ZombiesGamemode;
 import com.mango.zombies.gameplay.base.GameplayRegisterable;
+import com.mango.zombies.gameplay.base.InventoryClickEventRegisterable;
+import com.mango.zombies.gameplay.base.PlayerSwapHandsItemEventRegisterable;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class GameplaySession extends GameplayRegisterable {
+public class GameplaySession extends GameplayRegisterable implements InventoryClickEventRegisterable, PlayerSwapHandsItemEventRegisterable {
 
     //region Fields
     private boolean hasBegun;
@@ -81,6 +86,51 @@ public class GameplaySession extends GameplayRegisterable {
     //endregion
 
     //region Event Handlers
+    /**
+     * Called when an inventory is clicked.
+     * @param event The event caused by the click.
+     */
+    public void onInventoryClick(InventoryClickEvent event) {
+
+        if (!(event.getClickedInventory() instanceof PlayerInventory))
+            return;
+
+        PlayerInventory playerInventory = (PlayerInventory)event.getClickedInventory();
+
+        GameplayPlayer gameplayPlayer = null;
+
+        for (GameplayPlayer queryPlayer : players) {
+
+            if (queryPlayer.getPlayer().getUniqueId().equals(playerInventory.getHolder().getUniqueId())) {
+                gameplayPlayer = queryPlayer;
+                break;
+            }
+        }
+
+        if (gameplayPlayer != null)
+            event.setCancelled(true);
+    }
+
+    /**
+     * Called when a player swaps the items in their hands.
+     * @param event The event caused by the swap.
+     */
+    public void onPlayerSwapHansItem(PlayerSwapHandItemsEvent event) {
+
+        GameplayPlayer gameplayPlayer = null;
+
+        for (GameplayPlayer queryPlayer : players) {
+
+            if (queryPlayer.getPlayer().getUniqueId().equals(event.getPlayer().getUniqueId())) {
+                gameplayPlayer = queryPlayer;
+                break;
+            }
+        }
+
+        if (gameplayPlayer != null)
+            event.setCancelled(true);
+    }
+
     /**
      * Called when this gameplay registerable is unregistered.
      */
