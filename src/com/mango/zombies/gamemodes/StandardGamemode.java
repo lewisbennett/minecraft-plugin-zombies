@@ -118,7 +118,7 @@ public class StandardGamemode extends ZombiesGamemode {
         for (GameplayPlayer gameplayPlayer : getGameplaySession().getPlayers()) {
 
             Player player = gameplayPlayer.getPlayer();
-            LocationEntity[] playerSpawns = getGameplaySession().getMap().getPlayerSpawns();
+            LocationEntity[] playerSpawns = getGameplaySession().getMap().getStandardGamemodeConfig().getPlayerSpawns();
 
             LocationEntity playerSpawn = playerSpawns[new Random().nextInt(playerSpawns.length)];
 
@@ -285,7 +285,7 @@ public class StandardGamemode extends ZombiesGamemode {
 
         Map<Integer, LockedLocationEntity> lockedLocationMap = new HashMap<Integer, LockedLocationEntity>();
 
-        for (LockedLocationEntity queryLockedLocation : getGameplaySession().getMap().getEnemySpawns()) {
+        for (LockedLocationEntity queryLockedLocation : getGameplaySession().getMap().getStandardGamemodeConfig().getEnemySpawns()) {
 
             int xDifference = calculateDifference(player.getLocation().getBlockX(), queryLockedLocation.getX());
             int yDifference = calculateDifference(player.getLocation().getBlockY(), queryLockedLocation.getY());

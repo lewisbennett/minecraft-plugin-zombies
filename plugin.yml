@@ -10,7 +10,6 @@ commands:
       description: Get plugin information.
       usage: /<command>
 
-
     createsession:
       description: Create a new session.
       usage: /<command> [map ID] [gamemode]
@@ -38,6 +37,10 @@ commands:
     deletemap:
       description: Deletes a map.
       usage: /<command> [map ID] [delete key]
+
+    addgamemode:
+      description: Adds a gamemode to a map.
+      usage: /<command> [map ID] [gamemode]
 
     enablemap:
       description: Enables a map, if possible.

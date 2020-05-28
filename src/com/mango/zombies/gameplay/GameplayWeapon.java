@@ -13,7 +13,6 @@ import com.mango.zombies.helper.SoundUtil;
 import com.mango.zombies.schema.ProjectileConfigComponent;
 import com.mango.zombies.schema.WeaponService;
 import org.bukkit.ChatColor;
-import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;

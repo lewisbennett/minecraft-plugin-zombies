@@ -66,7 +66,7 @@ public class TurnedGamemode extends ZombiesGamemode {
 
         super.prepare();
 
-        LocationEntity[] zombieCureSpawns = getGameplaySession().getMap().getZombieCureSpawns();
+        LocationEntity[] zombieCureSpawns = getGameplaySession().getMap().getTurnedGamemodeConfig().getZombieCureSpawns();
 
         LocationEntity zombieCureLocation = zombieCureSpawns[new Random().nextInt(zombieCureSpawns.length)];
 
@@ -111,11 +111,6 @@ public class TurnedGamemode extends ZombiesGamemode {
 
         // reset skin
 
-        List<Player> players = new ArrayList<Player>();
-
-        for (GameplayPlayer queryGameplayPlayer : getGameplaySession().getPlayers())
-            players.add(queryGameplayPlayer.getPlayer());
-
         player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, (int)Time.fromMinutes(6).totalTicks(), 1, true, false));
 
         player.setWalkSpeed(0.2f);
@@ -131,11 +126,6 @@ public class TurnedGamemode extends ZombiesGamemode {
 
         // change skin
 
-        List<Player> players = new ArrayList<Player>();
-
-        for (GameplayPlayer queryGameplayPlayer : getGameplaySession().getPlayers())
-            players.add(queryGameplayPlayer.getPlayer());
-
         if (player.hasPotionEffect(PotionEffectType.GLOWING))
             player.removePotionEffect(PotionEffectType.GLOWING);
 
@@ -143,9 +133,9 @@ public class TurnedGamemode extends ZombiesGamemode {
 
         // refill health
 
-        LocationEntity[] enemySpawns = getGameplaySession().getMap().getEnemySpawns();
+        LocationEntity[] playerSpawns = getGameplaySession().getMap().getTurnedGamemodeConfig().getPlayerSpawns();
 
-        LocationEntity spawnPoint = enemySpawns[new Random().nextInt(enemySpawns.length)];
+        LocationEntity spawnPoint = playerSpawns[new Random().nextInt(playerSpawns.length)];
 
         player.teleport(new Location(player.getWorld(), spawnPoint.getX(), spawnPoint.getY(), spawnPoint.getZ()));
     }

@@ -80,6 +80,8 @@ public class Main extends JavaPlugin {
         this.getCommand("listsessions").setExecutor(new ListSessionsCommandExecutor());
         this.getCommand("createenemy").setExecutor(new CreateEnemyCommandExecutor());
         this.getCommand("createmap").setExecutor(new CreateMapCommandExecutor());
+        this.getCommand("deletemap").setExecutor(new DeleteMapCommandExecutor());
+        this.getCommand("addgamemode").setExecutor(new AddGamemodeCommandExecutor());
         this.getCommand("enablemap").setExecutor(new EnableMapCommandExecutor());
         this.getCommand("disablemap").setExecutor(new DisableMapCommandExecutor());
         this.getCommand("mapinfo").setExecutor(new MapInfoCommandExecutor());

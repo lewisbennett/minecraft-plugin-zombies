@@ -13,6 +13,17 @@ import java.util.Random;
 
 public class MapEntity {
 
+	//region Constant Values
+	public static final String INVALID_BOTTOM_POINT_ERROR = "Map not enabled. The bottom point of the map has not been configured.";
+	public static final String INVALID_LOBBY_SPAWN_POINT_ERROR = "Map not enabled. The lobby spawn location has not been configured.";
+	public static final String INVALID_MAX_PLAYERS_ERROR = "Map not enabled. Max players must be at least 1.";
+	public static final String INVALID_TOP_POINT_ERROR = "Map not enabled. The top point of the map has not been configured.";
+	public static final String NO_GAMEMODE_ERROR = "Map not enabled. At least 1 gamemode is required.";
+	public static final String NO_ENEMY_SPAWN_POINTS_ERROR = "Map not enabled. At least 1 enemy spawn point is required.";
+	public static final String NO_PLAYER_SPAWN_POINTS_ERROR = "Map not enabled. At least 1 player spawn point is required.";
+	public static final String SESSION_IN_PROGRESS_ERROR = "Map not disabled. A session is currently active.";
+	//endregion
+
 	//region Fields
 	private boolean isEnabled;
 
@@ -20,15 +31,10 @@ public class MapEntity {
 	@Expose private int mysteryBoxCost;
 	@Expose private int packAPunchCost;
 
-	@Expose private final List<LockedLocationEntity> enemySpawns = new ArrayList<LockedLocationEntity>();
-	@Expose private final List<LockedLocationEntity> playerSpawns = new ArrayList<LockedLocationEntity>();
 	@Expose private final List<LocationEntity> spectatorSpawns = new ArrayList<LocationEntity>();
-	@Expose private final List<LocationEntity> zombieCureSpawns = new ArrayList<LocationEntity>();
 
 	@Expose private final List<SignEntity> signs = new ArrayList<SignEntity>();
 
-	@Expose private final List<String> enemyBlacklist = new ArrayList<String>();
-	@Expose private final List<String> enemyWhitelist = new ArrayList<String>();
 	@Expose private final List<String> weaponBlacklist = new ArrayList<String>();
 	@Expose private final List<String> weaponWhitelist = new ArrayList<String>();
 
@@ -39,6 +45,10 @@ public class MapEntity {
 
 	@Expose private Sound roundEndSound;
 	@Expose private Sound roundStartSound;
+
+	@Expose private StandardGamemodeConfigEntity standardGamemodeConfig;
+
+	@Expose private TurnedGamemodeConfigEntity turnedGamemodeConfig;
 
 	@Expose private String deleteKey;
 	@Expose private String id;
@@ -80,27 +90,6 @@ public class MapEntity {
 	 */
 	public void setDeleteKey(String deleteKey) {
 		this.deleteKey = deleteKey;
-	}
-
-	/**
-	 * Gets the enemy blacklist.
-	 */
-	public String[] getEnemyBlacklist() {
-		return enemyBlacklist.toArray(new String[0]);
-	}
-
-	/**
-	 * Gets the locations where enemies can spawn in the map.
-	 */
-	public LockedLocationEntity[] getEnemySpawns() {
-		return enemySpawns.toArray(new LockedLocationEntity[0]);
-	}
-
-	/**
-	 * Gets the enemy whitelist.
-	 */
-	public String[] getEnemyWhitelist() {
-		return enemyWhitelist.toArray(new String[0]);
 	}
 
 	/**
@@ -209,13 +198,6 @@ public class MapEntity {
 	}
 
 	/**
-	 * Gets the locations where players can spawn in the map.
-	 */
-	public LockedLocationEntity[] getPlayerSpawns() {
-		return playerSpawns.toArray(new LockedLocationEntity[0]);
-	}
-
-	/**
 	 * Gets the round end sound.
 	 */
 	public Sound getRoundEndSound() {
@@ -258,6 +240,20 @@ public class MapEntity {
 	}
 
 	/**
+	 * Gets the standard gamemode configuration.
+	 */
+	public StandardGamemodeConfigEntity getStandardGamemodeConfig() {
+		return standardGamemodeConfig;
+	}
+
+	/**
+	 * Sets the standard gamemode configuration.
+	 */
+	public void setStandardGamemodeConfig(StandardGamemodeConfigEntity standardGamemodeConfig) {
+		this.standardGamemodeConfig = standardGamemodeConfig;
+	}
+
+	/**
 	 * Gets the top corner of the map.
 	 */
 	public LocationEntity getTopPoint() {
@@ -269,6 +265,20 @@ public class MapEntity {
 	 */
 	public void setTopPoint(LocationEntity topPoint) {
 		this.topPoint = topPoint;
+	}
+
+	/**
+	 * Gets the turned gamemode configuration.
+	 */
+	public TurnedGamemodeConfigEntity getTurnedGamemodeConfig() {
+		return turnedGamemodeConfig;
+	}
+
+	/**
+	 * Sets the turned gamemode configuration.
+	 */
+	public void setTurnedGamemodeConfig(TurnedGamemodeConfigEntity turnedGamemodeConfig) {
+		this.turnedGamemodeConfig = turnedGamemodeConfig;
 	}
 
 	/**
@@ -298,48 +308,9 @@ public class MapEntity {
 	public void setWorldName(String worldName) {
 		this.worldName = worldName;
 	}
-
-	/**
-	 * Gets the zombie cure spawn locations.
- 	 */
-	public LocationEntity[] getZombieCureSpawns() {
-		return zombieCureSpawns.toArray(new LocationEntity[0]);
-	}
 	//endregion
 
 	//region Public Methods
-	/**
-	 * Adds an entry to the enemy blacklist.
-	 * @param enemyId The ID of the enemy to add.
-	 */
-	public void addEnemyBlacklistEntry(String enemyId) {
-		enemyBlacklist.add(enemyId);
-	}
-
-	/**
-	 * Adds an entry to the enemy whitelist.
-	 * @param enemyId The ID of the enemy to add.
-	 */
-	public void addEnemyWhitelistEntry(String enemyId) {
-		enemyWhitelist.add(enemyId);
-	}
-
-	/**
-	 * Adds an enemy spawn location.
-	 * @param location The enemy spawn location.
-	 */
-	public void addEnemySpawnLocation(LockedLocationEntity location) {
-		enemySpawns.add(location);
-	}
-
-	/**
-	 * Adds a player spawn location.
-	 * @param location The player spawn location.
-	 */
-	public void addPlayerSpawnLocation(LockedLocationEntity location) {
-		playerSpawns.add(location);
-	}
-
 	/**
 	 * Adds a sign.
 	 */
@@ -371,18 +342,9 @@ public class MapEntity {
 	}
 
 	/**
-	 * Adds a zombie cure spawn location.
-	 */
-	public void addZombieCureSpawn(LocationEntity location) {
-		zombieCureSpawns.add(location);
-	}
-
-	/**
 	 * Disables the map, if it can.
 	 */
 	public void disableMap() {
-
-		boolean isActiveInSession = false;
 
 		for (GameplayRegisterable queryRegisterable : PluginCore.getGameplayService().getRegisterables()) {
 
@@ -391,14 +353,9 @@ public class MapEntity {
 
 			GameplaySession querySession = (GameplaySession)queryRegisterable;
 
-			if (querySession.getMap().getId().equals(id)) {
-				isActiveInSession = true;
-				break;
-			}
+			if (querySession.getMap().getId().equals(id))
+				throw new IllegalStateException(SESSION_IN_PROGRESS_ERROR);
 		}
-
-		if (isActiveInSession)
-			throw new IllegalStateException("Map not disabled. A session is currently active.");
 
 		isEnabled = false;
 	}
@@ -408,17 +365,35 @@ public class MapEntity {
 	 */
 	public void enableMap() {
 
-		if (enemySpawns.size() < 1)
-			throw new IllegalStateException("Map not enabled. At least 1 enemy spawn point is required.");
+		if (topPoint == null || topPoint.isEmpty())
+			throw new IllegalStateException(INVALID_TOP_POINT_ERROR);
 
-		if (playerSpawns.size() < 1)
-			throw new IllegalStateException("Map not enabled. At least 1 player spawn point is required.");
+		if (bottomPoint == null || bottomPoint.isEmpty())
+			throw new IllegalStateException(INVALID_BOTTOM_POINT_ERROR);
+
+		if (standardGamemodeConfig == null && turnedGamemodeConfig == null)
+			throw new IllegalStateException(NO_GAMEMODE_ERROR);
+
+		if (standardGamemodeConfig != null) {
+
+			if (standardGamemodeConfig.getEnemySpawns().length < 1)
+				throw new IllegalStateException(NO_ENEMY_SPAWN_POINTS_ERROR);
+
+			if (standardGamemodeConfig.getPlayerSpawns().length < 1)
+				throw new IllegalStateException(NO_PLAYER_SPAWN_POINTS_ERROR);
+		}
+
+		if (turnedGamemodeConfig != null) {
+
+			if (turnedGamemodeConfig.getPlayerSpawns().length < 1)
+				throw new IllegalStateException(NO_PLAYER_SPAWN_POINTS_ERROR);
+		}
 
 		if (maxPlayers < 1)
-			throw new IllegalStateException("Map not enabled. Max players must be at least 1.");
+			throw new IllegalStateException(INVALID_MAX_PLAYERS_ERROR);
 
 		if (lobbyPoint == null || lobbyPoint.isEmpty())
-			throw new IllegalStateException("Map not enabled. The lobby spawn location has not been configured.");
+			throw new IllegalStateException(INVALID_LOBBY_SPAWN_POINT_ERROR);
 
 		isEnabled = true;
 	}
@@ -442,38 +417,6 @@ public class MapEntity {
 	 */
 	public boolean isWithinMapBounds(Location location) {
 		return isWithinMapBounds(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
-	}
-
-	/**
-	 * Removes an entry from the enemy blacklist.
-	 * @param enemyId The ID of the enemy to remove.
-	 */
-	public void removeEnemyBlacklistEntry(String enemyId) {
-		enemyBlacklist.remove(enemyId);
-	}
-
-	/**
-	 * Removes an entry from the enemy whitelist.
-	 * @param enemyId The ID of the enemy to remove.
-	 */
-	public void removeEnemyWhitelistEntry(String enemyId) {
-		enemyWhitelist.remove(enemyId);
-	}
-
-	/**
-	 * Removes an enemy spawn location.
-	 * @param location The enemy spawn location to remove.
-	 */
-	public void removeEnemySpawnLocation(LocationEntity location) {
-		enemySpawns.remove(location);
-	}
-
-	/**
-	 * Removes a player spawn location.
-	 * @param location The player spawn location to remove.
-	 */
-	public void removePlayerSpawnLocation(LocationEntity location) {
-		playerSpawns.remove(location);
 	}
 
 	/**
@@ -504,13 +447,6 @@ public class MapEntity {
 	 */
 	public void removeWeaponWhitelistEntry(String weaponId) {
 		weaponWhitelist.remove(weaponId);
-	}
-
-	/**
-	 * Removes a zombie cure spawn location.
-	 */
-	public void removeZombieCureLocation(LocationEntity location) {
-		zombieCureSpawns.remove(location);
 	}
 	//endregion
 

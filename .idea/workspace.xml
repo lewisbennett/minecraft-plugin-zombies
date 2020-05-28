@@ -7,8 +7,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="29650a7b-3f89-4df9-bc36-b5aa3b568d39" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/com/mango/zombies/commands/AddGamemodeCommandExecutor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/mango/zombies/entities/StandardGamemodeConfigEntity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/mango/zombies/entities/TurnedGamemodeConfigEntity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/commands/MapInfoCommandExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/commands/MapInfoCommandExecutor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/entities/MapEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/entities/MapEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/gamemodes/StandardGamemode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/gamemodes/StandardGamemode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/gamemodes/TurnedGamemode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/gamemodes/TurnedGamemode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/GameplayWeapon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/GameplayWeapon.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/schema/Gamemode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/schema/Gamemode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/services/StockGameplayService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/services/StockGameplayService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/commands/MapInfoCommandExecutor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/commands/MapInfoCommandExecutor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/entities/MapEntity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/entities/MapEntity.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/gamemodes/StandardGamemode.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/gamemodes/StandardGamemode.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/gamemodes/TurnedGamemode.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/gamemodes/TurnedGamemode.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/gameplay/GameplayWeapon.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/gameplay/GameplayWeapon.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/schema/Gamemode.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/schema/Gamemode.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/services/StockGameplayService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/services/StockGameplayService.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,9 +105,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="212" y="127" width="1560" height="853" key="#Project_Structure/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1590517113047" />
-    <state x="765" y="226" key="#com.intellij.ide.util.MemberChooser" timestamp="1590582951463">
+    <state x="765" y="226" key="#com.intellij.ide.util.MemberChooser" timestamp="1590664871028">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
+    <state x="765" y="226" key="#com.intellij.ide.util.MemberChooser/-1920.0.1920.1040/0.0.1920.1040/3324.-900.1440.860/1920.0.1920.1040@0.0.1920.1040" timestamp="1590664871027" />
     <state x="765" y="226" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1590582951463" />
     <state x="722" y="343" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1590514088247">
       <screen x="0" y="0" width="1920" height="1040" />

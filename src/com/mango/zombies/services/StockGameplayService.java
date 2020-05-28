@@ -106,14 +106,14 @@ public class StockGameplayService implements GameplayService {
 
             case Gamemode.TURNED:
 
-                if (map.getZombieCureSpawns().length < 1)
+                if (map.getTurnedGamemodeConfig().getZombieCureSpawns().length < 1)
                     throw new IllegalStateException(String.format(MAP_DOES_NOT_SUPPORT_TURNED_ERROR, map.getName()));
 
                 zombiesGamemode = new TurnedGamemode();
 
                 break;
 
-            case Gamemode.ZOMBIES:
+            case Gamemode.STANDARD:
                 zombiesGamemode = new StandardGamemode();
                 break;
 

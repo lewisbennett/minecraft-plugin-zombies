@@ -4,6 +4,6 @@ public class Gamemode {
 
     //region Constant Values
     public static final String TURNED = "turned";
-    public static final String ZOMBIES = "zombies";
+    public static final String STANDARD = "standard";
     //endregion
 }
