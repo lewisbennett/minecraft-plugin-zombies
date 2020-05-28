@@ -212,6 +212,31 @@ public class WeaponEntity {
 	}
 
 	/**
+	 * Gets the initial magazine count from a service, if available, or default.
+	 * @param isPackAPunched Whether to look for a Pack-A-Punch service.
+	 */
+	public int getInitialMagazineCount(boolean isPackAPunched){
+		return getInitialMagazineCount(getService(WeaponService.GUNSHOT, isPackAPunched));
+	}
+
+	/**
+	 * Gets the initial magazine count from a service, if available, or default.
+	 * @param service The service to look for the initial magazine count in.
+	 */
+	public int getInitialMagazineCount(WeaponServiceEntity service) {
+
+		if (service == null || !service.getType().equals(WeaponService.GUNSHOT))
+			throw new IllegalArgumentException("Gunshot service required.");
+
+		WeaponServiceCharacteristicEntity initialMagazineCountCharacteristic = getCharacteristic(service, WeaponServiceCharacteristic.INITIAL_MAGAZINE_COUNT);
+
+		if (initialMagazineCountCharacteristic == null || !(initialMagazineCountCharacteristic.getValue() instanceof Number))
+			return service.doesRequirePackAPunch() ? PluginCore.getWeaponConfig().getDefaultInitialMagazineCount() : PluginCore.getWeaponConfig().getDefaultPackAPunchInitialMagazineCount();
+
+		return ((Number)initialMagazineCountCharacteristic.getValue()).intValue();
+	}
+
+	/**
 	 * Gets the magazine capacity from a service, if available, or default.
 	 * @param isPackAPunched Whether to look for a Pack-A-Punch service.
 	 */
@@ -445,6 +470,10 @@ public class WeaponEntity {
 			ammoCostCharacteristic.setType(WeaponServiceCharacteristic.AMMO_COST);
 			ammoCostCharacteristic.setValue(cost / 2);
 
+			WeaponServiceCharacteristicEntity initialMagazineCountCharacteristic = new WeaponServiceCharacteristicEntity();
+			initialMagazineCountCharacteristic.setType(WeaponServiceCharacteristic.INITIAL_MAGAZINE_COUNT);
+			initialMagazineCountCharacteristic.setValue(config.getDefaultInitialMagazineCount());
+
 			WeaponServiceCharacteristicEntity magazineCapacityCharacteristic = new WeaponServiceCharacteristicEntity();
 			magazineCapacityCharacteristic.setType(WeaponServiceCharacteristic.MAGAZINE_CAPACITY);
 			magazineCapacityCharacteristic.setValue(config.getDefaultMagazineCapacity());
@@ -471,6 +500,7 @@ public class WeaponEntity {
 
 			standardService.addCharacteristic(accuracyCharacteristic);
 			standardService.addCharacteristic(ammoCostCharacteristic);
+			standardService.addCharacteristic(initialMagazineCountCharacteristic);
 			standardService.addCharacteristic(magazineCapacityCharacteristic);
 			standardService.addCharacteristic(outOfAmmoSoundCharacteristic);
 			standardService.addCharacteristic(reloadSpeedCharacteristic);
@@ -489,6 +519,10 @@ public class WeaponEntity {
 			WeaponServiceCharacteristicEntity ammoCostPackAPunchCharacteristic = new WeaponServiceCharacteristicEntity();
 			ammoCostPackAPunchCharacteristic.setType(WeaponServiceCharacteristic.AMMO_COST);
 			ammoCostPackAPunchCharacteristic.setValue(cost);
+
+			WeaponServiceCharacteristicEntity initialMagazineCountPackAPunchCharacteristic = new WeaponServiceCharacteristicEntity();
+			initialMagazineCountPackAPunchCharacteristic.setType(WeaponServiceCharacteristic.INITIAL_MAGAZINE_COUNT);
+			initialMagazineCountPackAPunchCharacteristic.setValue(config.getDefaultPackAPunchInitialMagazineCount());
 
 			WeaponServiceCharacteristicEntity magazineCapacityPackAPunchCharacteristic = new WeaponServiceCharacteristicEntity();
 			magazineCapacityPackAPunchCharacteristic.setType(WeaponServiceCharacteristic.MAGAZINE_CAPACITY);
@@ -516,6 +550,7 @@ public class WeaponEntity {
 
 			packAPunchService.addCharacteristic(accuracyPackAPunchCharacteristic);
 			packAPunchService.addCharacteristic(ammoCostPackAPunchCharacteristic);
+			packAPunchService.addCharacteristic(initialMagazineCountPackAPunchCharacteristic);
 			packAPunchService.addCharacteristic(magazineCapacityPackAPunchCharacteristic);
 			packAPunchService.addCharacteristic(outOfAmmoSoundPackAPunchCharacteristic);
 			packAPunchService.addCharacteristic(reloadSpeedPackAPunchCharacteristic);

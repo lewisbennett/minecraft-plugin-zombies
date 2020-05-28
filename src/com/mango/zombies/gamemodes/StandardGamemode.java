@@ -6,11 +6,10 @@ import com.mango.zombies.Time;
 import com.mango.zombies.entities.EnemyEntity;
 import com.mango.zombies.entities.LocationEntity;
 import com.mango.zombies.entities.LockedLocationEntity;
-import com.mango.zombies.entities.WeaponEntity;
 import com.mango.zombies.gamemodes.base.ZombiesGamemode;
 import com.mango.zombies.gameplay.GameplayEnemy;
+import com.mango.zombies.gameplay.GameplayLoadout;
 import com.mango.zombies.gameplay.GameplayPlayer;
-import com.mango.zombies.gameplay.GameplayWeapon;
 import com.mango.zombies.helper.SoundUtil;
 import com.mango.zombies.schema.WeaponService;
 import org.bukkit.Bukkit;
@@ -118,21 +117,12 @@ public class StandardGamemode extends ZombiesGamemode {
         for (GameplayPlayer gameplayPlayer : getGameplaySession().getPlayers()) {
 
             Player player = gameplayPlayer.getPlayer();
-            LocationEntity[] playerSpawns = getGameplaySession().getMap().getStandardGamemodeConfig().getPlayerSpawns();
 
-            LocationEntity playerSpawn = playerSpawns[new Random().nextInt(playerSpawns.length)];
+            teleportPlayerToRandomSpawnPoint(player);
 
-            player.teleport(new Location(player.getWorld(), playerSpawn.getX(), playerSpawn.getY(), playerSpawn.getZ()));
+            gameplayPlayer.setLoadout(new GameplayLoadout(gameplayPlayer, getGameplaySession().getMap().getStandardGamemodeConfig().getStartingLoadout()));
 
-            WeaponEntity[] weaponEntities = PluginCore.getWeapons();
-
-            GameplayWeapon gameplayWeapon = new GameplayWeapon(weaponEntities[new Random().nextInt(weaponEntities.length)]);
-
-            PluginCore.getGameplayService().register(gameplayWeapon);
-
-            gameplayWeapon.setInitialMagazineCount(20);
-
-            gameplayWeapon.giveItemStack(player);
+            gameplayPlayer.getLoadout().applyLoadout();
         }
 
         startRound(1);
@@ -318,6 +308,17 @@ public class StandardGamemode extends ZombiesGamemode {
         }
 
         return lockedLocations.size() > 0 ? lockedLocations.get(random.nextInt(lockedLocations.size())) : null;
+    }
+
+    private void teleportPlayerToRandomSpawnPoint(Player player) {
+
+        // TODO: Evaluate the character assigned to the player, if any.
+
+        LocationEntity[] playerSpawns = getGameplaySession().getMap().getStandardGamemodeConfig().getPlayerSpawns();
+
+        LocationEntity playerSpawn = playerSpawns[random.nextInt(playerSpawns.length)];
+
+        player.teleport(new Location(player.getWorld(), playerSpawn.getX(), playerSpawn.getY(), playerSpawn.getZ()));
     }
     //endregion
 }

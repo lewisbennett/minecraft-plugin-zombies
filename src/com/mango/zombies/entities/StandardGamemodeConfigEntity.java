@@ -13,6 +13,8 @@ public class StandardGamemodeConfigEntity {
 
     @Expose private final List<String> enemyBlacklist = new ArrayList<String>();
     @Expose private final List<String> enemyWhitelist = new ArrayList<String>();
+
+    @Expose private final LoadoutEntity startingLoadout = new LoadoutEntity();
     //endregion
 
     //region Getters/Setters
@@ -28,6 +30,13 @@ public class StandardGamemodeConfigEntity {
      */
     public LockedLocationEntity[] getEnemySpawns() {
         return enemySpawns.toArray(new LockedLocationEntity[0]);
+    }
+
+    /**
+     * Gets the starting loadout.
+     */
+    public LoadoutEntity getStartingLoadout() {
+        return startingLoadout;
     }
 
     /**

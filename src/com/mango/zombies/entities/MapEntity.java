@@ -20,7 +20,9 @@ public class MapEntity {
 	public static final String INVALID_TOP_POINT_ERROR = "Map not enabled. The top point of the map has not been configured.";
 	public static final String NO_GAMEMODE_ERROR = "Map not enabled. At least 1 gamemode is required.";
 	public static final String NO_ENEMY_SPAWN_POINTS_ERROR = "Map not enabled. At least 1 enemy spawn point is required.";
+	public static final String NO_LOADOUTS_ERROR = "Map not enabled. At least 1 loadout is required.";
 	public static final String NO_PLAYER_SPAWN_POINTS_ERROR = "Map not enabled. At least 1 player spawn point is required.";
+	public static final String NO_STARTING_LOADOUT_ERROR = "Map not enabled. The starting loadout has not been configured.";
 	public static final String SESSION_IN_PROGRESS_ERROR = "Map not disabled. A session is currently active.";
 	//endregion
 
@@ -381,12 +383,18 @@ public class MapEntity {
 
 			if (standardGamemodeConfig.getPlayerSpawns().length < 1)
 				throw new IllegalStateException(NO_PLAYER_SPAWN_POINTS_ERROR);
+
+			if (standardGamemodeConfig.getStartingLoadout() == null || standardGamemodeConfig.getStartingLoadout().isEmpty())
+				throw new IllegalStateException(NO_STARTING_LOADOUT_ERROR);
 		}
 
 		if (turnedGamemodeConfig != null) {
 
 			if (turnedGamemodeConfig.getPlayerSpawns().length < 1)
 				throw new IllegalStateException(NO_PLAYER_SPAWN_POINTS_ERROR);
+
+			if (turnedGamemodeConfig.getLoadouts().length < 1)
+				throw new IllegalStateException(NO_LOADOUTS_ERROR);
 		}
 
 		if (maxPlayers < 1)

@@ -30,7 +30,6 @@ import java.util.UUID;
 public class GameplayWeapon extends GameplayRegisterable implements PlayerInteractEventRegisterable, EntityDamageByEntityEventRegisterable {
 
     //region Private Methods
-    private boolean hasSetInitialMagazineCount;
     private boolean isPackAPunched;
     private boolean isReloading;
 
@@ -39,9 +38,9 @@ public class GameplayWeapon extends GameplayRegisterable implements PlayerIntera
 
     private Player player;
 
-    private WeaponEntity weaponEntity;
+    private final WeaponEntity weaponEntity;
 
-    private UUID uuid;
+    private final UUID uuid;
     //endregion
 
     //region Getters/Setters
@@ -141,6 +140,15 @@ public class GameplayWeapon extends GameplayRegisterable implements PlayerIntera
      * @param player The player to give the weapon to.
      */
     public void giveItemStack(Player player) {
+        giveItemStack(player, -1);
+    }
+
+    /**
+     * Gives a player this weapon as a usable item.
+     * @param player The player to give the weapon to.
+     * @param inventoryPosition The inventory position to put the item in, or -1.
+     */
+    public void giveItemStack(Player player, int inventoryPosition) {
 
         this.player = player;
 
@@ -156,7 +164,10 @@ public class GameplayWeapon extends GameplayRegisterable implements PlayerIntera
 
         setWeaponDisplay(itemStack, weaponEntity.getService(WeaponService.GUNSHOT, isPackAPunched) == null ? null : getAmmoStatus());
 
-        player.getInventory().addItem(itemStack);
+        if (inventoryPosition < 0)
+            player.getInventory().addItem(itemStack);
+        else
+            player.getInventory().setItem(inventoryPosition, itemStack);
     }
 
     /**
@@ -209,31 +220,6 @@ public class GameplayWeapon extends GameplayRegisterable implements PlayerIntera
         instance.getServer().getScheduler().scheduleSyncDelayedTask(instance, this::reload_runnable, Time.fromSeconds(weaponEntity.getReloadSpeed(gunshotService)).totalTicks());
 
         return true;
-    }
-
-    /**
-     * Sets the starting magazine count for the weapon. Can only be called once.
-     * @param magazineCount The number of magazines that the weapon should start off with.
-     */
-    public void setInitialMagazineCount(int magazineCount) {
-
-        if (hasSetInitialMagazineCount || magazineCount < 1)
-            return;
-
-        hasSetInitialMagazineCount = true;
-
-        WeaponServiceEntity gunshotService = weaponEntity.getService(WeaponService.GUNSHOT, isPackAPunched);
-
-        if (gunshotService == null)
-            return;
-
-        int magazineCapacity = weaponEntity.getMagazineCapacity(gunshotService);
-        int totalAmmoCapacity = weaponEntity.getTotalAmmoCapacity(gunshotService);
-
-        int availableAmmo = (magazineCount - 1) * magazineCapacity;
-
-        this.currentAmmo = magazineCapacity;
-        this.availableAmmo = Math.min(availableAmmo, totalAmmoCapacity);
     }
 
     /**
@@ -328,6 +314,8 @@ public class GameplayWeapon extends GameplayRegisterable implements PlayerIntera
         this.weaponEntity = weaponEntity;
 
         uuid = UUID.randomUUID();
+
+        setInitialMagazineCount();
     }
     //endregion
 
@@ -362,6 +350,23 @@ public class GameplayWeapon extends GameplayRegisterable implements PlayerIntera
 
     private boolean isWithinRange(double positionOne, double positionTwo) {
         return Math.max(positionOne, positionTwo) - Math.min(positionOne, positionTwo) < (double)3;
+    }
+
+    private void setInitialMagazineCount() {
+
+        WeaponServiceEntity gunshotService = weaponEntity.getService(WeaponService.GUNSHOT, isPackAPunched);
+
+        if (gunshotService == null)
+            return;
+
+        int initialMagazineCount = weaponEntity.getInitialMagazineCount(gunshotService);
+        int magazineCapacity = weaponEntity.getMagazineCapacity(gunshotService);
+        int totalAmmoCapacity = weaponEntity.getTotalAmmoCapacity(gunshotService);
+
+        int availableAmmo = (initialMagazineCount - 1) * magazineCapacity;
+
+        this.currentAmmo = magazineCapacity;
+        this.availableAmmo = Math.min(availableAmmo, totalAmmoCapacity);
     }
 
     private void setWeaponDisplay(ItemStack itemStack, String status) {

@@ -61,8 +61,6 @@ public class GetWeaponCommandExecutor extends BaseCommandExecutor {
 
 		PluginCore.getGameplayService().register(gameplayWeapon);
 
-		gameplayWeapon.setInitialMagazineCount(5);
-
 		gameplayWeapon.giveItemStack(player);
 
 		return weaponEntity.getName() + " added to inventory.";

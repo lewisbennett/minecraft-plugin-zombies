@@ -20,6 +20,8 @@ public class GameplayPlayer {
 
     private GameMode gameMode;
 
+    private GameplayLoadout loadout;
+
     private int points;
 
     private ItemStack[] inventory;
@@ -30,6 +32,20 @@ public class GameplayPlayer {
     //endregion
 
     //region Getters/Setters
+    /**
+     * Gets the player's loadout.
+     */
+    public GameplayLoadout getLoadout() {
+        return loadout;
+    }
+
+    /**
+     * Sets the player's loadout.
+     */
+    public void setLoadout(GameplayLoadout loadout) {
+        this.loadout = loadout;
+    }
+
     /**
      * Gets the player.
      */

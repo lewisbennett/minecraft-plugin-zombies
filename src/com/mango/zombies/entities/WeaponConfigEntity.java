@@ -19,6 +19,8 @@ public class WeaponConfigEntity {
     public static final int DEFAULT_DEFAULT_PACK_A_PUNCH_ACCURACY = 95;
     public static final int DEFAULT_DEFAULT_GUNSHOT_DAMAGE = 30;
     public static final int DEFAULT_DEFAULT_PACK_A_PUNCH_GUNSHOT_DAMAGE = 60;
+    public static final int DEFAULT_DEFAULT_INITIAL_MAGAZINE_COUNT = 5;
+    public static final int DEFAULT_DEFAULT_PACK_A_PUNCH_INITIAL_MAGAZINE_COUNT = 8;
     public static final int DEFAULT_DEFAULT_MAGAZINE_CAPACITY = 8;
     public static final int DEFAULT_DEFAULT_PACK_A_PUNCH_MAGAZINE_CAPACITY = 12;
     public static final int DEFAULT_DEFAULT_MELEE_DAMAGE = 155;
@@ -56,6 +58,8 @@ public class WeaponConfigEntity {
     @Expose private int defaultPackAPunchAccuracy = DEFAULT_DEFAULT_PACK_A_PUNCH_ACCURACY;
     @Expose private int defaultGunshotDamage = DEFAULT_DEFAULT_GUNSHOT_DAMAGE;
     @Expose private int defaultPackAPunchGunshotDamage = DEFAULT_DEFAULT_PACK_A_PUNCH_GUNSHOT_DAMAGE;
+    @Expose private int defaultInitialMagazineCount = DEFAULT_DEFAULT_INITIAL_MAGAZINE_COUNT;
+    @Expose private int defaultPackAPunchInitialMagazineCount = DEFAULT_DEFAULT_PACK_A_PUNCH_INITIAL_MAGAZINE_COUNT;
     @Expose private int defaultMagazineCapacity = DEFAULT_DEFAULT_MAGAZINE_CAPACITY;
     @Expose private int defaultPackAPunchMagazineCapacity = DEFAULT_DEFAULT_PACK_A_PUNCH_MAGAZINE_CAPACITY;
     @Expose private int defaultMeleeDamage = DEFAULT_DEFAULT_MELEE_DAMAGE;
@@ -210,6 +214,34 @@ public class WeaponConfigEntity {
      */
     public void setDefaultPackAPunchGunshotDamage(int defaultPackAPunchGunshotDamage) {
         this.defaultPackAPunchGunshotDamage = defaultPackAPunchGunshotDamage;
+    }
+
+    /**
+     * Gets the default initial magazine capacity.
+     */
+    public int getDefaultInitialMagazineCount() {
+        return defaultInitialMagazineCount;
+    }
+
+    /**
+     * Sets the default initial magazine capacity.
+     */
+    public void setDefaultInitialMagazineCount(int defaultInitialMagazineCount) {
+        this.defaultInitialMagazineCount = defaultInitialMagazineCount;
+    }
+
+    /**
+     * Gets the default Pack-A-Punch initial magazine capacity.
+     */
+    public int getDefaultPackAPunchInitialMagazineCount() {
+        return defaultPackAPunchInitialMagazineCount;
+    }
+
+    /**
+     * Sets the default Pack-A-Punch initial magazine capacity.
+     */
+    public void setDefaultPackAPunchInitialMagazineCount(int defaultPackAPunchInitialMagazineCount) {
+        this.defaultPackAPunchInitialMagazineCount = defaultPackAPunchInitialMagazineCount;
     }
 
     /**

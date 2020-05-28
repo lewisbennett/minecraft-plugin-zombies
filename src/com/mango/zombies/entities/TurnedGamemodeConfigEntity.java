@@ -10,9 +10,18 @@ public class TurnedGamemodeConfigEntity {
     //region Fields
     @Expose private final List<LocationEntity> playerSpawns = new ArrayList<LocationEntity>();
     @Expose private final List<LocationEntity> zombieCureSpawns = new ArrayList<LocationEntity>();
+
+    @Expose private final List<LoadoutEntity> loadouts = new ArrayList<LoadoutEntity>();
     //endregion
 
     //region Getters/Setters
+    /**
+     * Gets the loadouts.
+     */
+    public LoadoutEntity[] getLoadouts() {
+        return loadouts.toArray(new LoadoutEntity[0]);
+    }
+
     /**
      * Gets the locations where players can spawn in the map.
      */
@@ -30,6 +39,13 @@ public class TurnedGamemodeConfigEntity {
 
     //region Public Methods
     /**
+     * Adds a loadout.
+     */
+    public void addLoadout(LoadoutEntity loadout) {
+        loadouts.add(loadout);
+    }
+
+    /**
      * Adds a player spawn location.
      * @param location The player spawn location.
      */
@@ -42,6 +58,13 @@ public class TurnedGamemodeConfigEntity {
      */
     public void addZombieCureSpawn(LocationEntity location) {
         zombieCureSpawns.add(location);
+    }
+
+    /**
+     * Removes a loadout.
+     */
+    public void removeLoadout(LoadoutEntity loadout) {
+        loadouts.remove(loadout);
     }
 
     /**
