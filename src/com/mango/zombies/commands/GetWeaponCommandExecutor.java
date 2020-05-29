@@ -59,7 +59,7 @@ public class GetWeaponCommandExecutor extends BaseCommandExecutor {
 
 		GameplayWeapon gameplayWeapon = new GameplayWeapon(weaponEntity);
 
-		PluginCore.getGameplayService().register(gameplayWeapon);
+		PluginCore.getGameplayService().addRegisterable(gameplayWeapon);
 
 		gameplayWeapon.giveItemStack(player);
 

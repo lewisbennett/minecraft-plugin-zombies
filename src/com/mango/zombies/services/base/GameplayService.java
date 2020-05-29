@@ -17,6 +17,12 @@ public interface GameplayService {
 
     //region Public Methods
     /**
+     * Registers an object for use in game.
+     * @param gameplayRegisterable The object to register.
+     */
+    void addRegisterable(GameplayRegisterable gameplayRegisterable);
+
+    /**
      * Calculates how many enemies to spawn in a round.
      * @param playerCount The number of players in the game.
      * @param round The round.
@@ -56,15 +62,9 @@ public interface GameplayService {
     GameplayRegisterable findRegisterableByUUID(UUID registerableUuid);
 
     /**
-     * Registers an object for use in game.
-     * @param gameplayRegisterable The object to register.
-     */
-    void register(GameplayRegisterable gameplayRegisterable);
-
-    /**
      * Unregisters an object from in game use.
      * @param gameplayRegisterable The object to unregister.
      */
-    void unregister(GameplayRegisterable gameplayRegisterable);
+    void removeRegisterable(GameplayRegisterable gameplayRegisterable);
     //endregion
 }

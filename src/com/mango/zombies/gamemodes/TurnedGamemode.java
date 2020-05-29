@@ -75,7 +75,7 @@ public class TurnedGamemode extends ZombiesGamemode {
 
         ZombieCureDrop zombieCureDrop = new ZombieCureDrop(this);
 
-        PluginCore.getGameplayService().register(zombieCureDrop);
+        PluginCore.getGameplayService().addRegisterable(zombieCureDrop);
 
         world.dropItem(new Location(world, zombieCureLocation.getX(), zombieCureLocation.getY(), zombieCureLocation.getZ()), zombieCureDrop.createItemStack());
 

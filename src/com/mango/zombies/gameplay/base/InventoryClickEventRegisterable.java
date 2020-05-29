@@ -1,7 +1,6 @@
 package com.mango.zombies.gameplay.base;
 
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryPickupItemEvent;
 
 public interface InventoryClickEventRegisterable {
 

@@ -31,14 +31,14 @@ public class GameplayLoadout {
     public void setMeleeWeapon(GameplayWeapon meleeWeapon) {
 
         if (this.meleeWeapon != null)
-            PluginCore.getGameplayService().unregister(this.meleeWeapon);
+            PluginCore.getGameplayService().removeRegisterable(this.meleeWeapon);
 
         this.meleeWeapon = meleeWeapon;
 
         if (this.meleeWeapon == null)
             return;
 
-        PluginCore.getGameplayService().register(this.meleeWeapon);
+        PluginCore.getGameplayService().addRegisterable(this.meleeWeapon);
 
         applyMeleeWeapon();
     }
@@ -56,14 +56,14 @@ public class GameplayLoadout {
     public void setPrimaryWeapon(GameplayWeapon primaryWeapon) {
 
         if (this.primaryWeapon != null)
-            PluginCore.getGameplayService().unregister(this.primaryWeapon);
+            PluginCore.getGameplayService().removeRegisterable(this.primaryWeapon);
 
         this.primaryWeapon = primaryWeapon;
 
         if (this.primaryWeapon == null)
             return;
 
-        PluginCore.getGameplayService().register(this.primaryWeapon);
+        PluginCore.getGameplayService().addRegisterable(this.primaryWeapon);
 
         applyPrimaryWeapon();
     }
@@ -81,14 +81,14 @@ public class GameplayLoadout {
     public void setSecondaryWeapon(GameplayWeapon secondaryWeapon) {
 
         if (this.secondaryWeapon != null)
-            PluginCore.getGameplayService().unregister(this.secondaryWeapon);
+            PluginCore.getGameplayService().removeRegisterable(this.secondaryWeapon);
 
         this.secondaryWeapon = secondaryWeapon;
 
         if (this.secondaryWeapon == null)
             return;
 
-        PluginCore.getGameplayService().register(this.secondaryWeapon);
+        PluginCore.getGameplayService().addRegisterable(this.secondaryWeapon);
 
         applySecondaryWeapon();
     }
@@ -106,14 +106,14 @@ public class GameplayLoadout {
     public void setTertiaryWeapon(GameplayWeapon tertiaryWeapon) {
 
         if (this.tertiaryWeapon != null)
-            PluginCore.getGameplayService().unregister(this.tertiaryWeapon);
+            PluginCore.getGameplayService().removeRegisterable(this.tertiaryWeapon);
 
         this.tertiaryWeapon = tertiaryWeapon;
 
         if (this.tertiaryWeapon == null)
             return;
 
-        PluginCore.getGameplayService().register(this.tertiaryWeapon);
+        PluginCore.getGameplayService().addRegisterable(this.tertiaryWeapon);
 
         applyTertiaryWeapon();
     }
@@ -186,7 +186,7 @@ public class GameplayLoadout {
             if (queryWeapon.getId().equals(loadoutEntity.getMeleeWeaponId())) {
 
                 meleeWeapon = new GameplayWeapon(queryWeapon);
-                PluginCore.getGameplayService().register(meleeWeapon);
+                PluginCore.getGameplayService().addRegisterable(meleeWeapon);
 
                 continue;
             }
@@ -194,7 +194,7 @@ public class GameplayLoadout {
             if (queryWeapon.getId().equals(loadoutEntity.getPrimaryWeaponId())) {
 
                 primaryWeapon = new GameplayWeapon(queryWeapon);
-                PluginCore.getGameplayService().register(primaryWeapon);
+                PluginCore.getGameplayService().addRegisterable(primaryWeapon);
 
                 continue;
             }
@@ -202,7 +202,7 @@ public class GameplayLoadout {
             if (queryWeapon.getId().equals(loadoutEntity.getSecondaryWeaponId())) {
 
                 secondaryWeapon = new GameplayWeapon(queryWeapon);
-                PluginCore.getGameplayService().register(secondaryWeapon);
+                PluginCore.getGameplayService().addRegisterable(secondaryWeapon);
 
                 continue;
             }
@@ -210,7 +210,7 @@ public class GameplayLoadout {
             if (queryWeapon.getId().equals(loadoutEntity.getTertiaryWeaponId())) {
 
                 tertiaryWeapon = new GameplayWeapon(queryWeapon);
-                PluginCore.getGameplayService().register(tertiaryWeapon);
+                PluginCore.getGameplayService().addRegisterable(tertiaryWeapon);
             }
         }
     }

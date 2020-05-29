@@ -63,7 +63,7 @@ public class GetPositionToolCommandExecutor extends BaseCommandExecutor {
 
         PositionTool positionTool = new PositionTool(map, args[0]);
 
-        PluginCore.getGameplayService().register(positionTool);
+        PluginCore.getGameplayService().addRegisterable(positionTool);
 
         positionTool.giveItemStack(player);
 

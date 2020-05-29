@@ -143,7 +143,7 @@ public class GameplayEnemy extends GameplayRegisterable {
         if (gameplaySession != null && gameplayPlayer != null)
             gameplaySession.getGamemode().onEnemyKilled(gameplayPlayer, this, weaponServiceType);
 
-        PluginCore.getGameplayService().unregister(this);
+        PluginCore.getGameplayService().removeRegisterable(this);
     }
 
     /**
@@ -154,7 +154,7 @@ public class GameplayEnemy extends GameplayRegisterable {
         if (entity != null)
             entity.remove();
 
-        PluginCore.getGameplayService().unregister(this);
+        PluginCore.getGameplayService().removeRegisterable(this);
     }
 
     /**
@@ -181,7 +181,7 @@ public class GameplayEnemy extends GameplayRegisterable {
 
         this.entity = (LivingEntity)entity;
 
-        PluginCore.getGameplayService().register(this);
+        PluginCore.getGameplayService().addRegisterable(this);
 
         Main instance = Main.getInstance();
 

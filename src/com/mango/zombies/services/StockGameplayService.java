@@ -39,6 +39,17 @@ public class StockGameplayService implements GameplayService {
 
     //region Public Methods
     /**
+     * Registers an object for use in game.
+     * @param gameplayRegisterable The object to register.
+     */
+    public void addRegisterable(GameplayRegisterable gameplayRegisterable) {
+
+        gameplayRegisterables.add(gameplayRegisterable);
+
+        gameplayRegisterable.onRegistered();
+    }
+
+    /**
      * Calculates how many enemies to spawn in a round.
      * @param playerCount The number of players in the game.
      * @param round The round.
@@ -168,21 +179,10 @@ public class StockGameplayService implements GameplayService {
     }
 
     /**
-     * Registers an object for use in game.
-     * @param gameplayRegisterable The object to register.
-     */
-    public void register(GameplayRegisterable gameplayRegisterable) {
-
-        gameplayRegisterables.add(gameplayRegisterable);
-
-        gameplayRegisterable.onRegistered();
-    }
-
-    /**
      * Unregisters an object from in game use.
      * @param gameplayRegisterable The object to unregister.
      */
-    public void unregister(GameplayRegisterable gameplayRegisterable) {
+    public void removeRegisterable(GameplayRegisterable gameplayRegisterable) {
 
         gameplayRegisterables.remove(gameplayRegisterable);
 
