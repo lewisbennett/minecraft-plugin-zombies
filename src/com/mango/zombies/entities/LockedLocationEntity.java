@@ -1,6 +1,7 @@
 package com.mango.zombies.entities;
 
 import com.google.gson.annotations.Expose;
+import org.bukkit.Location;
 
 public class LockedLocationEntity extends LocationEntity {
 
@@ -21,6 +22,16 @@ public class LockedLocationEntity extends LocationEntity {
      */
     public void setLockId(String lockId) {
         this.lockId = lockId;
+    }
+    //endregion
+
+    //region Constructors
+    public LockedLocationEntity() {
+        super();
+    }
+
+    public LockedLocationEntity(Location location) {
+        super(location);
     }
     //endregion
 }

@@ -4,6 +4,7 @@ import com.mango.zombies.PluginCore;
 import com.mango.zombies.entities.MapEntity;
 import com.mango.zombies.gameplay.MapBoundsPositionTool;
 import com.mango.zombies.gameplay.MapOriginPositionTool;
+import com.mango.zombies.gameplay.PlayerSpawnStandardPositionTool;
 import com.mango.zombies.helper.HiddenStringUtils;
 import com.mango.zombies.schema.Positionable;
 import org.bukkit.ChatColor;
@@ -144,6 +145,9 @@ public abstract class BasePositionTool extends GameplayRegisterable implements B
 
             case Positionable.MAP_ORIGIN:
                 return new MapOriginPositionTool(mapEntity);
+
+            case Positionable.PLAYER_SPAWN_STANDARD:
+                return new PlayerSpawnStandardPositionTool(mapEntity);
 
             default:
                 return null;

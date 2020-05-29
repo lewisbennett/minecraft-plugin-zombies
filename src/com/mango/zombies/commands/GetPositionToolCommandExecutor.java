@@ -4,6 +4,7 @@ import com.mango.zombies.PluginCore;
 import com.mango.zombies.commands.base.BaseCommandExecutor;
 import com.mango.zombies.entities.MapEntity;
 import com.mango.zombies.gameplay.base.BasePositionTool;
+import com.mango.zombies.schema.Positionable;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
@@ -15,8 +16,10 @@ public class GetPositionToolCommandExecutor extends BaseCommandExecutor {
     //region Constant Values
     public static final String CORRECT_USAGE_ERROR_CONSOLE = "Correct usage: /getpositiontool [positionable] [map ID] [player name]";
     public static final String CORRECT_USAGE_ERROR_PLAYER = "Correct usage: /getpositiontool [positionable] [map ID]";
+    public static final String NO_STANDARD_GAMEMODE_ERROR = "The standard gamemode has not been added for %s.";
     public static final String INVALID_MAP_ERROR = "%s is not a valid map ID.";
     public static final String INVALID_POSITIONABLE_ERROR = "%s is not a valid positionable.";
+    public static final String MAP_ENABLED_ERROR = "%s must be disabled first.";
     public static final String PLAYER_NOT_FOUND_ERROR = "Player not found.";
     //endregion
 
@@ -56,6 +59,12 @@ public class GetPositionToolCommandExecutor extends BaseCommandExecutor {
 
         if (mapEntity == null)
             throw new CommandException(String.format(INVALID_MAP_ERROR, args[1]));
+
+        if (mapEntity.isEnabled())
+            throw new CommandException(String.format(MAP_ENABLED_ERROR, mapEntity.getName()));
+
+        if (args[0].equals(Positionable.PLAYER_SPAWN_STANDARD) && mapEntity.getStandardGamemodeConfig() == null)
+            throw new CommandException(String.format(NO_STANDARD_GAMEMODE_ERROR, mapEntity.getName()));
 
         BasePositionTool positionTool = BasePositionTool.getPositionToolForPositionable(mapEntity, args[0]);
 

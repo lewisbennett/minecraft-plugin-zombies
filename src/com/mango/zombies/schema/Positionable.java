@@ -5,5 +5,6 @@ public class Positionable {
     //region Constant Values
     public static final String MAP_BOUNDS = "mapBounds";
     public static final String MAP_ORIGIN = "mapOrigin";
+    public static final String PLAYER_SPAWN_STANDARD = "playerSpawnStandard";
     //endregion
 }
