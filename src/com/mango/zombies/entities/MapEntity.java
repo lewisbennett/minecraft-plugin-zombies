@@ -33,6 +33,8 @@ public class MapEntity {
 	@Expose private int mysteryBoxCost;
 	@Expose private int packAPunchCost;
 
+	@Expose private final List<DoorEntity> doors = new ArrayList<DoorEntity>();
+
 	@Expose private final List<LocationEntity> spectatorSpawns = new ArrayList<LocationEntity>();
 
 	@Expose private final List<SignEntity> signs = new ArrayList<SignEntity>();
@@ -59,6 +61,13 @@ public class MapEntity {
 	//endregion
 
 	//region Getters/Setters
+	/**
+	 * Gets the map's doors.
+	 */
+	public DoorEntity[] getDoors() {
+		return doors.toArray(new DoorEntity[0]);
+	}
+
 	/**
 	 * Gets whether the map is enabled.
 	 */
@@ -314,6 +323,13 @@ public class MapEntity {
 
 	//region Public Methods
 	/**
+	 * Adds a door.
+	 */
+	public void addDoor(DoorEntity door) {
+		doors.add(door);
+	}
+
+	/**
 	 * Adds a sign.
 	 */
 	public void addSign(SignEntity sign) {
@@ -425,6 +441,13 @@ public class MapEntity {
 	 */
 	public boolean isWithinMapBounds(Location location) {
 		return isWithinMapBounds(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
+	}
+
+	/**
+	 * Removes a door.
+	 */
+	public void removeDoor(DoorEntity door) {
+		doors.remove(door);
 	}
 
 	/**

@@ -3,6 +3,7 @@ package com.mango.zombies.schema;
 public class Positionable {
 
     //region Constant Values
+    public static final String DOOR = "door";
     public static final String ENEMY_SPAWN = "enemySpawn";
     public static final String MAP_BOUNDS = "mapBounds";
     public static final String MAP_ORIGIN = "mapOrigin";

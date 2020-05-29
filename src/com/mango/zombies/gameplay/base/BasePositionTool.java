@@ -143,6 +143,9 @@ public abstract class BasePositionTool extends GameplayRegisterable implements B
 
         switch (positionable) {
 
+            case Positionable.DOOR:
+                return new DoorPositionTool(mapEntity);
+
             case Positionable.MAP_BOUNDS:
                 return new MapBoundsPositionTool(mapEntity);
 
