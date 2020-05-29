@@ -12,7 +12,7 @@ public class MapOriginPositionTool extends BasePositionTool {
 
     //region Getters/Setters
     /**
-     * Gets the name of this position tool, formatted.
+     * Gets the name of this position tool.
      */
     public String getPositionToolName() {
         return getMapEntity().getName() + " (map origin)";

@@ -37,7 +37,7 @@ public abstract class BasePositionTool extends GameplayRegisterable implements B
     }
 
     /**
-     * Gets the name of this position tool, formatted.
+     * Gets the name of this position tool.
      */
     public abstract String getPositionToolName();
 

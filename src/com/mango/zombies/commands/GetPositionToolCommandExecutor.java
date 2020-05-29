@@ -64,11 +64,22 @@ public class GetPositionToolCommandExecutor extends BaseCommandExecutor {
         if (mapEntity.isEnabled())
             throw new CommandException(String.format(MAP_ENABLED_ERROR, mapEntity.getName()));
 
-        if (args[0].equals(Positionable.PLAYER_SPAWN_STANDARD) && mapEntity.getStandardGamemodeConfig() == null)
-            throw new CommandException(String.format(NO_STANDARD_GAMEMODE_ERROR, mapEntity.getName()));
+        switch (args[0]) {
 
-        else if (args[0].equals(Positionable.PLAYER_SPAWN_TURNED) && mapEntity.getTurnedGamemodeConfig() == null)
-            throw new CommandException(String.format(NO_TURNED_GAMEMODE_ERROR, mapEntity.getName()));
+            case Positionable.ENEMY_SPAWN:
+            case Positionable.PLAYER_SPAWN_STANDARD:
+
+                if (mapEntity.getStandardGamemodeConfig() == null)
+                    throw new CommandException(String.format(NO_STANDARD_GAMEMODE_ERROR, mapEntity.getName()));
+
+                break;
+
+            case Positionable.PLAYER_SPAWN_TURNED:
+
+                if (mapEntity.getTurnedGamemodeConfig() == null)
+                    throw new CommandException(String.format(NO_TURNED_GAMEMODE_ERROR, mapEntity.getName()));
+
+        }
 
         BasePositionTool positionTool = BasePositionTool.getPositionToolForPositionable(mapEntity, args[0]);
 

@@ -12,7 +12,7 @@ public class PlayerSpawnStandardPositionTool extends BasePositionTool {
 
     //region Getters/Setters
     /**
-     * Gets the name of this position tool, formatted.
+     * Gets the name of this position tool.
      */
     public String getPositionToolName() {
         return getMapEntity().getName() + " (Standard player spawn)";
@@ -99,7 +99,7 @@ public class PlayerSpawnStandardPositionTool extends BasePositionTool {
         }
 
         if (lockedLocationEntity != null) {
-            PluginCore.getMessagingService().error(player, "An enemy spawn point exists here.");
+            PluginCore.getMessagingService().error(player, "An enemy spawn point already exists here.");
             return;
         }
 
