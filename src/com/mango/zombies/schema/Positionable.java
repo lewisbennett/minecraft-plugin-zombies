@@ -8,5 +8,6 @@ public class Positionable {
     public static final String MAP_ORIGIN = "mapOrigin";
     public static final String PLAYER_SPAWN_STANDARD = "playerSpawnStandard";
     public static final String PLAYER_SPAWN_TURNED = "playerSpawnTurned";
+    public static final String ZOMBIE_CURE = "zombieCure";
     //endregion
 }

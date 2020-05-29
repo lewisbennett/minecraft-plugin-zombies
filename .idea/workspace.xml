@@ -7,12 +7,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="29650a7b-3f89-4df9-bc36-b5aa3b568d39" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/EnemySpawnPositionTool.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/ZombieCurePositionTool.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/commands/GetPositionToolCommandExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/commands/GetPositionToolCommandExecutor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/MapBoundsPositionTool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/MapBoundsPositionTool.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/MapOriginPositionTool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/MapOriginPositionTool.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/PlayerSpawnStandardPositionTool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/PlayerSpawnStandardPositionTool.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/PlayerSpawnTurnedPositionTool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/PlayerSpawnTurnedPositionTool.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/base/BasePositionTool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/base/BasePositionTool.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/schema/Positionable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/schema/Positionable.java" afterDir="false" />

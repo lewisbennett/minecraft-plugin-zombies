@@ -75,6 +75,7 @@ public class GetPositionToolCommandExecutor extends BaseCommandExecutor {
                 break;
 
             case Positionable.PLAYER_SPAWN_TURNED:
+            case Positionable.ZOMBIE_CURE:
 
                 if (mapEntity.getTurnedGamemodeConfig() == null)
                     throw new CommandException(String.format(NO_TURNED_GAMEMODE_ERROR, mapEntity.getName()));
