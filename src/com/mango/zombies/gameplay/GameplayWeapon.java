@@ -258,9 +258,9 @@ public class GameplayWeapon extends GameplayRegisterable implements PlayerIntera
         for (int i = 0; i < projectiles; i++) {
 
             GameplayProjectile gameplayProjectile = new GameplayProjectile(player);
-            gameplayProjectile.getConfiguration().put(ProjectileConfigComponent.DAMAGE, damage);
 
-            PluginCore.getGameplayService().addRegisterable(gameplayProjectile);
+            gameplayProjectile.getConfiguration().put(ProjectileConfigComponent.DAMAGE, damage);
+            gameplayProjectile.register();
 
             Projectile projectile = player.launchProjectile(weaponEntity.getProjectileType(gunshotService));
 

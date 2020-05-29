@@ -1,6 +1,5 @@
 package com.mango.zombies.gamemodes;
 
-import com.mango.zombies.PluginCore;
 import com.mango.zombies.Time;
 import com.mango.zombies.entities.LocationEntity;
 import com.mango.zombies.gamemodes.base.ZombiesGamemode;
@@ -75,7 +74,7 @@ public class TurnedGamemode extends ZombiesGamemode {
 
         ZombieCureDrop zombieCureDrop = new ZombieCureDrop(this);
 
-        PluginCore.getGameplayService().addRegisterable(zombieCureDrop);
+        zombieCureDrop.register();
 
         world.dropItem(new Location(world, zombieCureLocation.getX(), zombieCureLocation.getY(), zombieCureLocation.getZ()), zombieCureDrop.createItemStack());
 

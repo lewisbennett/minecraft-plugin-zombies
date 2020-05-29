@@ -68,8 +68,7 @@ public class GetSpawningToolCommandExecutor extends BaseCommandExecutor {
 
         SpawningTool spawningTool = new SpawningTool(enemyEntity, spawnRound);
 
-        PluginCore.getGameplayService().addRegisterable(spawningTool);
-
+        spawningTool.register();
         spawningTool.giveItemStack(player);
 
         return "With the Spawning Tool, right click to spawn the specified enemy.";

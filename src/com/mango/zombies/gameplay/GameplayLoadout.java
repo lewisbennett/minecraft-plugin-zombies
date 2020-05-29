@@ -31,14 +31,14 @@ public class GameplayLoadout {
     public void setMeleeWeapon(GameplayWeapon meleeWeapon) {
 
         if (this.meleeWeapon != null)
-            PluginCore.getGameplayService().removeRegisterable(this.meleeWeapon);
+            this.meleeWeapon.unregister();
 
         this.meleeWeapon = meleeWeapon;
 
         if (this.meleeWeapon == null)
             return;
 
-        PluginCore.getGameplayService().addRegisterable(this.meleeWeapon);
+        this.meleeWeapon.register();
 
         applyMeleeWeapon();
     }
@@ -56,14 +56,14 @@ public class GameplayLoadout {
     public void setPrimaryWeapon(GameplayWeapon primaryWeapon) {
 
         if (this.primaryWeapon != null)
-            PluginCore.getGameplayService().removeRegisterable(this.primaryWeapon);
+            this.primaryWeapon.unregister();
 
         this.primaryWeapon = primaryWeapon;
 
         if (this.primaryWeapon == null)
             return;
 
-        PluginCore.getGameplayService().addRegisterable(this.primaryWeapon);
+        this.primaryWeapon.register();
 
         applyPrimaryWeapon();
     }
@@ -81,14 +81,14 @@ public class GameplayLoadout {
     public void setSecondaryWeapon(GameplayWeapon secondaryWeapon) {
 
         if (this.secondaryWeapon != null)
-            PluginCore.getGameplayService().removeRegisterable(this.secondaryWeapon);
+            secondaryWeapon.unregister();
 
         this.secondaryWeapon = secondaryWeapon;
 
         if (this.secondaryWeapon == null)
             return;
 
-        PluginCore.getGameplayService().addRegisterable(this.secondaryWeapon);
+        secondaryWeapon.register();
 
         applySecondaryWeapon();
     }
@@ -106,14 +106,14 @@ public class GameplayLoadout {
     public void setTertiaryWeapon(GameplayWeapon tertiaryWeapon) {
 
         if (this.tertiaryWeapon != null)
-            PluginCore.getGameplayService().removeRegisterable(this.tertiaryWeapon);
+            tertiaryWeapon.unregister();
 
         this.tertiaryWeapon = tertiaryWeapon;
 
         if (this.tertiaryWeapon == null)
             return;
 
-        PluginCore.getGameplayService().addRegisterable(this.tertiaryWeapon);
+        tertiaryWeapon.register();
 
         applyTertiaryWeapon();
     }
@@ -186,7 +186,7 @@ public class GameplayLoadout {
             if (queryWeapon.getId().equals(loadoutEntity.getMeleeWeaponId())) {
 
                 meleeWeapon = new GameplayWeapon(queryWeapon);
-                PluginCore.getGameplayService().addRegisterable(meleeWeapon);
+                meleeWeapon.register();
 
                 continue;
             }
@@ -194,7 +194,7 @@ public class GameplayLoadout {
             if (queryWeapon.getId().equals(loadoutEntity.getPrimaryWeaponId())) {
 
                 primaryWeapon = new GameplayWeapon(queryWeapon);
-                PluginCore.getGameplayService().addRegisterable(primaryWeapon);
+                primaryWeapon.register();
 
                 continue;
             }
@@ -202,7 +202,7 @@ public class GameplayLoadout {
             if (queryWeapon.getId().equals(loadoutEntity.getSecondaryWeaponId())) {
 
                 secondaryWeapon = new GameplayWeapon(queryWeapon);
-                PluginCore.getGameplayService().addRegisterable(secondaryWeapon);
+                secondaryWeapon.register();
 
                 continue;
             }
@@ -210,7 +210,7 @@ public class GameplayLoadout {
             if (queryWeapon.getId().equals(loadoutEntity.getTertiaryWeaponId())) {
 
                 tertiaryWeapon = new GameplayWeapon(queryWeapon);
-                PluginCore.getGameplayService().addRegisterable(tertiaryWeapon);
+                tertiaryWeapon.register();
             }
         }
     }

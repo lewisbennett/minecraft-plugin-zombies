@@ -70,7 +70,7 @@ public class GameplayProjectile extends GameplayRegisterable implements Projecti
         if (configuration.containsKey(ProjectileConfigComponent.DAMAGE))
             gameplayEnemy.damage(player, (int)configuration.get(ProjectileConfigComponent.DAMAGE), WeaponService.GUNSHOT);
 
-        PluginCore.getGameplayService().removeRegisterable(this);
+        unregister();
     }
     //endregion
 

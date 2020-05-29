@@ -47,7 +47,7 @@ public class LeaveSessionCommandExecutor extends PlayerOnlyCommandExecutor {
         gameplaySession.removePlayer(gameplayPlayer);
 
         if (gameplaySession.getPlayers().length < 1)
-            PluginCore.getGameplayService().removeRegisterable(gameplaySession);
+            gameplaySession.unregister();
 
         return "Left " + gameplaySession.getMap().getName() + ", " + gameplaySession.getGamemode().getName() + ".";
     }
