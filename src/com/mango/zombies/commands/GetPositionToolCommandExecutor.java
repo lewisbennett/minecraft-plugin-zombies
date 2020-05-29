@@ -3,8 +3,7 @@ package com.mango.zombies.commands;
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.commands.base.BaseCommandExecutor;
 import com.mango.zombies.entities.MapEntity;
-import com.mango.zombies.gameplay.PositionTool;
-import com.mango.zombies.schema.Positionable;
+import com.mango.zombies.gameplay.base.BasePositionTool;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
@@ -14,8 +13,8 @@ import org.bukkit.entity.Player;
 public class GetPositionToolCommandExecutor extends BaseCommandExecutor {
 
     //region Constant Values
-    public static final String CORRECT_USAGE_ERROR_CONSOLE = "Correct usage: /getpositiontool [map/door] [map ID] [player name]";
-    public static final String CORRECT_USAGE_ERROR_PLAYER = "Correct usage: /getpositiontool [map/door] [map ID]";
+    public static final String CORRECT_USAGE_ERROR_CONSOLE = "Correct usage: /getpositiontool [positionable] [map ID] [player name]";
+    public static final String CORRECT_USAGE_ERROR_PLAYER = "Correct usage: /getpositiontool [positionable] [map ID]";
     public static final String INVALID_MAP_ERROR = "%s is not a valid map ID.";
     public static final String INVALID_POSITIONABLE_ERROR = "%s is not a valid positionable.";
     public static final String PLAYER_NOT_FOUND_ERROR = "Player not found.";
@@ -45,42 +44,30 @@ public class GetPositionToolCommandExecutor extends BaseCommandExecutor {
                 throw new CommandException(PLAYER_NOT_FOUND_ERROR);
         }
 
-        if (!isValidPositionable(args[0]))
-            throw new CommandException(String.format(INVALID_POSITIONABLE_ERROR, args[0]));
-
-        MapEntity map = null;
+        MapEntity mapEntity = null;
 
         for (MapEntity queryMap : PluginCore.getMaps()) {
 
             if (queryMap.getId().equals(args[1])) {
-                map = queryMap;
+                mapEntity = queryMap;
                 break;
             }
         }
 
-        if (map == null)
+        if (mapEntity == null)
             throw new CommandException(String.format(INVALID_MAP_ERROR, args[1]));
 
-        PositionTool positionTool = new PositionTool(map, args[0]);
+        BasePositionTool positionTool = BasePositionTool.getPositionToolForPositionable(mapEntity, args[0]);
 
-        PluginCore.getGameplayService().addRegisterable(positionTool);
+        if (positionTool == null)
+            throw new CommandException(String.format(INVALID_POSITIONABLE_ERROR, args[0]));
 
+        positionTool.register();
         positionTool.giveItemStack(player);
 
-        return "With the Position Tool, left click to set the top point and right click to set the bottom point. Changes will be applied once both points have been selected.";
-    }
-    //endregion
+        return positionTool.getUsageDescription();
 
-    //region Private Methods
-    private boolean isValidPositionable(String positionable) {
 
-        for (String queryPositionable : Positionable.toList()) {
-
-            if (queryPositionable.equals(positionable))
-                return true;
-        }
-
-        return false;
     }
     //endregion
 }

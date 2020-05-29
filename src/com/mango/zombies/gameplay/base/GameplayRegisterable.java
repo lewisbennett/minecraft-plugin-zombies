@@ -1,5 +1,7 @@
 package com.mango.zombies.gameplay.base;
 
+import com.mango.zombies.PluginCore;
+
 import java.util.UUID;
 
 public abstract class GameplayRegisterable {
@@ -21,5 +23,21 @@ public abstract class GameplayRegisterable {
      * Called when this gameplay registerabled is unregistered.
      */
     public void onUnregistered() { }
+    //endregion
+
+    //region Public Methods
+    /**
+     * Registers this registerable.
+     */
+    public void register() {
+        PluginCore.getGameplayService().addRegisterable(this);
+    }
+
+    /**
+     * Unregisters this registerable.
+     */
+    public void unregister() {
+        PluginCore.getGameplayService().removeRegisterable(this);
+    }
     //endregion
 }
