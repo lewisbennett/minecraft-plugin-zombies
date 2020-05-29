@@ -1,21 +1,21 @@
 package com.mango.zombies.gameplay;
 
 import com.mango.zombies.PluginCore;
-import com.mango.zombies.entities.LockedLocationEntity;
+import com.mango.zombies.entities.LocationEntity;
 import com.mango.zombies.entities.MapEntity;
 import com.mango.zombies.gameplay.base.BasePositionTool;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class PlayerSpawnStandardPositionTool extends BasePositionTool {
+public class PlayerSpawnTurnedPositionTool extends BasePositionTool {
 
     //region Getters/Setters
     /**
      * Gets the name of this position tool, formatted.
      */
     public String getPositionToolName() {
-        return getMapEntity().getName() + " (Standard player spawn)";
+        return getMapEntity().getName() + " (Turned player spawn)";
     }
 
     /**
@@ -36,24 +36,24 @@ public class PlayerSpawnStandardPositionTool extends BasePositionTool {
     @Override
     public void onPlayerLeftClickBlock(Player player, Block block, ItemStack itemStack) {
 
-        LockedLocationEntity lockedLocationEntity = null;
+        LocationEntity locationEntity = null;
 
-        for (LockedLocationEntity queryLocation : getMapEntity().getStandardGamemodeConfig().getPlayerSpawns()) {
+        for (LocationEntity queryLocation : getMapEntity().getTurnedGamemodeConfig().getPlayerSpawns()) {
 
             boolean doesMatchX = queryLocation.getX() == block.getLocation().getBlockX();
             boolean doesMatchY = queryLocation.getY() == block.getLocation().getBlockY();
             boolean doesMatchZ = queryLocation.getZ() == block.getLocation().getBlockZ();
 
             if (doesMatchX && doesMatchY && doesMatchZ) {
-                lockedLocationEntity = queryLocation;
+                locationEntity = queryLocation;
                 break;
             }
         }
 
-        if (lockedLocationEntity == null)
+        if (locationEntity == null)
             return;
 
-        getMapEntity().getStandardGamemodeConfig().removePlayerSpawnLocation(lockedLocationEntity);
+        getMapEntity().getTurnedGamemodeConfig().removePlayerSpawnLocation(locationEntity);
 
         PluginCore.getMessagingService().success(player, "Removed player spawn point.");
     }
@@ -67,50 +67,33 @@ public class PlayerSpawnStandardPositionTool extends BasePositionTool {
     @Override
     public void onPlayerRightClickBlock(Player player, Block block, ItemStack itemStack) {
 
-        LockedLocationEntity lockedLocationEntity = null;
+        LocationEntity locationEntity = null;
 
-        for (LockedLocationEntity queryLocation : getMapEntity().getStandardGamemodeConfig().getPlayerSpawns()) {
+        for (LocationEntity queryLocation : getMapEntity().getTurnedGamemodeConfig().getPlayerSpawns()) {
 
             boolean doesMatchX = queryLocation.getX() == block.getLocation().getBlockX();
             boolean doesMatchY = queryLocation.getY() == block.getLocation().getBlockY();
             boolean doesMatchZ = queryLocation.getZ() == block.getLocation().getBlockZ();
 
             if (doesMatchX && doesMatchY && doesMatchZ) {
-                lockedLocationEntity = queryLocation;
+                locationEntity = queryLocation;
                 break;
             }
         }
 
-        if (lockedLocationEntity != null) {
+        if (locationEntity != null) {
             PluginCore.getMessagingService().error(player, "A player spawn point already exists here.");
             return;
         }
 
-        for (LockedLocationEntity queryLocation : getMapEntity().getStandardGamemodeConfig().getEnemySpawns()) {
-
-            boolean doesMatchX = queryLocation.getX() == block.getLocation().getBlockX();
-            boolean doesMatchY = queryLocation.getY() == block.getLocation().getBlockY();
-            boolean doesMatchZ = queryLocation.getZ() == block.getLocation().getBlockZ();
-
-            if (doesMatchX && doesMatchY && doesMatchZ) {
-                lockedLocationEntity = queryLocation;
-                break;
-            }
-        }
-
-        if (lockedLocationEntity != null) {
-            PluginCore.getMessagingService().error(player, "An enemy spawn point exists here.");
-            return;
-        }
-
-        getMapEntity().getStandardGamemodeConfig().addPlayerSpawnLocation(new LockedLocationEntity(block.getLocation()));
+        getMapEntity().getTurnedGamemodeConfig().addPlayerSpawnLocation(new LocationEntity(block.getLocation()));
 
         PluginCore.getMessagingService().success(player, "Player spawn point added.");
     }
     //endregion
 
     //region Constructors
-    public PlayerSpawnStandardPositionTool(MapEntity mapEntity) {
+    public PlayerSpawnTurnedPositionTool(MapEntity mapEntity) {
         super(mapEntity);
     }
     //endregion

@@ -5,6 +5,7 @@ import com.mango.zombies.entities.MapEntity;
 import com.mango.zombies.gameplay.MapBoundsPositionTool;
 import com.mango.zombies.gameplay.MapOriginPositionTool;
 import com.mango.zombies.gameplay.PlayerSpawnStandardPositionTool;
+import com.mango.zombies.gameplay.PlayerSpawnTurnedPositionTool;
 import com.mango.zombies.helper.HiddenStringUtils;
 import com.mango.zombies.schema.Positionable;
 import org.bukkit.ChatColor;
@@ -136,6 +137,11 @@ public abstract class BasePositionTool extends GameplayRegisterable implements B
     //endregion
 
     //region Public Static Methods
+    /**
+     * Gets a Position Tool for a specific positionable.
+     * @param mapEntity The map that the location is being configured for.
+     * @param positionable The positionable to configure.
+     */
     public static BasePositionTool getPositionToolForPositionable(MapEntity mapEntity, String positionable) {
 
         switch (positionable) {
@@ -148,6 +154,9 @@ public abstract class BasePositionTool extends GameplayRegisterable implements B
 
             case Positionable.PLAYER_SPAWN_STANDARD:
                 return new PlayerSpawnStandardPositionTool(mapEntity);
+
+            case Positionable.PLAYER_SPAWN_TURNED:
+                return new PlayerSpawnTurnedPositionTool(mapEntity);
 
             default:
                 return null;

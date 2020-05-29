@@ -16,10 +16,11 @@ public class GetPositionToolCommandExecutor extends BaseCommandExecutor {
     //region Constant Values
     public static final String CORRECT_USAGE_ERROR_CONSOLE = "Correct usage: /getpositiontool [positionable] [map ID] [player name]";
     public static final String CORRECT_USAGE_ERROR_PLAYER = "Correct usage: /getpositiontool [positionable] [map ID]";
-    public static final String NO_STANDARD_GAMEMODE_ERROR = "The standard gamemode has not been added for %s.";
     public static final String INVALID_MAP_ERROR = "%s is not a valid map ID.";
     public static final String INVALID_POSITIONABLE_ERROR = "%s is not a valid positionable.";
     public static final String MAP_ENABLED_ERROR = "%s must be disabled first.";
+    public static final String NO_STANDARD_GAMEMODE_ERROR = "The Standard gamemode has not been added for %s.";
+    public static final String NO_TURNED_GAMEMODE_ERROR = "The Turned gamemode has not been added for %s.";
     public static final String PLAYER_NOT_FOUND_ERROR = "Player not found.";
     //endregion
 
@@ -65,6 +66,9 @@ public class GetPositionToolCommandExecutor extends BaseCommandExecutor {
 
         if (args[0].equals(Positionable.PLAYER_SPAWN_STANDARD) && mapEntity.getStandardGamemodeConfig() == null)
             throw new CommandException(String.format(NO_STANDARD_GAMEMODE_ERROR, mapEntity.getName()));
+
+        else if (args[0].equals(Positionable.PLAYER_SPAWN_TURNED) && mapEntity.getTurnedGamemodeConfig() == null)
+            throw new CommandException(String.format(NO_TURNED_GAMEMODE_ERROR, mapEntity.getName()));
 
         BasePositionTool positionTool = BasePositionTool.getPositionToolForPositionable(mapEntity, args[0]);
 
