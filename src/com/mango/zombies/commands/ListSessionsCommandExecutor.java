@@ -3,7 +3,7 @@ package com.mango.zombies.commands;
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.commands.base.BaseCommandExecutor;
 import com.mango.zombies.gameplay.GameplaySession;
-import com.mango.zombies.gameplay.base.GameplayRegisterable;
+import com.mango.zombies.gameplay.base.BaseGameplayRegisterable;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -19,7 +19,7 @@ public class ListSessionsCommandExecutor extends BaseCommandExecutor {
 
         List<GameplaySession> sessions = new ArrayList<GameplaySession>();
 
-        for (GameplayRegisterable queryRegisterable : PluginCore.getGameplayService().getRegisterables()) {
+        for (BaseGameplayRegisterable queryRegisterable : PluginCore.getGameplayService().getRegisterables()) {
 
             if (queryRegisterable instanceof GameplaySession)
                 sessions.add((GameplaySession)queryRegisterable);

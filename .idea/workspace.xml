@@ -7,12 +7,70 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="29650a7b-3f89-4df9-bc36-b5aa3b568d39" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/com/mango/zombies/entities/DoorEntity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/DoorPositionTool.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/mango/zombies/entities/PlayerStateEntity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/base/BaseGameplayLiving.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/mango/zombies/listeners/EntityDamageListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/mango/zombies/schema/DamagerType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/commands/JoinSessionCommandExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/commands/JoinSessionCommandExecutor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/commands/LeaveSessionCommandExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/commands/LeaveSessionCommandExecutor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/commands/ListSessionsCommandExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/commands/ListSessionsCommandExecutor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/entities/MapEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/entities/MapEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/gamemodes/StandardGamemode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/gamemodes/StandardGamemode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/gamemodes/base/ZombiesGamemode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/gamemodes/base/ZombiesGamemode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/GameplayEnemy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/GameplayEnemy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/GameplayLoadout.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/GameplayLoadout.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/GameplayPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/GameplayPlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/GameplayProjectile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/GameplayProjectile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/GameplaySession.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/GameplaySession.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/GameplayWeapon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/GameplayWeapon.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/SpawningTool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/SpawningTool.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/base/BasePositionTool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/base/BasePositionTool.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/schema/Positionable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/schema/Positionable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/base/GameplayDrop.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/base/GameplayDrop.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/base/GameplayRegisterable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/base/BaseGameplayRegisterable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/listeners/BlockBreakListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/listeners/BlockBreakListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/listeners/EntityDamageByEntityListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/listeners/EntityDamageByEntityListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/listeners/EntityDeathListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/listeners/EntityDeathListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/listeners/InventoryClickListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/listeners/InventoryClickListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/listeners/InventoryPickupItemListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/listeners/InventoryPickupItemListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/listeners/PlayerInteractListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/listeners/PlayerInteractListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/listeners/PlayerQuitListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/listeners/PlayerQuitListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/listeners/PlayerSwapHandItemsListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/listeners/PlayerSwapHandItemsListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/listeners/ProjectileHitListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/listeners/ProjectileHitListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/services/StockGameplayService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/services/StockGameplayService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/services/base/GameplayService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/services/base/GameplayService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/META-INF/minecraft-plugin-zombies.kotlin_module" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/commands/JoinSessionCommandExecutor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/commands/JoinSessionCommandExecutor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/commands/LeaveSessionCommandExecutor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/commands/LeaveSessionCommandExecutor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/commands/ListSessionsCommandExecutor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/commands/ListSessionsCommandExecutor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/entities/MapEntity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/entities/MapEntity.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/gamemodes/StandardGamemode.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/gamemodes/StandardGamemode.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/gamemodes/base/ZombiesGamemode.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/gamemodes/base/ZombiesGamemode.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/gameplay/GameplayEnemy.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/gameplay/GameplayEnemy.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/gameplay/GameplayLoadout.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/gameplay/GameplayLoadout.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/gameplay/GameplayPlayer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/gameplay/GameplayPlayer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/gameplay/GameplayProjectile.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/gameplay/GameplayProjectile.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/gameplay/GameplaySession.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/gameplay/GameplaySession.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/gameplay/GameplayWeapon.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/gameplay/GameplayWeapon.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/gameplay/SpawningTool.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/gameplay/SpawningTool.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/gameplay/base/BasePositionTool.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/gameplay/base/BasePositionTool.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/gameplay/base/GameplayDrop.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/gameplay/base/GameplayDrop.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/gameplay/base/GameplayRegisterable.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/listeners/BlockBreakListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/listeners/BlockBreakListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/listeners/EntityDamageByEntityListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/listeners/EntityDamageByEntityListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/listeners/EntityDeathListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/listeners/EntityDeathListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/listeners/InventoryClickListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/listeners/InventoryClickListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/listeners/InventoryPickupItemListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/listeners/InventoryPickupItemListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/listeners/PlayerEggThrowListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/listeners/PlayerEggThrowListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/listeners/PlayerInteractListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/listeners/PlayerInteractListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/listeners/PlayerPickupArrowListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/listeners/PlayerPickupArrowListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/listeners/PlayerQuitListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/listeners/PlayerQuitListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/listeners/PlayerSwapHandItemsListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/listeners/PlayerSwapHandItemsListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/listeners/ProjectileHitListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/listeners/ProjectileHitListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/services/StockGameplayService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/services/StockGameplayService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/mango/zombies/services/base/GameplayService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mango/zombies/services/base/GameplayService.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,11 +149,11 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="212" y="127" width="1560" height="853" key="#Project_Structure/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1590517113047" />
-    <state x="765" y="226" key="#com.intellij.ide.util.MemberChooser" timestamp="1590696682664">
+    <state x="765" y="226" key="#com.intellij.ide.util.MemberChooser" timestamp="1590833058419">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="226" key="#com.intellij.ide.util.MemberChooser/-1920.0.1920.1040/0.0.1920.1040/3324.-900.1440.860/1920.0.1920.1040@0.0.1920.1040" timestamp="1590696682664" />
-    <state x="765" y="226" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1590582951463" />
+    <state x="765" y="226" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1590833058419" />
     <state x="722" y="343" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1590514088247">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -112,14 +170,14 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="672" y="308" key="#com.intellij.refactoring.move.moveMembers.MoveMembersDialog/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1590066661018" />
-    <state x="497" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1590414880348">
+    <state x="497" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1590768654726">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="497" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1590414880348" />
-    <state x="690" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1590755409415">
+    <state x="497" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1590768654726" />
+    <state x="690" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1590835588684">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="690" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1590755409415" />
+    <state x="690" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1590835588684" />
     <state x="884" y="396" key="#com.intellij.util.ui.classpath.ChooseLibrariesDialog" timestamp="1590511506506">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

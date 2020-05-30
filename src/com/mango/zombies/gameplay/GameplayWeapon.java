@@ -5,11 +5,12 @@ import com.mango.zombies.PluginCore;
 import com.mango.zombies.Time;
 import com.mango.zombies.entities.WeaponEntity;
 import com.mango.zombies.entities.WeaponServiceEntity;
+import com.mango.zombies.gameplay.base.BaseGameplayRegisterable;
 import com.mango.zombies.gameplay.base.EntityDamageByEntityEventRegisterable;
-import com.mango.zombies.gameplay.base.GameplayRegisterable;
 import com.mango.zombies.gameplay.base.PlayerInteractEventRegisterable;
 import com.mango.zombies.helper.HiddenStringUtils;
 import com.mango.zombies.helper.SoundUtil;
+import com.mango.zombies.schema.DamagerType;
 import com.mango.zombies.schema.ProjectileConfigComponent;
 import com.mango.zombies.schema.WeaponService;
 import org.bukkit.ChatColor;
@@ -27,11 +28,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class GameplayWeapon extends GameplayRegisterable implements PlayerInteractEventRegisterable, EntityDamageByEntityEventRegisterable {
+public class GameplayWeapon extends BaseGameplayRegisterable implements PlayerInteractEventRegisterable, EntityDamageByEntityEventRegisterable {
 
-    //region Private Methods
+    //region Fields
     private boolean isPackAPunched;
     private boolean isReloading;
+
+    private GameplayPlayer gameplayPlayer;
 
     private int availableAmmo;
     private int currentAmmo;
@@ -44,6 +47,23 @@ public class GameplayWeapon extends GameplayRegisterable implements PlayerIntera
     //endregion
 
     //region Getters/Setters
+    /**
+     * Gets the gameplay player using this weapon, if any.
+     */
+    public GameplayPlayer getGameplayPlayer() {
+        return gameplayPlayer;
+    }
+
+    /**
+     * Sets the gameplay player using this weapon.
+     */
+    public void setGameplayPlayer(GameplayPlayer gameplayPlayer) {
+
+        this.gameplayPlayer = gameplayPlayer;
+
+        player = this.gameplayPlayer.getPlayer();
+    }
+
     /**
      * Gets whether this weapon is Pack-A-Punched.
      */
@@ -86,7 +106,7 @@ public class GameplayWeapon extends GameplayRegisterable implements PlayerIntera
             return;
         }
 
-        GameplayRegisterable gameplayEnemyRegisterable = PluginCore.getGameplayService().findRegisterableByUUID(livingEntity.getUniqueId());
+        BaseGameplayRegisterable gameplayEnemyRegisterable = PluginCore.getGameplayService().findRegisterableByUUID(livingEntity.getUniqueId());
 
         if (!(gameplayEnemyRegisterable instanceof GameplayEnemy))
             return;
@@ -103,7 +123,7 @@ public class GameplayWeapon extends GameplayRegisterable implements PlayerIntera
         }
 
         livingEntity.setHealth(20);
-        gameplayEnemy.damage(player, meleeService.getDamage(), WeaponService.MELEE);
+        gameplayEnemy.damage(gameplayPlayer, meleeService.getDamage(), DamagerType.MELEE);
     }
 
     /**
@@ -257,7 +277,7 @@ public class GameplayWeapon extends GameplayRegisterable implements PlayerIntera
 
         for (int i = 0; i < projectiles; i++) {
 
-            GameplayProjectile gameplayProjectile = new GameplayProjectile(player);
+            GameplayProjectile gameplayProjectile = new GameplayProjectile(gameplayPlayer);
 
             gameplayProjectile.getConfiguration().put(ProjectileConfigComponent.DAMAGE, damage);
             gameplayProjectile.register();

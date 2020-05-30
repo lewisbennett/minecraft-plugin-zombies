@@ -38,6 +38,7 @@ public class GameplayLoadout {
         if (this.meleeWeapon == null)
             return;
 
+        this.meleeWeapon.setGameplayPlayer(gameplayPlayer);
         this.meleeWeapon.register();
 
         applyMeleeWeapon();
@@ -63,6 +64,7 @@ public class GameplayLoadout {
         if (this.primaryWeapon == null)
             return;
 
+        this.primaryWeapon.setGameplayPlayer(gameplayPlayer);
         this.primaryWeapon.register();
 
         applyPrimaryWeapon();
@@ -88,7 +90,8 @@ public class GameplayLoadout {
         if (this.secondaryWeapon == null)
             return;
 
-        secondaryWeapon.register();
+        this.secondaryWeapon.setGameplayPlayer(gameplayPlayer);
+        this.secondaryWeapon.register();
 
         applySecondaryWeapon();
     }
@@ -113,7 +116,8 @@ public class GameplayLoadout {
         if (this.tertiaryWeapon == null)
             return;
 
-        tertiaryWeapon.register();
+        this.tertiaryWeapon.setGameplayPlayer(gameplayPlayer);
+        this.tertiaryWeapon.register();
 
         applyTertiaryWeapon();
     }
@@ -186,6 +190,7 @@ public class GameplayLoadout {
             if (queryWeapon.getId().equals(loadoutEntity.getMeleeWeaponId())) {
 
                 meleeWeapon = new GameplayWeapon(queryWeapon);
+                meleeWeapon.setGameplayPlayer(gameplayPlayer);
                 meleeWeapon.register();
 
                 continue;
@@ -194,6 +199,7 @@ public class GameplayLoadout {
             if (queryWeapon.getId().equals(loadoutEntity.getPrimaryWeaponId())) {
 
                 primaryWeapon = new GameplayWeapon(queryWeapon);
+                primaryWeapon.setGameplayPlayer(gameplayPlayer);
                 primaryWeapon.register();
 
                 continue;
@@ -202,6 +208,7 @@ public class GameplayLoadout {
             if (queryWeapon.getId().equals(loadoutEntity.getSecondaryWeaponId())) {
 
                 secondaryWeapon = new GameplayWeapon(queryWeapon);
+                secondaryWeapon.setGameplayPlayer(gameplayPlayer);
                 secondaryWeapon.register();
 
                 continue;
@@ -210,6 +217,7 @@ public class GameplayLoadout {
             if (queryWeapon.getId().equals(loadoutEntity.getTertiaryWeaponId())) {
 
                 tertiaryWeapon = new GameplayWeapon(queryWeapon);
+                tertiaryWeapon.setGameplayPlayer(gameplayPlayer);
                 tertiaryWeapon.register();
             }
         }

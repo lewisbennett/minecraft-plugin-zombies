@@ -2,8 +2,8 @@ package com.mango.zombies.gameplay;
 
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.entities.EnemyEntity;
+import com.mango.zombies.gameplay.base.BaseGameplayRegisterable;
 import com.mango.zombies.gameplay.base.BlockBreakEventRegisterable;
-import com.mango.zombies.gameplay.base.GameplayRegisterable;
 import com.mango.zombies.gameplay.base.PlayerInteractEventRegisterable;
 import com.mango.zombies.helper.HiddenStringUtils;
 import org.bukkit.ChatColor;
@@ -18,14 +18,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class SpawningTool extends GameplayRegisterable implements PlayerInteractEventRegisterable, BlockBreakEventRegisterable {
+public class SpawningTool extends BaseGameplayRegisterable implements PlayerInteractEventRegisterable, BlockBreakEventRegisterable {
 
     //region Fields
-    private EnemyEntity enemyEntity;
+    private final EnemyEntity enemyEntity;
 
-    private int spawnRound;
+    private final int spawnRound;
 
-    private UUID uuid;
+    private final UUID uuid;
     //endregion
 
     //region Event Handlers
@@ -51,7 +51,8 @@ public class SpawningTool extends GameplayRegisterable implements PlayerInteract
         GameplayEnemy gameplayEnemy = new GameplayEnemy(enemyEntity);
         gameplayEnemy.setSpawnLocation(clickedBlock.getLocation().add(0, 1, 0));
 
-        gameplayEnemy.setCurrentHealth(PluginCore.getGameplayService().calculateHealthForRound(spawnRound, enemyEntity.getRoundMultiplier(), enemyEntity.getMaxHealth()));
+        gameplayEnemy.setInitialHealth(PluginCore.getGameplayService().calculateHealthForRound(spawnRound, enemyEntity.getRoundMultiplier(), enemyEntity.getMaxHealth()));
+
         gameplayEnemy.spawn();
     }
     //endregion

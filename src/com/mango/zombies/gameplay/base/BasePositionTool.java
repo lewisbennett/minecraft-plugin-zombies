@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class BasePositionTool extends GameplayRegisterable implements BlockBreakEventRegisterable, PlayerInteractEventRegisterable {
+public abstract class BasePositionTool extends BaseGameplayRegisterable implements BlockBreakEventRegisterable, PlayerInteractEventRegisterable {
 
     //region Fields
     private final MapEntity mapEntity;

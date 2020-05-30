@@ -3,7 +3,7 @@ package com.mango.zombies.entities;
 import com.google.gson.annotations.Expose;
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.gameplay.GameplaySession;
-import com.mango.zombies.gameplay.base.GameplayRegisterable;
+import com.mango.zombies.gameplay.base.BaseGameplayRegisterable;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 
@@ -364,7 +364,7 @@ public class MapEntity {
 	 */
 	public void disableMap() {
 
-		for (GameplayRegisterable queryRegisterable : PluginCore.getGameplayService().getRegisterables()) {
+		for (BaseGameplayRegisterable queryRegisterable : PluginCore.getGameplayService().getRegisterables()) {
 
 			if (!(queryRegisterable instanceof GameplaySession))
 				continue;

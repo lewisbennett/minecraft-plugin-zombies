@@ -4,7 +4,7 @@ import com.mango.zombies.PluginCore;
 import com.mango.zombies.commands.base.PlayerOnlyCommandExecutor;
 import com.mango.zombies.gameplay.GameplayPlayer;
 import com.mango.zombies.gameplay.GameplaySession;
-import com.mango.zombies.gameplay.base.GameplayRegisterable;
+import com.mango.zombies.gameplay.base.BaseGameplayRegisterable;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
 import org.bukkit.entity.Player;
@@ -26,7 +26,7 @@ public class JoinSessionCommandExecutor extends PlayerOnlyCommandExecutor {
 
         GameplaySession session = null;
 
-        for (GameplayRegisterable queryRegisterable : PluginCore.getGameplayService().getRegisterables()) {
+        for (BaseGameplayRegisterable queryRegisterable : PluginCore.getGameplayService().getRegisterables()) {
 
             if (!(queryRegisterable instanceof GameplaySession))
                 continue;
@@ -48,7 +48,7 @@ public class JoinSessionCommandExecutor extends PlayerOnlyCommandExecutor {
         if (session == null)
             throw new CommandException(String.format(SESSION_DOES_NOT_EXIST_ERROR, args[0]));
 
-        session.addPlayer(new GameplayPlayer(player.getUniqueId()));
+        session.addPlayer(player);
 
         return "Joined " + session.getMap().getName() + ", " + session.getGamemode().getName() + ".";
     }

@@ -10,8 +10,9 @@ import com.mango.zombies.gamemodes.base.ZombiesGamemode;
 import com.mango.zombies.gameplay.GameplayEnemy;
 import com.mango.zombies.gameplay.GameplayLoadout;
 import com.mango.zombies.gameplay.GameplayPlayer;
+import com.mango.zombies.gameplay.base.BaseGameplayLiving;
 import com.mango.zombies.helper.SoundUtil;
-import com.mango.zombies.schema.WeaponService;
+import com.mango.zombies.schema.DamagerType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -53,19 +54,6 @@ public class StandardGamemode extends ZombiesGamemode {
 
     //region Event Handlers
     /**
-     * Called when an enemy is damaged.
-     * @param gameplayPlayer The player that damaged the enemy.
-     * @param gameplayEnemy The damaged enemy.
-     */
-    @Override
-    public void onEnemyDamaged(GameplayPlayer gameplayPlayer, GameplayEnemy gameplayEnemy) {
-
-        super.onEnemyDamaged(gameplayPlayer, gameplayEnemy);
-
-        gameplayPlayer.addPoints(10);
-    }
-
-    /**
      * Called when an enemy despawns.
      * @param gameplayEnemy The despawned enemy.
      */
@@ -78,33 +66,51 @@ public class StandardGamemode extends ZombiesGamemode {
     }
 
     /**
-     * Called when an enemy is killed.
-     * @param gameplayPlayer The player that killed the enemy.
-     * @param gameplayEnemy The killed enemy.
+     * Called when an entity is damaged.
+     * @param damagedEntity The entity that was damaged.
+     * @param damagerEntity The entity that damaged the entity.
      */
     @Override
-    public void onEnemyKilled(GameplayPlayer gameplayPlayer, GameplayEnemy gameplayEnemy, String weaponServiceType) {
+    public void onEntityDamaged(BaseGameplayLiving damagedEntity, BaseGameplayLiving damagerEntity) {
 
-        super.onEnemyKilled(gameplayPlayer, gameplayEnemy, weaponServiceType);
+        super.onEntityDamaged(damagedEntity, damagerEntity);
 
-        switch (weaponServiceType) {
+        if (!damagedEntity.hasBeenNuked() && !damagerEntity.hasBeenDowned() && damagerEntity instanceof GameplayPlayer)
+            ((GameplayPlayer)damagerEntity).addPoints(10);
+    }
 
-            case WeaponService.GUNSHOT:
-                gameplayPlayer.addPoints(60);
-                break;
+    /**
+     * Called when an entity is downed.
+     * @param downedEntity The entity that was downed.
+     * @param downerEntity The entity that downed the entity.
+     * @param damagerType The type of damage dealt to the entity.
+     */
+    @Override
+    public void onEntityDowned(BaseGameplayLiving downedEntity, BaseGameplayLiving downerEntity, DamagerType damagerType) {
 
-            case WeaponService.MELEE:
-                gameplayPlayer.addPoints(130);
-                break;
+        super.onEntityDowned(downedEntity, downerEntity, damagerType);
 
-            default:
-                return;
-        }
-
-        enemiesKilledInRound++;
+        if (downedEntity instanceof GameplayEnemy)
+            enemiesKilledInRound++;
 
         if (enemiesKilledInRound >= totalEnemiesInRound)
             endRound();
+
+        if (downedEntity.hasBeenNuked() || downerEntity.hasBeenDowned() || !(downerEntity instanceof GameplayPlayer))
+            return;
+
+        GameplayPlayer gameplayPlayer = (GameplayPlayer)downerEntity;
+
+        switch (damagerType) {
+
+            case GUNSHOT:
+                gameplayPlayer.addPoints(60);
+                break;
+
+            case MELEE:
+                gameplayPlayer.addPoints(130);
+                break;
+        }
     }
     //endregion
 
@@ -235,13 +241,11 @@ public class StandardGamemode extends ZombiesGamemode {
         if (enemyEntity == null)
             return null;
 
-        GameplayEnemy gameplayEnemy = new GameplayEnemy(enemyEntity);
+        GameplayEnemy gameplayEnemy = new GameplayEnemy(getGameplaySession(), enemyEntity);
 
-        gameplayEnemy.setGameplaySession(getGameplaySession());
+        gameplayEnemy.setInitialHealth(PluginCore.getGameplayService().calculateHealthForRound(getCurrentRound(), enemyEntity.getRoundMultiplier(), enemyEntity.getMaxHealth()));
 
         gameplayEnemy.setSpawnLocation(new Location(Bukkit.getWorld(getGameplaySession().getMap().getWorldName()), lockedLocation.getX(), lockedLocation.getY() + 1, lockedLocation.getZ()));
-
-        gameplayEnemy.applyHealth(getCurrentRound());
 
         return gameplayEnemy;
     }

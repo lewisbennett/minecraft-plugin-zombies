@@ -4,7 +4,7 @@ import com.mango.zombies.PluginCore;
 import com.mango.zombies.commands.base.PlayerOnlyCommandExecutor;
 import com.mango.zombies.gameplay.GameplayPlayer;
 import com.mango.zombies.gameplay.GameplaySession;
-import com.mango.zombies.gameplay.base.GameplayRegisterable;
+import com.mango.zombies.gameplay.base.BaseGameplayRegisterable;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
 import org.bukkit.entity.Player;
@@ -22,7 +22,7 @@ public class LeaveSessionCommandExecutor extends PlayerOnlyCommandExecutor {
         GameplaySession gameplaySession = null;
         GameplayPlayer gameplayPlayer = null;
 
-        for (GameplayRegisterable queryRegisterable : PluginCore.getGameplayService().getRegisterables()) {
+        for (BaseGameplayRegisterable queryRegisterable : PluginCore.getGameplayService().getRegisterables()) {
 
             if (!(queryRegisterable instanceof GameplaySession))
                 continue;

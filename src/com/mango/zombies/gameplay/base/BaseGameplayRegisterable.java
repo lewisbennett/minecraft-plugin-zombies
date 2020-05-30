@@ -4,7 +4,7 @@ import com.mango.zombies.PluginCore;
 
 import java.util.UUID;
 
-public abstract class GameplayRegisterable {
+public abstract class BaseGameplayRegisterable {
 
     //region Getters/Setters
     /**

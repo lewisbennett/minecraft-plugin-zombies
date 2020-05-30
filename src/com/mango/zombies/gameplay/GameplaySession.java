@@ -5,7 +5,7 @@ import com.mango.zombies.PluginCore;
 import com.mango.zombies.Time;
 import com.mango.zombies.entities.MapEntity;
 import com.mango.zombies.gamemodes.base.ZombiesGamemode;
-import com.mango.zombies.gameplay.base.GameplayRegisterable;
+import com.mango.zombies.gameplay.base.BaseGameplayRegisterable;
 import com.mango.zombies.gameplay.base.InventoryClickEventRegisterable;
 import com.mango.zombies.gameplay.base.PlayerSwapHandsItemEventRegisterable;
 import org.bukkit.ChatColor;
@@ -21,11 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class GameplaySession extends GameplayRegisterable implements InventoryClickEventRegisterable, PlayerSwapHandsItemEventRegisterable {
+public class GameplaySession extends BaseGameplayRegisterable implements InventoryClickEventRegisterable, PlayerSwapHandsItemEventRegisterable {
 
     //region Fields
     private boolean hasBegun;
     private boolean isCountdownScheduled;
+    private boolean playerToPlayerDamageEnabled;
 
     private int countdownSeconds;
     private int countdownTaskReference;
@@ -68,6 +69,20 @@ public class GameplaySession extends GameplayRegisterable implements InventoryCl
      */
     public GameplayPlayer[] getPlayers() {
         return players.toArray(new GameplayPlayer[0]);
+    }
+
+    /**
+     * Gets whether player-to-player damage is enabled.
+     */
+    public boolean isPlayerToPlayerDamageEnabled() {
+        return playerToPlayerDamageEnabled;
+    }
+
+    /**
+     * Sets whether player-to-player damage is enabled.
+     */
+    public void setPlayerToPlayerDamage(boolean playerToPlayerDamageEnabled) {
+        this.playerToPlayerDamageEnabled = playerToPlayerDamageEnabled;
     }
 
     /**
@@ -145,7 +160,7 @@ public class GameplaySession extends GameplayRegisterable implements InventoryCl
         for (GameplayPlayer queryPlayer : players)
             removePlayer(queryPlayer);
 
-        for (GameplayRegisterable queryRegisterable : PluginCore.getGameplayService().getRegisterables()) {
+        for (BaseGameplayRegisterable queryRegisterable : PluginCore.getGameplayService().getRegisterables()) {
 
             if (!(queryRegisterable instanceof GameplayEnemy))
                 continue;
@@ -162,9 +177,12 @@ public class GameplaySession extends GameplayRegisterable implements InventoryCl
     /**
      * Adds a player to the session.
      */
-    public void addPlayer(GameplayPlayer gameplayPlayer) {
+    public void addPlayer(Player player) {
 
-        Player player = gameplayPlayer.getPlayer();
+        GameplayPlayer gameplayPlayer = new GameplayPlayer(null, player);
+
+        gameplayPlayer.register();
+        gameplayPlayer.cachePlayerState();
 
         int requiredPlayers = gamemode.getMinimumPlayers() - (players.size() + 1);
 
@@ -185,8 +203,6 @@ public class GameplaySession extends GameplayRegisterable implements InventoryCl
 
         players.add(gameplayPlayer);
 
-        gameplayPlayer.cachePlayerState();
-
         player.teleport(new Location(player.getWorld(), map.getLobbyPoint().getX(), map.getLobbyPoint().getY(), map.getLobbyPoint().getZ()));
 
         player.getInventory().clear();
@@ -200,13 +216,11 @@ public class GameplaySession extends GameplayRegisterable implements InventoryCl
      */
     public void removePlayer(GameplayPlayer gameplayPlayer) {
 
-        Player player = gameplayPlayer.getPlayer();
-
         players.remove(gameplayPlayer);
 
-        gameplayPlayer.applyPlayerState();
+        gameplayPlayer.unregister();
 
-        String leftMessage = player.getDisplayName() + " has left.";
+        String leftMessage = gameplayPlayer.getPlayer().getDisplayName() + " has left.";
         int requiredPlayers = gamemode.getMinimumPlayers() - players.size();
 
         if (requiredPlayers > 0) {

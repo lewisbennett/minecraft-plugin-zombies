@@ -2,7 +2,7 @@ package com.mango.zombies.services.base;
 
 import com.mango.zombies.entities.MapEntity;
 import com.mango.zombies.gameplay.GameplaySession;
-import com.mango.zombies.gameplay.base.GameplayRegisterable;
+import com.mango.zombies.gameplay.base.BaseGameplayRegisterable;
 
 import java.util.UUID;
 
@@ -12,7 +12,7 @@ public interface GameplayService {
     /**
      * Gets the currently active registerables.
      */
-    GameplayRegisterable[] getRegisterables();
+    BaseGameplayRegisterable[] getRegisterables();
     //endregion
 
     //region Public Methods
@@ -20,7 +20,7 @@ public interface GameplayService {
      * Registers an object for use in game.
      * @param gameplayRegisterable The object to register.
      */
-    void addRegisterable(GameplayRegisterable gameplayRegisterable);
+    void addRegisterable(BaseGameplayRegisterable gameplayRegisterable);
 
     /**
      * Calculates how many enemies to spawn in a round.
@@ -59,12 +59,12 @@ public interface GameplayService {
      * Finds a registerable by its UUID, if any.
      * @param registerableUuid The UUID of the registerable to find.
      */
-    GameplayRegisterable findRegisterableByUUID(UUID registerableUuid);
+    BaseGameplayRegisterable findRegisterableByUUID(UUID registerableUuid);
 
     /**
      * Unregisters an object from in game use.
      * @param gameplayRegisterable The object to unregister.
      */
-    void removeRegisterable(GameplayRegisterable gameplayRegisterable);
+    void removeRegisterable(BaseGameplayRegisterable gameplayRegisterable);
     //endregion
 }

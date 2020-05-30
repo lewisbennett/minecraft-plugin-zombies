@@ -3,8 +3,10 @@ package com.mango.zombies.gamemodes.base;
 import com.mango.zombies.gameplay.GameplayEnemy;
 import com.mango.zombies.gameplay.GameplayPlayer;
 import com.mango.zombies.gameplay.GameplaySession;
+import com.mango.zombies.gameplay.base.BaseGameplayLiving;
 import com.mango.zombies.gameplay.base.GameplayDrop;
 import com.mango.zombies.helper.SoundUtil;
+import com.mango.zombies.schema.DamagerType;
 import org.bukkit.Sound;
 
 public abstract class ZombiesGamemode {
@@ -66,24 +68,27 @@ public abstract class ZombiesGamemode {
     }
 
     /**
-     * Called when an enemy is damaged.
-     * @param gameplayPlayer The player that damaged the enemy.
-     * @param gameplayEnemy The damaged enemy.
-     */
-    public void onEnemyDamaged(GameplayPlayer gameplayPlayer, GameplayEnemy gameplayEnemy) { }
-
-    /**
      * Called when an enemy despawns.
      * @param gameplayEnemy The despawned enemy.
      */
     public void onEnemyDespawned(GameplayEnemy gameplayEnemy) { }
 
     /**
-     * Called when an enemy is killed.
-     * @param gameplayPlayer The player that killed the enemy.
-     * @param gameplayEnemy The killed enemy.
+     * Called when an entity is damaged.
+     * @param damagedEntity The entity that was damaged.
+     * @param damagerEntity The entity that damaged the entity.
      */
-    public void onEnemyKilled(GameplayPlayer gameplayPlayer, GameplayEnemy gameplayEnemy, String weaponServiceType) { }
+    public void onEntityDamaged(BaseGameplayLiving damagedEntity, BaseGameplayLiving damagerEntity) {
+    }
+
+    /**
+     * Called when an entity is downed.
+     * @param downedEntity The entity that was downed.
+     * @param downerEntity The entity that downed the entity.
+     * @param damagerType The type of damage dealt to the entity.
+     */
+    public void onEntityDowned(BaseGameplayLiving downedEntity, BaseGameplayLiving downerEntity, DamagerType damagerType) {
+    }
     //endregion
 
     //region Lifecycle

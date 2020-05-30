@@ -1,7 +1,7 @@
 package com.mango.zombies.listeners;
 
 import com.mango.zombies.PluginCore;
-import com.mango.zombies.gameplay.base.GameplayRegisterable;
+import com.mango.zombies.gameplay.base.BaseGameplayRegisterable;
 import com.mango.zombies.gameplay.base.ProjectileHitEventRegisterable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,7 +35,7 @@ public class ProjectileHitListener implements Listener {
         if (registerableUuid == null)
             return;
 
-        GameplayRegisterable registerable = PluginCore.getGameplayService().findRegisterableByUUID(registerableUuid);
+        BaseGameplayRegisterable registerable = PluginCore.getGameplayService().findRegisterableByUUID(registerableUuid);
 
         if (registerable instanceof ProjectileHitEventRegisterable)
             ((ProjectileHitEventRegisterable)registerable).onProjectileHit(event);

@@ -1,8 +1,8 @@
 package com.mango.zombies.listeners;
 
 import com.mango.zombies.PluginCore;
+import com.mango.zombies.gameplay.base.BaseGameplayRegisterable;
 import com.mango.zombies.gameplay.base.EntityDamageByEntityEventRegisterable;
-import com.mango.zombies.gameplay.base.GameplayRegisterable;
 import com.mango.zombies.helper.HiddenStringUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,7 +33,7 @@ public class EntityDamageByEntityListener implements Listener {
         if (registerableUuid == null)
             return;
 
-        GameplayRegisterable registerable = PluginCore.getGameplayService().findRegisterableByUUID(registerableUuid);
+        BaseGameplayRegisterable registerable = PluginCore.getGameplayService().findRegisterableByUUID(registerableUuid);
 
         if (registerable instanceof EntityDamageByEntityEventRegisterable)
             ((EntityDamageByEntityEventRegisterable)registerable).onEntityDamageByEntity(event);

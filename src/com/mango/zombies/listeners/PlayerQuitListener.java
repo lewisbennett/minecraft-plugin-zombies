@@ -3,7 +3,7 @@ package com.mango.zombies.listeners;
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.gameplay.GameplayPlayer;
 import com.mango.zombies.gameplay.GameplaySession;
-import com.mango.zombies.gameplay.base.GameplayRegisterable;
+import com.mango.zombies.gameplay.base.BaseGameplayRegisterable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -14,7 +14,7 @@ public class PlayerQuitListener implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
 
-        for (GameplayRegisterable queryRegisterable : PluginCore.getGameplayService().getRegisterables()) {
+        for (BaseGameplayRegisterable queryRegisterable : PluginCore.getGameplayService().getRegisterables()) {
 
             if (!(queryRegisterable instanceof GameplaySession))
                 continue;

@@ -1,7 +1,7 @@
 package com.mango.zombies.listeners;
 
 import com.mango.zombies.PluginCore;
-import com.mango.zombies.gameplay.base.GameplayRegisterable;
+import com.mango.zombies.gameplay.base.BaseGameplayRegisterable;
 import com.mango.zombies.gameplay.base.InventoryClickEventRegisterable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,7 +19,7 @@ public class InventoryClickListener implements Listener {
     //region Private Methods
     private void handOffToRegisterables(InventoryClickEvent event) {
 
-        for (GameplayRegisterable queryRegisterable : PluginCore.getGameplayService().getRegisterables()) {
+        for (BaseGameplayRegisterable queryRegisterable : PluginCore.getGameplayService().getRegisterables()) {
 
             if (queryRegisterable instanceof InventoryClickEventRegisterable)
                 ((InventoryClickEventRegisterable)queryRegisterable).onInventoryClick(event);

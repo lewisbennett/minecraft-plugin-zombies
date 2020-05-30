@@ -4,161 +4,120 @@ import com.mango.zombies.Main;
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.Time;
 import com.mango.zombies.entities.EnemyEntity;
-import com.mango.zombies.gameplay.base.GameplayRegisterable;
+import com.mango.zombies.gameplay.base.BaseGameplayLiving;
+import com.mango.zombies.schema.DamagerType;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 
-import java.util.UUID;
-
-public class GameplayEnemy extends GameplayRegisterable {
+public class GameplayEnemy extends BaseGameplayLiving {
 
     //region Fields
-    private boolean hasBeenDamaged, hasBeenSpawned;
+    private boolean hasBeenSpawned;
 
     private final EnemyEntity enemyEntity;
-
-    private GameplaySession gameplaySession;
-
-    private int bleedOutTaskReference;
-    private int currentHealth;
-    private int originalHealth;
-
-    private LivingEntity entity;
 
     private Location spawnLocation;
     //endregion
 
     //region Getters/Setters
     /**
-     * Gets the health of the enemy.
+     * Gets whether this entity can bleed out
      */
-    public int getCurrentHealth() {
-        return currentHealth;
+    public boolean canBleedOut() {
+        return true;
     }
 
     /**
-     * Sets the health of the enemy.
+     * Gets whether this entity can heal after being damaged.
      */
-    public void setCurrentHealth(int currentHealth) {
-
-        this.currentHealth = currentHealth;
-        originalHealth = this.currentHealth;
+    public boolean canHeal() {
+        return false;
     }
 
     /**
-     * Gets the entity.
+     * Gets the chance the entity has of bleeding out once the threshold has been met.
      */
-    public LivingEntity getEntity() {
-        return entity;
+    public int getBleedOutChance() {
+        return enemyEntity.getBleedOutChance();
     }
 
     /**
-     * Gets the session that this enemy is a part of, if any.
+     * Gets the health requirement before the entity can begin to bleed out.
      */
-    public GameplaySession getGameplaySession() {
-        return gameplaySession;
+    public int getBleedOutThreshold() {
+        return (int)Math.round(getInitialHealth() * enemyEntity.getBleedOutHealthMultiplier());
     }
 
     /**
-     * Sets the session that this enemy is a part of, if any.
+     * Gets the entity's initial health.
      */
-    public void setGameplaySession(GameplaySession gameplaySession) {
-        this.gameplaySession = gameplaySession;
+    public int getInitialHealth() {
+        return PluginCore.getGameplayService().calculateHealthForRound(getGameplaySession() == null ? 1 : getGameplaySession().getGamemode().getCurrentRound(), enemyEntity.getRoundMultiplier(), enemyEntity.getMaxHealth());
     }
 
     /**
-     * Gets the spawn location.
+     * Gets the duration that the entity should be nuked for, in seconds.
+     */
+    public int getNukeDuration() {
+        return (int)Math.round(Math.random() * 10);
+    }
+
+    /**
+     * Gets the enemy's spawn location.
      */
     public Location getSpawnLocation() {
         return spawnLocation;
     }
 
     /**
-     * Sets the spawn location.
+     * Sets the enemy's spawn location.
      */
     public void setSpawnLocation(Location spawnLocation) {
         this.spawnLocation = spawnLocation;
-    }
-
-    /**
-     * Gets the UUID of this gameplay registerable.
-     */
-    public UUID getUUID() {
-        return entity == null ? null : entity.getUniqueId();
     }
     //endregion
 
     //region Public Methods
     /**
-     * Calculates and applies the enemy's health.
-     * @param round The round to calculate the health for.
-     */
-    public void applyHealth(int round) {
-        currentHealth = PluginCore.getGameplayService().calculateHealthForRound(round, enemyEntity.getRoundMultiplier(), enemyEntity.getMaxHealth());
-    }
-
-    /**
-     * Damages the enemy.
-     */
-    public void damage(Player player, int damage, String weaponServiceType) {
-
-        if (entity == null)
-            return;
-
-        hasBeenDamaged = true;
-
-        currentHealth -= damage;
-
-        spawnBloodEffect(damage / 10);
-
-        int healthThreshold = (int)Math.round(originalHealth * enemyEntity.getBleedOutHealthMultiplier());
-
-        if (currentHealth < healthThreshold && Math.random() * 100 <= enemyEntity.getBleedOutChance()) {
-
-            Main instance = Main.getInstance();
-
-            long time = Time.fromSeconds(1).totalTicks();
-
-            bleedOutTaskReference = instance.getServer().getScheduler().scheduleSyncRepeatingTask(instance, this::bleedOut_runnable, time, time);
-        }
-
-        GameplayPlayer gameplayPlayer = GameplayPlayer.findGameplayPlayerForPlayer(player, false);
-
-        if (currentHealth > 0) {
-
-            if (gameplaySession != null && gameplayPlayer != null)
-                gameplaySession.getGamemode().onEnemyDamaged(gameplayPlayer, this);
-
-            return;
-        }
-
-        // Kill the enemy.
-        entity.damage(100);
-
-        if (gameplaySession != null && gameplayPlayer != null)
-            gameplaySession.getGamemode().onEnemyKilled(gameplayPlayer, this, weaponServiceType);
-
-        unregister();
-    }
-
-    /**
      * Despawns the enemy.
      */
     public void despawn() {
 
-        if (entity != null)
-            entity.remove();
+        if (getLivingEntity() != null)
+            getLivingEntity().remove();
+    }
+
+    /**
+     * Downs the entity.
+     * @param downerEntity The entity that downed this entity.
+     * @param damagerType The type of damage that was dealt.
+     */
+    @Override
+    public void down(BaseGameplayLiving downerEntity, DamagerType damagerType) {
+
+        super.down(downerEntity, damagerType);
+
+        getLivingEntity().damage(100);
 
         unregister();
     }
 
     /**
-     * Spawns the enemy into the world.
+     * Immobilises the entity.
+     */
+    public void immobilise() {
+    }
+
+    /**
+     * Mobilises the entity.
+     */
+    public void mobilise() {
+    }
+
+    /**
+     * Spawns the enemy.
      */
     public void spawn() {
 
@@ -179,7 +138,7 @@ public class GameplayEnemy extends GameplayRegisterable {
 
         hasBeenSpawned = true;
 
-        this.entity = (LivingEntity)entity;
+        setLivingEntity((LivingEntity)entity);
 
         register();
 
@@ -190,46 +149,27 @@ public class GameplayEnemy extends GameplayRegisterable {
     //endregion
 
     //region Runnables
-    private void bleedOut_runnable() {
-
-        if (entity == null || currentHealth < 1)
-            return;
-
-        spawnBloodEffect(20);
-
-        currentHealth -= (originalHealth * 0.05);
-
-        if (currentHealth > 0)
-            entity.damage(0);
-
-        else {
-
-            entity.damage(100);
-            Main.getInstance().getServer().getScheduler().cancelTask(bleedOutTaskReference);
-        }
-    }
-
     private void despawn_runnable() {
 
-        if (hasBeenDamaged)
+        if (hasBeenDamaged())
             return;
 
-        entity.remove();
+        getLivingEntity().remove();
 
-        if (gameplaySession != null)
-            gameplaySession.getGamemode().onEnemyDespawned(this);
+        if (getGameplaySession() != null)
+            getGameplaySession().getGamemode().onEnemyDespawned(this);
     }
     //endregion
 
     //region Constructors
     public GameplayEnemy(EnemyEntity enemyEntity) {
-        this.enemyEntity = enemyEntity;
+        this(null, enemyEntity);
     }
-    //endregion
 
-    //region Private Methods
-    private void spawnBloodEffect(int count) {
-        entity.getWorld().spawnParticle(Particle.BLOCK_CRACK, Math.random() > 0.5 ? entity.getEyeLocation() : entity.getLocation(), count, Material.RED_WOOL.createBlockData());
+    public GameplayEnemy(GameplaySession gameplaySession, EnemyEntity enemyEntity) {
+        super(gameplaySession);
+
+        this.enemyEntity = enemyEntity;
     }
     //endregion
 }

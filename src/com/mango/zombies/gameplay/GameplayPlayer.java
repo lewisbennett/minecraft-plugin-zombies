@@ -1,39 +1,57 @@
 package com.mango.zombies.gameplay;
 
 import com.mango.zombies.Log;
-import com.mango.zombies.PluginCore;
-import com.mango.zombies.gameplay.base.GameplayRegisterable;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
+import com.mango.zombies.entities.PlayerStateEntity;
+import com.mango.zombies.gamemodes.StandardGamemode;
+import com.mango.zombies.gameplay.base.BaseGameplayLiving;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
-import java.util.UUID;
-
-public class GameplayPlayer {
+public class GameplayPlayer extends BaseGameplayLiving {
 
     //region Fields
-    private boolean isFlying;
-
-    private double health;
-
-    private float walkSpeed;
-
-    private GameMode gameMode;
-
     private GameplayLoadout loadout;
 
     private int points;
 
-    private ItemStack[] inventory;
-
-    private Location location;
-
-    private final UUID playerUuid;
+    private PlayerStateEntity playerState;
     //endregion
 
     //region Getters/Setters
+    /**
+     * Gets whether this entity can bleed out
+     */
+    public boolean canBleedOut() {
+        return getGameplaySession().getGamemode() instanceof StandardGamemode && getGameplaySession().getPlayers().length > 1;
+    }
+
+    /**
+     * Gets whether this entity can heal after being damaged.
+     */
+    public boolean canHeal() {
+        return true;
+    }
+
+    /**
+     * Gets the chance the entity has of bleeding out once the threshold has been met.
+     */
+    public int getBleedOutChance() {
+        return 100;
+    }
+
+    /**
+     * Gets the health requirement before the entity can begin to bleed out.
+     */
+    public int getBleedOutThreshold() {
+        return (int)Math.round(getInitialHealth() * 0.33);
+    }
+
+    /**
+     * Gets the entity's initial health.
+     */
+    public int getInitialHealth() {
+        return 100;
+    }
+
     /**
      * Gets the player's loadout.
      */
@@ -49,103 +67,90 @@ public class GameplayPlayer {
     }
 
     /**
-     * Gets the player.
+     * Gets the duration that the entity should be nuked for, in seconds.
      */
-    public Player getPlayer() {
-        return Bukkit.getPlayer(playerUuid);
+    public int getNukeDuration() {
+        return (int)Math.round(Math.random() * 10);
     }
 
     /**
-     * Gets the player's points.
+     * Gets the player.
      */
-    public int getPoints() {
-        return points;
+    public Player getPlayer() {
+        return (Player)getLivingEntity();
+    }
+    //endregion
+
+    //region Event Handlers
+    /**
+     * Called when this gameplay registerabled is unregistered.
+     */
+    @Override
+    public void onUnregistered() {
+
+        super.onRegistered();
+
+        restorePlayerState();
     }
     //endregion
 
     //region Public Methods
     /**
-     * Gives the player points.
+     * Gives points to the player.
      */
     public void addPoints(int points) {
         this.points += points;
 
-        // update scoreboard
         Log.information("Points: " + this.points);
     }
 
     /**
-     * Applies the player state based on the last cache.
+     * Caches the player's state.
      */
-    public void applyPlayerState() {
-
-        Player player = getPlayer();
-
-        player.setGameMode(gameMode);
-        player.setHealth(health);
-        player.setFlying(isFlying);
-        player.teleport(location);
-        player.setWalkSpeed(walkSpeed);
-
-        player.getInventory().setContents(inventory);
+    public void cachePlayerState() {
+        playerState = PlayerStateEntity.cachePlayerState(getPlayer());
     }
 
     /**
-     * Saves the players current state.
+     * Immobilises the entity.
      */
-    public void cachePlayerState() {
+    public void immobilise() {
+        getPlayer().setWalkSpeed(0);
+    }
 
-        Player player = getPlayer();
-
-        gameMode = player.getGameMode();
-        health = player.getHealth();
-        isFlying = player.isFlying();
-        location = player.getLocation();
-        walkSpeed = player.getWalkSpeed();
-
-        ItemStack[] itemStacks = player.getInventory().getContents();
-        inventory = new ItemStack[itemStacks.length];
-
-        System.arraycopy(itemStacks, 0, inventory, 0, itemStacks.length);
+    /**
+     * Mobilises the entity.
+     */
+    public void mobilise() {
+        getPlayer().setWalkSpeed(0.5f);
     }
 
     /**
      * Removes points from the player.
      */
     public void removePoints(int points) {
-        this.points -= points;
+
+        if (this.points - points < 0)
+            this.points = 0;
+        else
+            this.points -= points;
+
+        Log.information("Points: " + this.points);
+    }
+
+    /**
+     * Restores the player's state.
+     */
+    public void restorePlayerState() {
+        playerState.applyPlayerState();
     }
     //endregion
 
     //region Constructors
-    public GameplayPlayer(UUID playerUuid) {
-        this.playerUuid = playerUuid;
-    }
-    //endregion
+    public GameplayPlayer(GameplaySession gameplaySession, Player player) {
+        super(gameplaySession);
 
-    //region Public Static Methods
-    /**
-     * Finds a gameplay player reference for a player.
-     * @param player The player to search for.
-     * @param createNew Whether a new instance should be created in the event that one isn't found.
-     */
-    public static GameplayPlayer findGameplayPlayerForPlayer(Player player, boolean createNew) {
-
-        for (GameplayRegisterable queryRegisterable : PluginCore.getGameplayService().getRegisterables()) {
-
-            if (!(queryRegisterable instanceof GameplaySession))
-                continue;
-
-            GameplaySession querySession = (GameplaySession)queryRegisterable;
-
-            for (GameplayPlayer queryPlayer : querySession.getPlayers()) {
-
-                if (queryPlayer.getPlayer().getUniqueId().equals(player.getUniqueId()))
-                    return queryPlayer;
-            }
-        }
-
-        return createNew ? new GameplayPlayer(player.getUniqueId()) : null;
+        setLivingEntity(player);
     }
     //endregion
 }

@@ -6,7 +6,7 @@ import com.mango.zombies.gamemodes.StandardGamemode;
 import com.mango.zombies.gamemodes.TurnedGamemode;
 import com.mango.zombies.gamemodes.base.ZombiesGamemode;
 import com.mango.zombies.gameplay.GameplaySession;
-import com.mango.zombies.gameplay.base.GameplayRegisterable;
+import com.mango.zombies.gameplay.base.BaseGameplayRegisterable;
 import com.mango.zombies.schema.Gamemode;
 import com.mango.zombies.services.base.GameplayService;
 
@@ -25,15 +25,15 @@ public class StockGameplayService implements GameplayService {
     //endregion
 
     //region Fields
-    private final List<GameplayRegisterable> gameplayRegisterables = new ArrayList<GameplayRegisterable>();
+    private final List<BaseGameplayRegisterable> gameplayRegisterables = new ArrayList<BaseGameplayRegisterable>();
     //endregion
 
     //region Getters/Setters
     /**
      * Gets the currently active registerables.
      */
-    public GameplayRegisterable[] getRegisterables() {
-        return gameplayRegisterables.toArray(new GameplayRegisterable[0]);
+    public BaseGameplayRegisterable[] getRegisterables() {
+        return gameplayRegisterables.toArray(new BaseGameplayRegisterable[0]);
     }
     //endregion
 
@@ -42,7 +42,7 @@ public class StockGameplayService implements GameplayService {
      * Registers an object for use in game.
      * @param gameplayRegisterable The object to register.
      */
-    public void addRegisterable(GameplayRegisterable gameplayRegisterable) {
+    public void addRegisterable(BaseGameplayRegisterable gameplayRegisterable) {
 
         gameplayRegisterables.add(gameplayRegisterable);
 
@@ -95,7 +95,7 @@ public class StockGameplayService implements GameplayService {
 
         GameplaySession session = null;
 
-        for (GameplayRegisterable queryRegisterable : gameplayRegisterables) {
+        for (BaseGameplayRegisterable queryRegisterable : gameplayRegisterables) {
 
             if (!(queryRegisterable instanceof GameplaySession))
                 continue;
@@ -167,9 +167,9 @@ public class StockGameplayService implements GameplayService {
      * Finds a registerable by its UUID, if any.
      * @param registerableUuid The UUID of the registerable to find.
      */
-    public GameplayRegisterable findRegisterableByUUID(UUID registerableUuid) {
+    public BaseGameplayRegisterable findRegisterableByUUID(UUID registerableUuid) {
 
-        for (GameplayRegisterable queryRegisterable : getRegisterables()) {
+        for (BaseGameplayRegisterable queryRegisterable : getRegisterables()) {
 
             if (queryRegisterable.getUUID().equals(registerableUuid))
                 return queryRegisterable;
@@ -182,7 +182,7 @@ public class StockGameplayService implements GameplayService {
      * Unregisters an object from in game use.
      * @param gameplayRegisterable The object to unregister.
      */
-    public void removeRegisterable(GameplayRegisterable gameplayRegisterable) {
+    public void removeRegisterable(BaseGameplayRegisterable gameplayRegisterable) {
 
         gameplayRegisterables.remove(gameplayRegisterable);
 

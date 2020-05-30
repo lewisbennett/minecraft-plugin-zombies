@@ -2,8 +2,8 @@ package com.mango.zombies.listeners;
 
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.entities.MapEntity;
+import com.mango.zombies.gameplay.base.BaseGameplayRegisterable;
 import com.mango.zombies.gameplay.base.BlockBreakEventRegisterable;
-import com.mango.zombies.gameplay.base.GameplayRegisterable;
 import com.mango.zombies.helper.HiddenStringUtils;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -45,7 +45,7 @@ public class BlockBreakListener implements Listener {
         if (uuid == null)
             return;
 
-        GameplayRegisterable registerable = PluginCore.getGameplayService().findRegisterableByUUID(uuid);
+        BaseGameplayRegisterable registerable = PluginCore.getGameplayService().findRegisterableByUUID(uuid);
 
         if (registerable instanceof BlockBreakEventRegisterable)
             ((BlockBreakEventRegisterable)registerable).onBlockBreak(event);
