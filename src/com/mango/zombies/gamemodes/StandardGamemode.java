@@ -16,6 +16,9 @@ import com.mango.zombies.schema.DamagerType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.entity.Ageable;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -218,6 +221,14 @@ public class StandardGamemode extends ZombiesGamemode {
             return;
 
         gameplayEnemy.spawn();
+
+        LivingEntity livingEnitity = gameplayEnemy.getLivingEntity();
+
+        if (livingEnitity instanceof Ageable)
+            ((Ageable)livingEnitity).setAdult();
+
+        if (livingEnitity instanceof Monster)
+            ((Monster)livingEnitity).setTarget(player);
 
         enemiesSpawnedInRound++;
     }

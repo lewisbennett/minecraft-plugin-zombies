@@ -5,11 +5,16 @@
       <artifact name="comz" />
     </artifacts-to-build>
   </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="29650a7b-3f89-4df9-bc36-b5aa3b568d39" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/com/mango/zombies/listeners/EntityCombustListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/comz.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/comz.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/gamemodes/StandardGamemode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/gamemodes/StandardGamemode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/GameplayEnemy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/mango/zombies/gameplay/GameplayEnemy.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,6 +32,13 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2020.1.1\plugins\maven\lib\maven3" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
   <component name="ProjectId" id="1SLUQXE1KlEjQZfI6PbiSWHhAsS" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -43,7 +55,7 @@
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15429688" />
     <property name="project.structure.side.proportion" value="0.20416124" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.folding" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -58,6 +70,7 @@
       <recent name="D:\Projects\minecraft-plugin-zombies\src\com\mango\zombies\commands" />
     </key>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -84,59 +97,17 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="212" y="127" width="1560" height="853" key="#Project_Structure" timestamp="1590517113047">
+    <state x="440" y="94" key="#Project_Structure" timestamp="1601726333856">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="212" y="127" width="1560" height="853" key="#Project_Structure/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1590517113047" />
-    <state x="765" y="226" key="#com.intellij.ide.util.MemberChooser" timestamp="1590833058419">
+    <state x="440" y="94" key="#Project_Structure/1920.-1.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1601726333856" />
+    <state x="640" y="255" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1600718905229">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="765" y="226" key="#com.intellij.ide.util.MemberChooser/-1920.0.1920.1040/0.0.1920.1040/3324.-900.1440.860/1920.0.1920.1040@0.0.1920.1040" timestamp="1590696682664" />
-    <state x="765" y="226" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1590833058419" />
-    <state x="722" y="343" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1590514088247">
+    <state x="640" y="255" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1600718905228" />
+    <state x="461" y="164" key="SettingsEditor" timestamp="1600719138138">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="722" y="343" key="#com.intellij.ide.util.TreeClassChooserDialog/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1590514088247" />
-    <state x="811" y="412" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog" timestamp="1589988013922">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="811" y="412" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1589988013922" />
-    <state x="743" y="414" width="433" height="218" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1590755510408">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="743" y="414" width="433" height="218" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1590755510408" />
-    <state x="672" y="308" key="#com.intellij.refactoring.move.moveMembers.MoveMembersDialog" timestamp="1590066661018">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="672" y="308" key="#com.intellij.refactoring.move.moveMembers.MoveMembersDialog/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1590066661018" />
-    <state x="497" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1590768654726">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="497" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1590768654726" />
-    <state x="690" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1590835588684">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="690" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1590835588684" />
-    <state x="884" y="396" key="#com.intellij.util.ui.classpath.ChooseLibrariesDialog" timestamp="1590511506506">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="884" y="396" key="#com.intellij.util.ui.classpath.ChooseLibrariesDialog/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1590511506506" />
-    <state x="861" y="387" key="FileChooserDialogImpl" timestamp="1590697387588">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="861" y="387" key="FileChooserDialogImpl/-1920.0.1920.1040/0.0.1920.1040/3324.-900.1440.860/1920.0.1920.1040@0.0.1920.1040" timestamp="1590697387588" />
-    <state x="861" y="387" key="FileChooserDialogImpl/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1590579989044" />
-    <state x="463" y="166" key="SettingsEditor" timestamp="1590060894495">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="463" y="166" key="SettingsEditor/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1590060894495" />
-    <state x="616" y="240" width="672" height="677" key="run.anything.popup" timestamp="1590077775868">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="616" y="240" width="672" height="677" key="run.anything.popup/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1590077775868" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1590763572512">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1590763572512" />
+    <state x="461" y="164" key="SettingsEditor/0.0.1920.1040/-1920.0.1920.1040/1920.0.1920.1040/3324.-900.1440.860@0.0.1920.1040" timestamp="1600719138138" />
   </component>
 </project>
