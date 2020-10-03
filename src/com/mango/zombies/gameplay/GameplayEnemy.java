@@ -8,6 +8,7 @@ import com.mango.zombies.gameplay.base.BaseGameplayLiving;
 import com.mango.zombies.schema.DamagerType;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;

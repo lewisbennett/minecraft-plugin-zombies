@@ -81,7 +81,16 @@ public class StockGameplayService implements GameplayService {
      * @param round The round.
      */
     public double calculateSpawnRateForRound(int round) {
-        return Math.max(round <= 1 ? 2 : Math.pow(0.95, round - 1), 0.08);
+
+        // Spawn rate starts at 2 seconds on round 1 then gets 5% faster each round until it gets to 0.08 seconds.
+
+        // Round 1 spawn rate.
+        double spawnRate = 2;
+
+        if (round > 1)
+            spawnRate = Math.max(Math.pow(0.95, round - 1) * 2, 0.08);
+
+        return spawnRate;
     }
 
     /**

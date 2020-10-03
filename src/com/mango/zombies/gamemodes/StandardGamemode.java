@@ -1,5 +1,6 @@
 package com.mango.zombies.gamemodes;
 
+import com.mango.zombies.Log;
 import com.mango.zombies.Main;
 import com.mango.zombies.PluginCore;
 import com.mango.zombies.Time;
@@ -158,7 +159,11 @@ public class StandardGamemode extends ZombiesGamemode {
 
         Main instance = Main.getInstance();
 
-        long ticks = Time.fromSeconds(PluginCore.getGameplayService().calculateSpawnRateForRound(round)).totalTicks();
+        double spawnRate = PluginCore.getGameplayService().calculateSpawnRateForRound(round);
+
+        long ticks = Time.fromSeconds(spawnRate).totalTicks();
+
+        Log.information("Spawn rate: " + spawnRate);
 
         spawnEnemyTaskReference = instance.getServer().getScheduler().scheduleSyncRepeatingTask(instance, this::spawnEnemy_runnable, ticks, ticks);
     }
@@ -222,13 +227,13 @@ public class StandardGamemode extends ZombiesGamemode {
 
         gameplayEnemy.spawn();
 
-        LivingEntity livingEnitity = gameplayEnemy.getLivingEntity();
+        LivingEntity livingEntity = gameplayEnemy.getLivingEntity();
 
-        if (livingEnitity instanceof Ageable)
-            ((Ageable)livingEnitity).setAdult();
+        if (livingEntity instanceof Ageable)
+            ((Ageable)livingEntity).setAdult();
 
-        if (livingEnitity instanceof Monster)
-            ((Monster)livingEnitity).setTarget(player);
+        if (livingEntity instanceof Monster)
+            ((Monster)livingEntity).setTarget(player);
 
         enemiesSpawnedInRound++;
     }
