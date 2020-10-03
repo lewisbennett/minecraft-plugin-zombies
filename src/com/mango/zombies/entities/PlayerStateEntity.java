@@ -19,6 +19,8 @@ public class PlayerStateEntity {
 
     private GameMode gameMode;
 
+    private int foodLevel;
+
     private ItemStack[] inventory;
 
     private Location location;
@@ -112,6 +114,20 @@ public class PlayerStateEntity {
     }
 
     /**
+     * Gets the player's saturation.
+     */
+    public int getFoodLevel() {
+        return foodLevel;
+    }
+
+    /**
+     * Sets the player's saturation.
+     */
+    public void setFoodLevel(int foodLevel) {
+        this.foodLevel = foodLevel;
+    }
+
+    /**
      * Gets the player's walk speed.
      */
     public float getWalkSpeed() {
@@ -141,6 +157,7 @@ public class PlayerStateEntity {
         player.setHealth(health);
         player.setFlying(isFlying);
         player.teleport(location);
+        player.setSaturation(foodLevel);
         player.setWalkSpeed(walkSpeed);
 
         player.getInventory().setContents(inventory);
@@ -160,6 +177,7 @@ public class PlayerStateEntity {
         playerState.setHealth(player.getHealth());
         playerState.setLocation(player.getLocation());
         playerState.setPlayerUUID(player.getUniqueId());
+        playerState.setFoodLevel(player.getFoodLevel());
         playerState.setWalkSpeed(player.getWalkSpeed());
 
         ItemStack[] itemStacks = player.getInventory().getContents();

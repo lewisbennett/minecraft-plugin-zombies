@@ -4,9 +4,11 @@ import com.mango.zombies.Log;
 import com.mango.zombies.entities.PlayerStateEntity;
 import com.mango.zombies.gamemodes.StandardGamemode;
 import com.mango.zombies.gameplay.base.BaseGameplayLiving;
+import com.mango.zombies.gameplay.base.FoodLevelChangeEventRegisterable;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 
-public class GameplayPlayer extends BaseGameplayLiving {
+public class GameplayPlayer extends BaseGameplayLiving implements FoodLevelChangeEventRegisterable {
 
     //region Fields
     private GameplayLoadout loadout;
@@ -82,6 +84,16 @@ public class GameplayPlayer extends BaseGameplayLiving {
     //endregion
 
     //region Event Handlers
+    /**
+     * Called when the food level of a HumanEntity changes.
+     * @param event The event.
+     */
+    public void onFoodLevelChanged(FoodLevelChangeEvent event) {
+
+        if (event.getEntity().getUniqueId().equals(getPlayer().getUniqueId()) && getGameplaySession() != null)
+            event.setCancelled(true);
+    }
+
     /**
      * Called when this gameplay registerabled is unregistered.
      */

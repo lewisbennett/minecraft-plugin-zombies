@@ -7,7 +7,9 @@ import com.mango.zombies.gameplay.base.BaseGameplayLiving;
 import com.mango.zombies.gameplay.base.GameplayDrop;
 import com.mango.zombies.helper.SoundUtil;
 import com.mango.zombies.schema.DamagerType;
+import org.bukkit.GameMode;
 import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 
 public abstract class ZombiesGamemode {
 
@@ -93,6 +95,18 @@ public abstract class ZombiesGamemode {
 
     //region Lifecycle
     public void prepare() {
+
+        // Set the starting values of the player just in case they changed between joining the session and now.
+        for (GameplayPlayer gameplayPlayer : gameplaySession.getPlayers()) {
+
+            Player player = gameplayPlayer.getPlayer();
+
+            player.getInventory().clear();
+            player.setGameMode(GameMode.SURVIVAL);
+
+            player.setHealth(20);
+            player.setFoodLevel(20);
+        }
     }
 
     public void startRound(int round) {

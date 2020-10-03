@@ -179,7 +179,7 @@ public class GameplaySession extends BaseGameplayRegisterable implements Invento
      */
     public void addPlayer(Player player) {
 
-        GameplayPlayer gameplayPlayer = new GameplayPlayer(null, player);
+        GameplayPlayer gameplayPlayer = new GameplayPlayer(this, player);
 
         gameplayPlayer.register();
         gameplayPlayer.cachePlayerState();
@@ -207,6 +207,9 @@ public class GameplaySession extends BaseGameplayRegisterable implements Invento
 
         player.getInventory().clear();
         player.setGameMode(GameMode.SURVIVAL);
+
+        player.setHealth(20);
+        player.setFoodLevel(20);
 
         sendMessage(player, startingMessage);
     }
